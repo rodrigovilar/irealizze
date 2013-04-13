@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" 
+    xmlns:beans="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+    <!-- HTTP security configurations -->
+    <http auto-config="true" use-expressions="true">
+        <form-login login-processing-url="/resources/j_spring_security_check" login-page="/login" authentication-failure-url="/login?login_error=t" />
+        <logout logout-url="/resources/j_spring_security_logout" />
+        <!-- Configure these elements to secure URIs in your application -->
+        <intercept-url pattern="/choices/**" access="hasRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/member/**" access="isAuthenticated()" />
+        <intercept-url pattern="/resources/**" access="permitAll" />
+        <intercept-url pattern="/**" access="permitAll" />
+    </http>
+    <!-- Configure Authentication mechanism -->
+    <authentication-manager alias="authenticationManager">
+        <!-- SHA-256 values can be produced using 'echo -n your_desired_password | sha256sum' (using normal *nix environments) -->
+        <authentication-provider>
+            <password-encoder hash="sha-256" />
+            <user-service>
+                <user name="diogo" password="fc5fd4ab2e475dc7e5d95e95fb833d40d47e51c6928d6cef78ea56cf8f7c7630" authorities="ROLE_ADMIN" />
+                <user name="rodrigo" password="f278c613d2b8e7815984b0ceba1ad4e397035b5b56c3459f19836407ba62692a" authorities="ROLE_ADMIN" />
+                <user name="orlando" password="b3b1ed71b810507bd5dda295e83bcc0993bce029232dacc8a59abe0439e96e85" authorities="ROLE_ADMIN" />
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+</beans:beans>

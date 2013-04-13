@@ -1,0 +1,112 @@
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-08 17:22:21
+project --topLevelPackage com.nanuvem.irealizze --projectName iRealizze --java 6 --packaging JAR
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-08 17:22:40
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-08 17:22:51
+jpa setup --database MYSQL --provider HIBERNATE 
+entity jpa --class com.nanuvem.irealizze.modelo.Projeto --testAutomatically 
+field string --fieldName nome --notNull
+field string --fieldName cliente
+entity jpa --class ~.modelo.Elemento --testAutomatically 
+field string --fieldName nome --notNull
+field reference --fieldName projeto --type ~.modelo.Projeto --cardinality MANY_TO_ONE --notNull 
+field reference --fieldName pai --type ~.modelo.Elemento --cardinality MANY_TO_ONE --notNull 
+field set --fieldName filhos --type ~.modelo.Elemento --cardinality ONE_TO_MANY --mappedBy pai
+focus --class ~.modelo.Projeto
+field set --fieldName elementosRaiz --type ~.modelo.Elemento --cardinality ONE_TO_MANY --mappedBy projeto
+entity jpa --class ~.modelo.perene.TabelaPreco --testAutomatically 
+field string --fieldName nome --notNull
+field boolean --fieldName vigente --value false
+field date --fieldName inicioVigencia --type java.util.Calendar --dateFormat SHORT 
+field date --fieldName fimVigencia --type java.util.Calendar --dateFormat SHORT 
+entity jpa --class ~.modelo.perene.TipoItem --testAutomatically 
+field string --fieldName nome --notNull
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-08 18:02:58
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-08 19:47:18
+focus --class ~.modelo.perene.TipoItem
+field reference --fieldName pai --type ~.modelo.perene.TipoItem --cardinality MANY_TO_ONE
+field set --fieldName filhos --type ~.modelo.perene.TipoItem  --cardinality ONE_TO_MANY --mappedBy pai
+entity jpa --class ~.modelo.Item --testAutomatically 
+field string --fieldName nome --notNull
+field string --fieldName unidade
+// [failed] field string --fieldName nome --notNull --unique 
+// [failed] field string --fieldName nome --notNull --unique 
+field reference --fieldName tipo --type ~.modelo.perene.TipoItem --cardinality MANY_TO_ONE --notNull 
+focus --class ~.modelo.perene.TipoItem
+field set --fieldName itens --type ~.modelo.Item --cardinality ONE_TO_MANY
+entity jpa --class ~.modelo.perene.Item --testAutomatically 
+field string --fieldName nome --notNull --unique 
+field string --fieldName unidade
+field reference --fieldName tipo --type ~.modelo.perene.TipoItem --cardinality MANY_TO_ONE --notNull 
+entity jpa --class ~.modelo.perene.Preco --testAutomatically 
+field number --fieldName valorUnitario --type double --notNull 
+field reference --fieldName item --type ~.modelo.perene.Item --cardinality MANY_TO_ONE --notNull 
+field reference --fieldName tabela --type ~.modelo.perene.TabelaPreco --cardinality MANY_TO_ONE --notNull 
+focus --class ~.modelo.perene.Item
+field set --fieldName precos --type ~.modelo.perene.Preco --cardinality ONE_TO_MANY --mappedBy item
+focus --class ~.modelo.perene.TabelaPreco
+field set --fieldName precos --type ~.modelo.perene.TabelaPreco --cardinality ONE_TO_MANY --mappedBy tabela
+entity jpa --class ~.modelo.perene.Responsavel --testAutomatically 
+field string --fieldName login --notNull --unique 
+help security setup
+hint security setup
+web mvc setup
+security setup
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-08 21:31:24
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-08 22:08:03
+entity jpa --class ~.modelo.Periodo --testAutomatically 
+field date --fieldName dataLimite --type java.util.Calendar
+field reference --fieldName projeto --type ~.modelo.Projeto --cardinality MANY_TO_ONE --notNull 
+focus --class ~.modelo.Projeto
+field set --fieldName periodos --type ~.modelo.Periodo --cardinality ONE_TO_MANY --mappedBy periodo
+entity jpa --class ~.modelo.ElementoFolha --testAutomatically 
+field reference --fieldName pai --type ~.modelo.Elemento --cardinality MANY_TO_ONE --notNull 
+focus --class ~.modelo.Elemento
+field set --fieldName folhas --type ~.modelo.ElementoFolha --cardinality ONE_TO_MANY --mappedBy pai
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-09 00:03:40
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-13 18:18:57
+focus --class ~.modelo.ElementoFolha
+field reference --fieldName item --type ~.modelo.perene.Item --cardinality MANY_TO_ONE 
+entity jpa --class ~.modelo.Alocacao --testAutomatically 
+field number --fieldName prioridade --type int 
+field reference --fieldName elemento --type ~.modelo.Elemento --cardinality MANY_TO_ONE --notNull 
+// [failed] field reference --fieldName elemento --type ~.modelo.perene.Responsavel  --cardinality MANY_TO_ONE --notNull 
+field reference --fieldName responsavel --type ~.modelo.perene.Responsavel  --cardinality MANY_TO_ONE --notNull 
+field reference --fieldName periodo --type ~.modelo.Periodo  --cardinality MANY_TO_ONE --notNull 
+focus --class ~.modelo.Periodo
+field set --fieldName alocacoes --type ~.modelo.Alocacao --cardinality ONE_TO_MANY --mappedBy periodo
+focus --class ~.modelo.Alocacao
+focus --class ~.modelo.Elemento
+field set --fieldName alocacoes --type ~.modelo.Alocacao --cardinality ONE_TO_MANY --mappedBy elemento
+focus --class ~.modelo.perene.Responsavel
+field set --fieldName alocacoes --type ~.modelo.Alocacao --cardinality ONE_TO_MANY --mappedBy responsavel
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-13 18:29:36
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-13 19:58:32
+entity jpa --class ~.modelo.Medicao --testAutomatically 
+enum type --class ~.modelo.TipoMedicao
+enum constant --name Prevista
+enum constant --name Realizada
+enum constant --name Cancelada
+focus --class ~.modelo.Medicao
+field number --fieldName quantidade --type double
+field enum --fieldName tipo --type ~.modelo.TipoMedicao --notNull 
+field reference --fieldName elementoFolha --type ~.modelo.ElementoFolha --cardinality MANY_TO_ONE --notNull 
+field reference --fieldName preco --type ~.modelo.perene.Preco --cardinality MANY_TO_ONE --notNull 
+field reference --fieldName periodo --type ~.modelo.Periodo --cardinality MANY_TO_ONE --notNull 
+field reference --fieldName alocacao --type ~.modelo.Alocacao --cardinality MANY_TO_ONE --notNull 
+focus --class ~.modelo.ElementoFolha
+field set --fieldName medicoes --type ~.modelo.Medicao --cardinality ONE_TO_MANY --mappedBy elementoFolha
+focus --class ~.modelo.perene.Preco
+field set --fieldName medicoes --type ~.modelo.Medicao --cardinality ONE_TO_MANY --mappedBy preco
+// [failed] focus --class ~.modelo.Perioo
+focus --class ~.modelo.Periodo
+field set --fieldName medicoes --type ~.modelo.Medicao --cardinality ONE_TO_MANY --mappedBy periodo
+focus --class ~.modelo.Alocacao
+field set --fieldName medicoes --type ~.modelo.Medicao --cardinality ONE_TO_MANY --mappedBy alocacao
+json all 
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-14 00:19:15
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-16 18:01:23
+web mvc json all 
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-16 20:33:54
+jpa setup --database MYSQL --provider HIBERNATE 
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-18 08:16:18
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-04-12 21:25:05
