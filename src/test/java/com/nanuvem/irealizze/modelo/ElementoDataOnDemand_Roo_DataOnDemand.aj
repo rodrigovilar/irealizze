@@ -33,6 +33,7 @@ privileged aspect ElementoDataOnDemand_Roo_DataOnDemand {
         setNome(obj, index);
         setPai(obj, index);
         setProjeto(obj, index);
+        setSequencia(obj, index);
         return obj;
     }
     
@@ -49,6 +50,11 @@ privileged aspect ElementoDataOnDemand_Roo_DataOnDemand {
     public void ElementoDataOnDemand.setProjeto(Elemento obj, int index) {
         Projeto projeto = projetoDataOnDemand.getRandomProjeto();
         obj.setProjeto(projeto);
+    }
+    
+    public void ElementoDataOnDemand.setSequencia(Elemento obj, int index) {
+        int sequencia = index;
+        obj.setSequencia(sequencia);
     }
     
     public Elemento ElementoDataOnDemand.getSpecificElemento(int index) {

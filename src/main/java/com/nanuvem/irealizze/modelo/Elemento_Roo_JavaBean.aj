@@ -35,6 +35,14 @@ privileged aspect Elemento_Roo_JavaBean {
         this.pai = pai;
     }
     
+    public int Elemento.getSequencia() {
+        return this.sequencia;
+    }
+    
+    public void Elemento.setSequencia(int sequencia) {
+        this.sequencia = sequencia;
+    }
+    
     public Set<Elemento> Elemento.getFilhos() {
         return this.filhos;
     }

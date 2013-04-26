@@ -26,6 +26,9 @@ public class Elemento {
 
     @ManyToOne
     private Elemento pai;
+    
+    @NotNull
+    private int sequencia;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pai")
     private Set<Elemento> filhos = new HashSet<Elemento>();
