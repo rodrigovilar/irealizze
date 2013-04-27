@@ -17,18 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 privileged aspect ProjetoController_Roo_Controller_Json {
     
-    @RequestMapping(value = "/{id}", headers = "Accept=application/json")
-    @ResponseBody
-    public ResponseEntity<String> ProjetoController.showJson(@PathVariable("id") Long id) {
-        Projeto projeto = Projeto.findProjeto(id);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json; charset=utf-8");
-        if (projeto == null) {
-            return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<String>(projeto.toJson(), headers, HttpStatus.OK);
-    }
-    
     @RequestMapping(headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<String> ProjetoController.listJson() {
@@ -55,17 +43,6 @@ privileged aspect ProjetoController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
-    }
-    
-    @RequestMapping(method = RequestMethod.PUT, headers = "Accept=application/json")
-    public ResponseEntity<String> ProjetoController.updateFromJson(@RequestBody String json) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        Projeto projeto = Projeto.fromJsonToProjeto(json);
-        if (projeto.merge() == null) {
-            return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<String>(headers, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/jsonArray", method = RequestMethod.PUT, headers = "Accept=application/json")
