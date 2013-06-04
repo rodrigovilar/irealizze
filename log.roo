@@ -110,3 +110,5 @@ web mvc json all
 jpa setup --database MYSQL --provider HIBERNATE 
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-18 08:16:18
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-04-12 21:25:05
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-05-06 10:30:51
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-05-06 11:08:02

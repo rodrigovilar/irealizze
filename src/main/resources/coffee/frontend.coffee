@@ -2,8 +2,7 @@ atualizarGUI = (page) ->
   page.trigger('create')
 
 class Pagina
-  constructor: (@url, @urlMae) ->
-    @myId = "pagina"
+  constructor: (@modulo, @idMae) ->
     body  = $("body")
     @page = $('<div data-role="page" data-theme="a" id="' + this.getId() + '">"')
     @header = $('<div data-role="header" data-theme="a"><h1>iRealizze</h1></div>')
@@ -18,7 +17,7 @@ class Pagina
     @page.page()
     
   getId: ->
-    "pagina" + @url
+    "pagina" + @modulo.url
     
   atualizar: ->
     atualizarGUI @page
@@ -28,7 +27,7 @@ class Pagina
         
   desenharBotaoVoltar: ->
     @content.append $('<a data-role="button" data-inline="true" href="#' + 
-      @urlMae + '" data-icon="arrow-l" data-iconpos="left">Voltar</a>')
+      @idMae + '" data-icon="arrow-l" data-iconpos="left">Voltar</a>')
 
   enviarPut: (link, json, callback)=>
     dadosAjax = 
@@ -44,36 +43,73 @@ class Pagina
     request.always =>
         callback()
     
+  enviarPost: (link, json, callback)=>
+    dadosAjax = 
+      type: "POST"
+      url: link
+      data: json
+      processData: true
+      contentType: "application/json"
+      headers: 
+        Accept: "application/json"
+    
+    request = $.ajax(dadosAjax)
+    request.always =>
+        callback()
   
 class PaginaListagem extends Pagina
-  constructor: (@url, @urlMae, @titulo) ->
-    super(@url, @urlMae)
+  constructor: (@modulo, @idMae) ->
+    super(@modulo, @idMae)
 
   desenharConteudo: ->
     @content.empty()
     @lista = $('<ul data-role="listview" data-divider-theme="b" data-inset="true">')
     @content.append @lista
     
-    @lista.append $('<li data-role="list-divider" role="heading">' + @titulo + '</li>')
-    this.desenharBotaoVoltar()
-    this.atualizar()
+    @lista.append $('<li data-role="list-divider" role="heading">' + @modulo.nome + '</li>')
+    @desenharBotaoNovo()
+    @desenharBotaoVoltar()
+    @atualizar()
+    $.getJSON @modulo.url, (jsonObj) =>
+      $.each jsonObj, (i, registro) =>
+        @listar(registro)
+      @lista.listview('refresh')
+    
+  listar: (registro) ->
+    ver = $("<a href='#'>#{registro[@modulo.propriedade]}</a>")
+    editar = $("<a href='#" + @modulo.paginaEdicao.getId() + "' data-transition='slide'>Editar</a>")
+    li = $("<li data-theme='c' data-icon='edit'>")
+    li.append ver
+    li.append editar
+    @lista.append li
+    ver.click =>
+      @modulo.abrirItem(registro.id)
+    editar.click =>
+      @modulo.editarItem(registro.id)
+
+
+  desenharBotaoNovo: ->
+    criar = $('<a data-role="button" data-inline="true" href="#criacao' + @modulo.url + '" data-icon="create" data-iconpos="left">Criar</a>')
+    @content.append criar
+    criar.click =>
+      @modulo.novoItem()
 
 class PaginaEdicao extends Pagina
-  constructor: (@url, @titulo, @modulo) ->
-    super(@url, @modulo.paginaListagem.getId())
+  constructor: (@modulo) ->
+    super(@modulo, @modulo.paginaListagem.getId())
     @form = $('<form>')
     @content.append @form
-    this.desenharBotaoVoltar()
+    @desenharBotaoVoltar()
     
   getId: ->
-    "edicao" + @url
+    "edicao" + @modulo.url
 
   desenharConteudo: ->
     @form.empty()    
     
   abrir: (@idItem) ->
     this.desenharConteudo()    
-    $.getJSON @url + "/" + @idItem, (jsonObj) =>
+    $.getJSON @modulo.url + "/" + @idItem, (jsonObj) =>
       this.desenharConteudoForm(jsonObj)
       this.desenharBotaoSalvar()      
       this.atualizar()
@@ -81,7 +117,7 @@ class PaginaEdicao extends Pagina
   desenharConteudoForm: (jsonObj) ->
 
   desenharBotaoSalvar: ->
-    submit = $('<a href="#' + @urlMae +
+    submit = $('<a href="#' + @idMae +
       '" data-role="button" data-inline="true" data-icon="arrow-l" data-iconpos="left">Salvar</a>')       
     @form.append submit
     submit.click =>
@@ -89,7 +125,43 @@ class PaginaEdicao extends Pagina
     
   salvar: =>
     json = this.montarJSON()        
-    this.enviarPut @url + "/" + @idItem, json, =>
+    this.enviarPut @modulo.url + "/" + @idItem, json, =>
+        @modulo.abrir()
+        
+  montarJSON: ->
+    "{}"   
+
+class PaginaCriacao extends Pagina
+  constructor: (@modulo) ->
+    super(@modulo, @modulo.paginaListagem.getId())
+    @form = $('<form>')
+    @content.append @form
+    @desenharBotaoVoltar()
+    
+  getId: ->
+    "criacao" + @modulo.url
+
+  desenharConteudo: ->
+    @form.empty()    
+    
+  abrir: () ->
+    @desenharConteudo()    
+    @desenharConteudoForm()
+    @desenharBotaoSalvar()      
+    @atualizar()
+
+  desenharConteudoForm: () ->
+
+  desenharBotaoSalvar: ->
+    submit = $('<a href="#' + @idMae +
+      '" data-role="button" data-inline="true" data-icon="arrow-l" data-iconpos="left">Criar</a>')       
+    @form.append submit
+    submit.click =>
+      this.salvar()
+    
+  salvar: =>
+    json = this.montarJSON()        
+    this.enviarPost @modulo.url, json, =>
         @modulo.abrir()
         
   montarJSON: ->
@@ -97,8 +169,8 @@ class PaginaEdicao extends Pagina
 
 
 class FormEdicaoProjeto extends PaginaEdicao
-  constructor: (@url, @titulo, @modulo) ->
-    super(@url, @titulo, @modulo)
+  constructor: (@modulo) ->
+    super(@modulo)
     
   desenharConteudoForm: (jsonObj) ->
     divNome = $('<div data-role="fieldcontain">')
@@ -120,31 +192,49 @@ class FormEdicaoProjeto extends PaginaEdicao
   montarJSON: ->
     "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}' }"                
 
+class FormCriacaoProjeto extends PaginaCriacao
+  constructor: (@modulo) ->
+    super(@modulo)
+    
+  desenharConteudoForm: () ->
+    divNome = $('<div data-role="fieldcontain">')
+    @form.append divNome    
+    labelNome = $('<label for="nome">Nome</label>')        
+    @inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">')
+                
+    divNome.append labelNome
+    divNome.append @inputNome
+
+    divCliente = $('<div data-role="fieldcontain">')
+    @form.append divCliente    
+    labelCliente = $('<label for="cliente">Cliente</label>')        
+    @inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="" type="text">')
+                
+    divNome.append labelCliente
+    divNome.append @inputCliente
+
+  montarJSON: ->
+    "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}' }"                
+
     
 class Modulo
   constructor: (@lista, @nome, @url, @propriedade) ->
-    @paginaListagem = new PaginaListagem(@url, "#principal", @nome)
-    @paginaEdicao = new PaginaEdicao(@url, @nome, this)
+    @paginaListagem = new PaginaListagem(this, "principal")
+    @paginaEdicao = @criarPaginaEdicao()
+    @paginaCriacao = @criarPaginaCriacao()
   
+  criarPaginaEdicao: ->
+    new PaginaEdicao(this)
+
+  criarPaginaCriacao: ->
+    new PaginaCriacao(this)
+    
   abrir: ->
     @paginaListagem.desenharConteudo()
-    $.getJSON @url, (jsonObj) =>
-      $.each jsonObj, (i, registro) =>
-        this.listar(registro)
-      @paginaListagem.lista.listview('refresh')
-    
-  listar: (registro) ->
-    ver = $("<a href='#'>#{registro[@propriedade]}</a>")
-    editar = $("<a href='#" + @paginaEdicao.getId() + "' data-transition='slide'>Editar</a>")
-    li = $("<li data-theme='c' data-icon='edit'>")
-    li.append ver
-    li.append editar
-    @paginaListagem.lista.append li
-    ver.click =>
-      this.abrirItem(registro.id)
-    editar.click =>
-      this.editarItem(registro.id)
   
+  novoItem: () ->
+    @paginaCriacao.abrir()
+      
   abrirItem: (idItem) ->
     alert "ver " + idItem
   
@@ -155,16 +245,18 @@ class Modulo
 class ModuloProjetos extends Modulo
   constructor: (@lista) ->
     super(@lista, 'Projetos', 'projetos', 'nome')
-    @paginaEdicao = new FormEdicaoProjeto(@url, @nome, this)
     
+  criarPaginaEdicao: ->
+    new FormEdicaoProjeto(this)
+    
+  criarPaginaCriacao: ->
+    new FormCriacaoProjeto(this)
+  
   abrirItem: (idItem) ->
       alert "ver projeto " + idItem
   
-  editarItem: (idItem) ->
-    @paginaEdicao.abrir(idItem)
-  
 addMenu = (menu, modulo) ->
-  item = $('<li data-theme="c"><a href="#pagina' + modulo.url + '" data-transition="slide">' + modulo.nome + '</a></li>')
+  item = $('<li data-theme="c"><a href="#' + modulo.paginaListagem.getId() + '" data-transition="slide">' + modulo.nome + '</a></li>')
   menu.append item
   item.click -> 
     modulo.abrir()
