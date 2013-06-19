@@ -192,6 +192,22 @@ class FormEdicaoProjeto extends PaginaEdicao
   montarJSON: ->
     "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}' }"                
 
+class FormEdicaoResponsavel extends PaginaEdicao
+  constructor: (@modulo) ->
+    super(@modulo)
+    
+  desenharConteudoForm: (jsonObj) ->
+    divLogin = $('<div data-role="fieldcontain">')
+    @form.append divLogin    
+    labelLogin = $('<label for="login">Login</label>')        
+    @inputLogin = $('<input name="login" id="login" placeholder="" value="' + jsonObj.login + '" type="text">')
+                
+    divLogin.append labelLogin
+    divLogin.append @inputLogin
+
+  montarJSON: ->
+    "{ 'login': '#{@inputLogin.val()}'}"
+
 class FormCriacaoProjeto extends PaginaCriacao
   constructor: (@modulo) ->
     super(@modulo)
@@ -215,6 +231,23 @@ class FormCriacaoProjeto extends PaginaCriacao
 
   montarJSON: ->
     "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}' }"                
+
+class FormCriacaoResponsavel extends PaginaCriacao
+  constructor: (@modulo) ->
+    super(@modulo)
+    
+  desenharConteudoForm: () ->
+    divLogin = $('<div data-role="fieldcontain">')
+    @form.append divLogin    
+    labelLogin = $('<label for="login">Login</label>')        
+    @inputLogin = $('<input name="Login" id="login" placeholder="" value="" type="text">')
+                
+    divLogin.append labelLogin
+    divLogin.append @inputLogin
+
+  montarJSON: ->
+    "{ 'login': '#{@inputLogin.val()}'}"                
+
 
     
 class Modulo
@@ -254,12 +287,31 @@ class ModuloProjetos extends Modulo
   
   abrirItem: (idItem) ->
       alert "ver projeto " + idItem
-  
+
 addMenu = (menu, modulo) ->
   item = $('<li data-theme="c"><a href="#' + modulo.paginaListagem.getId() + '" data-transition="slide">' + modulo.nome + '</a></li>')
   menu.append item
   item.click -> 
     modulo.abrir()
+
+
+class ModuloResponsavel extends Modulo
+	constructor: (@lista) ->
+	super(@lista, 'Responsavel', 'responsaveis', 'nome')
+	
+	criarPaginaEdicao: ->
+    new FormEdicaoResponsavel(this)
+    
+  criarPaginaCriacao: ->
+    new FormCriacaoResponsavel(this)
+  
+  abrirItem: (idItem) ->
+      alert "ver responsaveis " + idItem
+
+                
+
+
+
 
 abrirTelaPrincipal = ->
   content  = $("div[data-role='content']")
@@ -274,6 +326,7 @@ abrirTelaPrincipal = ->
   addMenu(menu, new Modulo content, 'Itens', 'tipositens', 'nome')
   addMenu(menu, new Modulo content, 'Preço', 'tabelasprecos', 'nome')
   
+
 iniciar = ->
   abrirTelaPrincipal()
   $("#principal").page()
