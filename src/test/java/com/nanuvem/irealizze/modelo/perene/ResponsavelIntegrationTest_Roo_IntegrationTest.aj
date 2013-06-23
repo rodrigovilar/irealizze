@@ -24,7 +24,7 @@ privileged aspect ResponsavelIntegrationTest_Roo_IntegrationTest {
     declare @type: ResponsavelIntegrationTest: @Transactional;
     
     @Autowired
-    private ResponsavelDataOnDemand ResponsavelIntegrationTest.dod;
+    ResponsavelDataOnDemand ResponsavelIntegrationTest.dod;
     
     @Test
     public void ResponsavelIntegrationTest.testCountResponsavels() {

@@ -1,5 +1,5 @@
 (function() {
-  var FormCriacaoProjeto, FormEdicaoProjeto, Modulo, ModuloProjetos, Pagina, PaginaCriacao, PaginaEdicao, PaginaListagem, abrirTelaPrincipal, addMenu, atualizarGUI, iniciar,
+  var FormCriacaoProjeto, FormCriacaoResponsavel, FormEdicaoProjeto, FormEdicaoResponsavel, Modulo, ModuloProjetos, ModuloResponsavel, Pagina, PaginaCriacao, PaginaEdicao, PaginaListagem, abrirTelaPrincipal, addMenu, atualizarGUI, iniciar,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -332,6 +332,62 @@
 
   })(PaginaCriacao);
 
+  FormEdicaoResponsavel = (function(_super) {
+
+    __extends(FormEdicaoResponsavel, _super);
+
+    function FormEdicaoResponsavel(modulo) {
+      this.modulo = modulo;
+      FormEdicaoResponsavel.__super__.constructor.call(this, this.modulo);
+    }
+
+    FormEdicaoResponsavel.prototype.desenharConteudoForm = function(jsonObj) {
+      var divLogin, labelLogin;
+      divLogin = $('<div data-role="fieldcontain">');
+      this.form.append(divLogin);
+      labelLogin = $('<label for="login">Login</label>');
+      this.inputLogin = $('<input name="login" id="login" placeholder="" value="' + jsonObj.login + '" type="text">');
+      divLogin.append(labelLogin);
+      return divLogin.append(this.inputLogin);
+    };
+
+    FormEdicaoResponsavel.prototype.montarJSON = function() {
+      return "{ 'login': '" + (this.inputLogin.val()) + "' }";
+    };
+
+    return FormEdicaoResponsavel;
+
+  })(PaginaEdicao);
+
+  FormCriacaoResponsavel = (function(_super) {
+
+    __extends(FormCriacaoResponsavel, _super);
+
+    function FormCriacaoResponsavel(modulo) {
+      this.modulo = modulo;
+      FormCriacaoResponsavel.__super__.constructor.call(this, this.modulo);
+    }
+
+    FormCriacaoResponsavel.prototype.desenharConteudoForm = function() {
+      var divLogin, labelLogin;
+      divLogin = $('<div data-role="fieldcontain">');
+      this.form.append(divLogin);
+      labelLogin = $('<label for="login">Login</label>');
+      this.inputLogin = $('<input name="login" id="login" placeholder="" value="" type="text">');
+      divLogin.append(labelLogin);
+      return divLogin.append(this.inputLogin);
+    };
+
+    return FormCriacaoResponsavel;
+
+  })(PaginaCriacao);
+
+  ({
+    montarJSON: function() {
+      return "{ 'login': '" + (this.inputLogin.val()) + "' }";
+    }
+  });
+
   Modulo = (function() {
 
     function Modulo(lista, nome, url, propriedade) {
@@ -406,6 +462,40 @@
     });
   };
 
+  ModuloResponsavel = (function(_super) {
+
+    __extends(ModuloResponsavel, _super);
+
+    function ModuloResponsavel(lista) {
+      this.lista = lista;
+      ModuloResponsavel.__super__.constructor.call(this, this.lista, 'Responsáveis', 'responsaveis', 'login');
+    }
+
+    ModuloResponsavel.prototype.criarPaginaEdicao = function() {
+      return new FormEdicaoProjeto(this);
+    };
+
+    ModuloResponsavel.prototype.criarPaginaCriacao = function() {
+      return new FormCriacaoProjeto(this);
+    };
+
+    ModuloResponsavel.prototype.abrirItem = function(idItem) {
+      return alert("ver responsavel " + idItem);
+    };
+
+    return ModuloResponsavel;
+
+  })(Modulo);
+
+  addMenu = function(menu, modulo) {
+    var item;
+    item = $('<li data-theme="c"><a href="#' + modulo.paginaListagem.getId() + '" data-transition="slide">' + modulo.login + '</a></li>');
+    menu.append(item);
+    return item.click(function() {
+      return modulo.abrir();
+    });
+  };
+
   abrirTelaPrincipal = function() {
     var content, menu;
     content = $("div[data-role='content']");
@@ -414,7 +504,7 @@
     content.append(menu);
     menu.append('<li data-role="list-divider" role="heading">Módulos</li>');
     addMenu(menu, new ModuloProjetos(content));
-    addMenu(menu, new Modulo(content, 'Responsáveis', 'responsaveis', 'login'));
+    addMenu(menu, new ModuloResponsáveis(content));
     addMenu(menu, new Modulo(content, 'Itens', 'tipositens', 'nome'));
     return addMenu(menu, new Modulo(content, 'Preço', 'tabelasprecos', 'nome'));
   };
