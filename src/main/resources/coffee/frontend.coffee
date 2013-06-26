@@ -192,6 +192,22 @@ class FormEdicaoProjeto extends PaginaEdicao
   montarJSON: ->
     "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}' }"                
 
+class FormCriacaoResponsavel extends PaginaCriacao
+  constructor: (@modulo) ->
+    super(@modulo)
+    
+  desenharConteudoForm: () ->
+    divLogin = $('<div data-role="fieldcontain">')
+    @form.append divLogin    
+    labelLogin = $('<label for="login">Login</label>')        
+    @inputLogin = $('<input name="login" id="login" placeholder="" value="" type="text">')
+                
+    divLogin.append labelLogin
+    divLogin.append @inputLogin
+
+ montarJSON: ->
+    "{ 'login': '#{@inputLogin.val()}' }"                
+
 class FormCriacaoProjeto extends PaginaCriacao
   constructor: (@modulo) ->
     super(@modulo)
@@ -210,8 +226,8 @@ class FormCriacaoProjeto extends PaginaCriacao
     labelCliente = $('<label for="cliente">Cliente</label>')        
     @inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="" type="text">')
                 
-    divNome.append labelCliente
-    divNome.append @inputCliente
+    divCliente.append labelCliente
+    divCliente.append @inputCliente
 
   montarJSON: ->
     "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}' }"                
@@ -233,21 +249,6 @@ class FormEdicaoResponsavel extends PaginaEdicao
   montarJSON: ->
     "{ 'login': '#{@inputLogin.val()}' }"
 
-class FormCriacaoResponsavel extends PaginaCriacao
-  constructor: (@modulo) ->
-    super(@modulo)
-    
-  desenharConteudoForm: () ->
-    divLogin = $('<div data-role="fieldcontain">')
-    @form.append divLogin    
-    labelLogin = $('<label for="login">Login</label>')        
-    @inputLogin = $('<input name="login" id="login" placeholder="" value="" type="text">')
-                
-    divLogin.append labelLogin
-    divLogin.append @inputLogin
-
- montarJSON: ->
-    "{ 'login': '#{@inputLogin.val()}' }"                
 
 
     
@@ -295,21 +296,21 @@ addMenu = (menu, modulo) ->
   item.click -> 
     modulo.abrir()
 
-class ModuloResponsavel extends Modulo
+class ModuloResponsaveis extends Modulo
   constructor: (@lista) ->
-    super(@lista, 'Responsáveis', 'responsaveis', 'login')
+    super(@lista, 'Responsavel', 'responsaveis', 'login')
     
   criarPaginaEdicao: ->
-    new FormEdicaoProjeto(this)
+    new FormEdicaoResponsavel(this)
     
   criarPaginaCriacao: ->
-    new FormCriacaoProjeto(this)
+    new FormCriacaoResponsavel(this)
   
   abrirItem: (idItem) ->
       alert "ver responsavel " + idItem
   
 addMenu = (menu, modulo) ->
-  item = $('<li data-theme="c"><a href="#' + modulo.paginaListagem.getId() + '" data-transition="slide">' + modulo.login + '</a></li>')
+  item = $('<li data-theme="c"><a href="#' + modulo.paginaListagem.getId() + '" data-transition="slide">' + modulo.nome + '</a></li>')
   menu.append item
   item.click -> 
     modulo.abrir()
@@ -325,7 +326,7 @@ abrirTelaPrincipal = ->
   menu.append('<li data-role="list-divider" role="heading">Módulos</li>')
 
   addMenu(menu, new ModuloProjetos content)
-  addMenu(menu, new ModuloResponsáveis content)
+  addMenu(menu, new ModuloResponsaveis content)
   addMenu(menu, new Modulo content, 'Itens', 'tipositens', 'nome')
   addMenu(menu, new Modulo content, 'Preço', 'tabelasprecos', 'nome')
   

@@ -1,5 +1,5 @@
 (function() {
-  var FormCriacaoProjeto, FormCriacaoResponsavel, FormEdicaoProjeto, FormEdicaoResponsavel, Modulo, ModuloProjetos, ModuloResponsavel, Pagina, PaginaCriacao, PaginaEdicao, PaginaListagem, abrirTelaPrincipal, addMenu, atualizarGUI, iniciar,
+  var FormCriacaoProjeto, FormCriacaoResponsavel, FormEdicaoProjeto, FormEdicaoResponsavel, Modulo, ModuloProjetos, ModuloResponsaveis, Pagina, PaginaCriacao, PaginaEdicao, PaginaListagem, abrirTelaPrincipal, addMenu, atualizarGUI, iniciar,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -299,6 +299,35 @@
 
   })(PaginaEdicao);
 
+  FormCriacaoResponsavel = (function(_super) {
+
+    __extends(FormCriacaoResponsavel, _super);
+
+    function FormCriacaoResponsavel(modulo) {
+      this.modulo = modulo;
+      FormCriacaoResponsavel.__super__.constructor.call(this, this.modulo);
+    }
+
+    FormCriacaoResponsavel.prototype.desenharConteudoForm = function() {
+      var divLogin, labelLogin;
+      divLogin = $('<div data-role="fieldcontain">');
+      this.form.append(divLogin);
+      labelLogin = $('<label for="login">Login</label>');
+      this.inputLogin = $('<input name="login" id="login" placeholder="" value="" type="text">');
+      divLogin.append(labelLogin);
+      return divLogin.append(this.inputLogin);
+    };
+
+    return FormCriacaoResponsavel;
+
+  })(PaginaCriacao);
+
+  ({
+    montarJSON: function() {
+      return "{ 'login': '" + (this.inputLogin.val()) + "' }";
+    }
+  });
+
   FormCriacaoProjeto = (function(_super) {
 
     __extends(FormCriacaoProjeto, _super);
@@ -320,8 +349,8 @@
       this.form.append(divCliente);
       labelCliente = $('<label for="cliente">Cliente</label>');
       this.inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="" type="text">');
-      divNome.append(labelCliente);
-      return divNome.append(this.inputCliente);
+      divCliente.append(labelCliente);
+      return divCliente.append(this.inputCliente);
     };
 
     FormCriacaoProjeto.prototype.montarJSON = function() {
@@ -358,35 +387,6 @@
     return FormEdicaoResponsavel;
 
   })(PaginaEdicao);
-
-  FormCriacaoResponsavel = (function(_super) {
-
-    __extends(FormCriacaoResponsavel, _super);
-
-    function FormCriacaoResponsavel(modulo) {
-      this.modulo = modulo;
-      FormCriacaoResponsavel.__super__.constructor.call(this, this.modulo);
-    }
-
-    FormCriacaoResponsavel.prototype.desenharConteudoForm = function() {
-      var divLogin, labelLogin;
-      divLogin = $('<div data-role="fieldcontain">');
-      this.form.append(divLogin);
-      labelLogin = $('<label for="login">Login</label>');
-      this.inputLogin = $('<input name="login" id="login" placeholder="" value="" type="text">');
-      divLogin.append(labelLogin);
-      return divLogin.append(this.inputLogin);
-    };
-
-    return FormCriacaoResponsavel;
-
-  })(PaginaCriacao);
-
-  ({
-    montarJSON: function() {
-      return "{ 'login': '" + (this.inputLogin.val()) + "' }";
-    }
-  });
 
   Modulo = (function() {
 
@@ -462,34 +462,34 @@
     });
   };
 
-  ModuloResponsavel = (function(_super) {
+  ModuloResponsaveis = (function(_super) {
 
-    __extends(ModuloResponsavel, _super);
+    __extends(ModuloResponsaveis, _super);
 
-    function ModuloResponsavel(lista) {
+    function ModuloResponsaveis(lista) {
       this.lista = lista;
-      ModuloResponsavel.__super__.constructor.call(this, this.lista, 'Responsáveis', 'responsaveis', 'login');
+      ModuloResponsaveis.__super__.constructor.call(this, this.lista, 'Responsavel', 'responsaveis', 'login');
     }
 
-    ModuloResponsavel.prototype.criarPaginaEdicao = function() {
-      return new FormEdicaoProjeto(this);
+    ModuloResponsaveis.prototype.criarPaginaEdicao = function() {
+      return new FormEdicaoResponsavel(this);
     };
 
-    ModuloResponsavel.prototype.criarPaginaCriacao = function() {
-      return new FormCriacaoProjeto(this);
+    ModuloResponsaveis.prototype.criarPaginaCriacao = function() {
+      return new FormCriacaoResponsavel(this);
     };
 
-    ModuloResponsavel.prototype.abrirItem = function(idItem) {
+    ModuloResponsaveis.prototype.abrirItem = function(idItem) {
       return alert("ver responsavel " + idItem);
     };
 
-    return ModuloResponsavel;
+    return ModuloResponsaveis;
 
   })(Modulo);
 
   addMenu = function(menu, modulo) {
     var item;
-    item = $('<li data-theme="c"><a href="#' + modulo.paginaListagem.getId() + '" data-transition="slide">' + modulo.login + '</a></li>');
+    item = $('<li data-theme="c"><a href="#' + modulo.paginaListagem.getId() + '" data-transition="slide">' + modulo.nome + '</a></li>');
     menu.append(item);
     return item.click(function() {
       return modulo.abrir();
@@ -504,7 +504,7 @@
     content.append(menu);
     menu.append('<li data-role="list-divider" role="heading">Módulos</li>');
     addMenu(menu, new ModuloProjetos(content));
-    addMenu(menu, new ModuloResponsáveis(content));
+    addMenu(menu, new ModuloResponsaveis(content));
     addMenu(menu, new Modulo(content, 'Itens', 'tipositens', 'nome'));
     return addMenu(menu, new Modulo(content, 'Preço', 'tabelasprecos', 'nome'));
   };
