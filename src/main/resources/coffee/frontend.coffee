@@ -1,7 +1,10 @@
-atualizarGUI = (page) ->
+window.App={}
+
+
+App.atualizarGUI = (page) ->
   page.trigger('create')
 
-class Pagina
+class App.Pagina
   constructor: (@modulo, @idMae) ->
     body  = $("body")
     @page = $('<div data-role="page" data-theme="a" id="' + this.getId() + '">"')
@@ -20,7 +23,7 @@ class Pagina
     "pagina" + @modulo.url
     
   atualizar: ->
-    atualizarGUI @page
+    App.atualizarGUI @page
 
   desenharConteudo: ->
     this.desenharBotaoVoltar()
@@ -57,7 +60,7 @@ class Pagina
     request.always =>
         callback()
   
-class PaginaListagem extends Pagina
+class App.PaginaListagem extends App.Pagina
   constructor: (@modulo, @idMae) ->
     super(@modulo, @idMae)
 
@@ -94,7 +97,7 @@ class PaginaListagem extends Pagina
     criar.click =>
       @modulo.novoItem()
 
-class PaginaEdicao extends Pagina
+class App.PaginaEdicao extends App.Pagina
   constructor: (@modulo) ->
     super(@modulo, @modulo.paginaListagem.getId())
     @form = $('<form>')
@@ -131,7 +134,7 @@ class PaginaEdicao extends Pagina
   montarJSON: ->
     "{}"   
 
-class PaginaCriacao extends Pagina
+class App.PaginaCriacao extends App.Pagina
   constructor: (@modulo) ->
     super(@modulo, @modulo.paginaListagem.getId())
     @form = $('<form>')
@@ -168,66 +171,18 @@ class PaginaCriacao extends Pagina
     "{}"   
 
 
-class FormEdicaoProjeto extends PaginaEdicao
-  constructor: (@modulo) ->
-    super(@modulo)
     
-  desenharConteudoForm: (jsonObj) ->
-    divNome = $('<div data-role="fieldcontain">')
-    @form.append divNome    
-    labelNome = $('<label for="nome">Nome</label>')        
-    @inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">')
-                
-    divNome.append labelNome
-    divNome.append @inputNome
-
-    divCliente = $('<div data-role="fieldcontain">')
-    @form.append divCliente    
-    labelCliente = $('<label for="cliente">Cliente</label>')        
-    @inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="' + jsonObj.cliente + '" type="text">')
-                
-    divNome.append labelCliente
-    divNome.append @inputCliente
-
-  montarJSON: ->
-    "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}' }"                
-
-class FormCriacaoProjeto extends PaginaCriacao
-  constructor: (@modulo) ->
-    super(@modulo)
-    
-  desenharConteudoForm: () ->
-    divNome = $('<div data-role="fieldcontain">')
-    @form.append divNome    
-    labelNome = $('<label for="nome">Nome</label>')        
-    @inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">')
-                
-    divNome.append labelNome
-    divNome.append @inputNome
-
-    divCliente = $('<div data-role="fieldcontain">')
-    @form.append divCliente    
-    labelCliente = $('<label for="cliente">Cliente</label>')        
-    @inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="" type="text">')
-                
-    divNome.append labelCliente
-    divNome.append @inputCliente
-
-  montarJSON: ->
-    "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}' }"                
-
-    
-class Modulo
+class App.Modulo
   constructor: (@lista, @nome, @url, @propriedade) ->
-    @paginaListagem = new PaginaListagem(this, "principal")
+    @paginaListagem = new App.PaginaListagem(this, "principal")
     @paginaEdicao = @criarPaginaEdicao()
     @paginaCriacao = @criarPaginaCriacao()
   
   criarPaginaEdicao: ->
-    new PaginaEdicao(this)
+    new App.PaginaEdicao(this)
 
   criarPaginaCriacao: ->
-    new PaginaCriacao(this)
+    new App.PaginaCriacao(this)
     
   abrir: ->
     @paginaListagem.desenharConteudo()
@@ -241,43 +196,3 @@ class Modulo
   editarItem: (idItem) ->
     @paginaEdicao.abrir(idItem)
 
-
-class ModuloProjetos extends Modulo
-  constructor: (@lista) ->
-    super(@lista, 'Projetos', 'projetos', 'nome')
-    
-  criarPaginaEdicao: ->
-    new FormEdicaoProjeto(this)
-    
-  criarPaginaCriacao: ->
-    new FormCriacaoProjeto(this)
-  
-  abrirItem: (idItem) ->
-      alert "ver projeto " + idItem
-  
-addMenu = (menu, modulo) ->
-  item = $('<li data-theme="c"><a href="#' + modulo.paginaListagem.getId() + '" data-transition="slide">' + modulo.nome + '</a></li>')
-  menu.append item
-  item.click -> 
-    modulo.abrir()
-
-abrirTelaPrincipal = ->
-  content  = $("div[data-role='content']")
-  content.empty()
-  
-  menu = $('<ul data-role="listview" data-divider-theme="b" data-inset="true">') 
-  content.append menu
-  menu.append('<li data-role="list-divider" role="heading">Módulos</li>')
-
-  addMenu(menu, new ModuloProjetos content)
-  addMenu(menu, new Modulo content, 'Responsáveis', 'responsaveis', 'login')
-  addMenu(menu, new Modulo content, 'Itens', 'tipositens', 'nome')
-  addMenu(menu, new Modulo content, 'Preço', 'tabelasprecos', 'nome')
-  
-iniciar = ->
-  abrirTelaPrincipal()
-  $("#principal").page()
-  
-$ -> 
-  iniciar()
-  atualizarGUI($('#principal'))

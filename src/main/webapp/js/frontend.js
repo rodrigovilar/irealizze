@@ -1,14 +1,15 @@
 (function() {
-  var FormCriacaoProjeto, FormEdicaoProjeto, Modulo, ModuloProjetos, Pagina, PaginaCriacao, PaginaEdicao, PaginaListagem, abrirTelaPrincipal, addMenu, atualizarGUI, iniciar,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  atualizarGUI = function(page) {
+  window.App = {};
+
+  App.atualizarGUI = function(page) {
     return page.trigger('create');
   };
 
-  Pagina = (function() {
+  App.Pagina = (function() {
 
     function Pagina(modulo, idMae) {
       var body;
@@ -35,7 +36,7 @@
     };
 
     Pagina.prototype.atualizar = function() {
-      return atualizarGUI(this.page);
+      return App.atualizarGUI(this.page);
     };
 
     Pagina.prototype.desenharConteudo = function() {
@@ -88,7 +89,7 @@
 
   })();
 
-  PaginaListagem = (function(_super) {
+  App.PaginaListagem = (function(_super) {
 
     __extends(PaginaListagem, _super);
 
@@ -144,9 +145,9 @@
 
     return PaginaListagem;
 
-  })(Pagina);
+  })(App.Pagina);
 
-  PaginaEdicao = (function(_super) {
+  App.PaginaEdicao = (function(_super) {
 
     __extends(PaginaEdicao, _super);
 
@@ -206,9 +207,9 @@
 
     return PaginaEdicao;
 
-  })(Pagina);
+  })(App.Pagina);
 
-  PaginaCriacao = (function(_super) {
+  App.PaginaCriacao = (function(_super) {
 
     __extends(PaginaCriacao, _super);
 
@@ -264,92 +265,26 @@
 
     return PaginaCriacao;
 
-  })(Pagina);
+  })(App.Pagina);
 
-  FormEdicaoProjeto = (function(_super) {
-
-    __extends(FormEdicaoProjeto, _super);
-
-    function FormEdicaoProjeto(modulo) {
-      this.modulo = modulo;
-      FormEdicaoProjeto.__super__.constructor.call(this, this.modulo);
-    }
-
-    FormEdicaoProjeto.prototype.desenharConteudoForm = function(jsonObj) {
-      var divCliente, divNome, labelCliente, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
-      divNome.append(labelNome);
-      divNome.append(this.inputNome);
-      divCliente = $('<div data-role="fieldcontain">');
-      this.form.append(divCliente);
-      labelCliente = $('<label for="cliente">Cliente</label>');
-      this.inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="' + jsonObj.cliente + '" type="text">');
-      divNome.append(labelCliente);
-      return divNome.append(this.inputCliente);
-    };
-
-    FormEdicaoProjeto.prototype.montarJSON = function() {
-      return "{ 'nome': '" + (this.inputNome.val()) + "', 'cliente': '" + (this.inputCliente.val()) + "' }";
-    };
-
-    return FormEdicaoProjeto;
-
-  })(PaginaEdicao);
-
-  FormCriacaoProjeto = (function(_super) {
-
-    __extends(FormCriacaoProjeto, _super);
-
-    function FormCriacaoProjeto(modulo) {
-      this.modulo = modulo;
-      FormCriacaoProjeto.__super__.constructor.call(this, this.modulo);
-    }
-
-    FormCriacaoProjeto.prototype.desenharConteudoForm = function() {
-      var divCliente, divNome, labelCliente, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">');
-      divNome.append(labelNome);
-      divNome.append(this.inputNome);
-      divCliente = $('<div data-role="fieldcontain">');
-      this.form.append(divCliente);
-      labelCliente = $('<label for="cliente">Cliente</label>');
-      this.inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="" type="text">');
-      divNome.append(labelCliente);
-      return divNome.append(this.inputCliente);
-    };
-
-    FormCriacaoProjeto.prototype.montarJSON = function() {
-      return "{ 'nome': '" + (this.inputNome.val()) + "', 'cliente': '" + (this.inputCliente.val()) + "' }";
-    };
-
-    return FormCriacaoProjeto;
-
-  })(PaginaCriacao);
-
-  Modulo = (function() {
+  App.Modulo = (function() {
 
     function Modulo(lista, nome, url, propriedade) {
       this.lista = lista;
       this.nome = nome;
       this.url = url;
       this.propriedade = propriedade;
-      this.paginaListagem = new PaginaListagem(this, "principal");
+      this.paginaListagem = new App.PaginaListagem(this, "principal");
       this.paginaEdicao = this.criarPaginaEdicao();
       this.paginaCriacao = this.criarPaginaCriacao();
     }
 
     Modulo.prototype.criarPaginaEdicao = function() {
-      return new PaginaEdicao(this);
+      return new App.PaginaEdicao(this);
     };
 
     Modulo.prototype.criarPaginaCriacao = function() {
-      return new PaginaCriacao(this);
+      return new App.PaginaCriacao(this);
     };
 
     Modulo.prototype.abrir = function() {
@@ -371,62 +306,5 @@
     return Modulo;
 
   })();
-
-  ModuloProjetos = (function(_super) {
-
-    __extends(ModuloProjetos, _super);
-
-    function ModuloProjetos(lista) {
-      this.lista = lista;
-      ModuloProjetos.__super__.constructor.call(this, this.lista, 'Projetos', 'projetos', 'nome');
-    }
-
-    ModuloProjetos.prototype.criarPaginaEdicao = function() {
-      return new FormEdicaoProjeto(this);
-    };
-
-    ModuloProjetos.prototype.criarPaginaCriacao = function() {
-      return new FormCriacaoProjeto(this);
-    };
-
-    ModuloProjetos.prototype.abrirItem = function(idItem) {
-      return alert("ver projeto " + idItem);
-    };
-
-    return ModuloProjetos;
-
-  })(Modulo);
-
-  addMenu = function(menu, modulo) {
-    var item;
-    item = $('<li data-theme="c"><a href="#' + modulo.paginaListagem.getId() + '" data-transition="slide">' + modulo.nome + '</a></li>');
-    menu.append(item);
-    return item.click(function() {
-      return modulo.abrir();
-    });
-  };
-
-  abrirTelaPrincipal = function() {
-    var content, menu;
-    content = $("div[data-role='content']");
-    content.empty();
-    menu = $('<ul data-role="listview" data-divider-theme="b" data-inset="true">');
-    content.append(menu);
-    menu.append('<li data-role="list-divider" role="heading">Módulos</li>');
-    addMenu(menu, new ModuloProjetos(content));
-    addMenu(menu, new Modulo(content, 'Responsáveis', 'responsaveis', 'login'));
-    addMenu(menu, new Modulo(content, 'Itens', 'tipositens', 'nome'));
-    return addMenu(menu, new Modulo(content, 'Preço', 'tabelasprecos', 'nome'));
-  };
-
-  iniciar = function() {
-    abrirTelaPrincipal();
-    return $("#principal").page();
-  };
-
-  $(function() {
-    iniciar();
-    return atualizarGUI($('#principal'));
-  });
 
 }).call(this);
