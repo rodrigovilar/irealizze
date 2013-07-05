@@ -85,7 +85,7 @@ class PaginaListagem extends Pagina
     ver.click =>
       @modulo.abrirItem(registro.id)
     editar.click =>
-      @modulo.editarItem(registro.id)
+      @modulo.editarItem(registro.id, registro.version)
 
 
   desenharBotaoNovo: ->
@@ -107,7 +107,7 @@ class PaginaEdicao extends Pagina
   desenharConteudo: ->
     @form.empty()    
     
-  abrir: (@idItem) ->
+  abrir: (@idItem, @versionItem) ->
     this.desenharConteudo()    
     $.getJSON @modulo.url + "/" + @idItem, (jsonObj) =>
       this.desenharConteudoForm(jsonObj)
@@ -186,8 +186,8 @@ class FormEdicaoProjeto extends PaginaEdicao
     labelCliente = $('<label for="cliente">Cliente</label>')        
     @inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="' + jsonObj.cliente + '" type="text">')
                 
-    divNome.append labelCliente
-    divNome.append @inputCliente
+    divCliente.append labelCliente
+    divCliente.append @inputCliente
 
   montarJSON: ->
     "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}' }"                
@@ -205,7 +205,7 @@ class FormCriacaoResponsavel extends PaginaCriacao
     divLogin.append labelLogin
     divLogin.append @inputLogin
 
- montarJSON: ->
+  montarJSON: ->
     "{ 'login': '#{@inputLogin.val()}' }"                
 
 class FormCriacaoProjeto extends PaginaCriacao
@@ -247,11 +247,8 @@ class FormEdicaoResponsavel extends PaginaEdicao
     divLogin.append @inputLogin
 
   montarJSON: ->
-    "{ 'login': '#{@inputLogin.val()}' }"
-
-
-
-    
+    "{ 'login': '#{@inputLogin.val()}', 'id': '#{@idItem}', 'version': '#{@versionItem}' }"
+   
 class Modulo
   constructor: (@lista, @nome, @url, @propriedade) ->
     @paginaListagem = new PaginaListagem(this, "principal")
@@ -273,8 +270,8 @@ class Modulo
   abrirItem: (idItem) ->
     alert "ver " + idItem
   
-  editarItem: (idItem) ->
-    @paginaEdicao.abrir(idItem)
+  editarItem: (idItem, versionItem) ->
+    @paginaEdicao.abrir(idItem, versionItem)
 
 
 class ModuloProjetos extends Modulo
@@ -314,8 +311,6 @@ addMenu = (menu, modulo) ->
   menu.append item
   item.click -> 
     modulo.abrir()
-
-
 
 abrirTelaPrincipal = ->
   content  = $("div[data-role='content']")

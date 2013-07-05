@@ -128,7 +128,7 @@
         return _this.modulo.abrirItem(registro.id);
       });
       return editar.click(function() {
-        return _this.modulo.editarItem(registro.id);
+        return _this.modulo.editarItem(registro.id, registro.version);
       });
     };
 
@@ -168,9 +168,10 @@
       return this.form.empty();
     };
 
-    PaginaEdicao.prototype.abrir = function(idItem) {
+    PaginaEdicao.prototype.abrir = function(idItem, versionItem) {
       var _this = this;
       this.idItem = idItem;
+      this.versionItem = versionItem;
       this.desenharConteudo();
       return $.getJSON(this.modulo.url + "/" + this.idItem, function(jsonObj) {
         _this.desenharConteudoForm(jsonObj);
@@ -287,8 +288,8 @@
       this.form.append(divCliente);
       labelCliente = $('<label for="cliente">Cliente</label>');
       this.inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="' + jsonObj.cliente + '" type="text">');
-      divNome.append(labelCliente);
-      return divNome.append(this.inputCliente);
+      divCliente.append(labelCliente);
+      return divCliente.append(this.inputCliente);
     };
 
     FormEdicaoProjeto.prototype.montarJSON = function() {
@@ -318,15 +319,13 @@
       return divLogin.append(this.inputLogin);
     };
 
+    FormCriacaoResponsavel.prototype.montarJSON = function() {
+      return "{ 'login': '" + (this.inputLogin.val()) + "' }";
+    };
+
     return FormCriacaoResponsavel;
 
   })(PaginaCriacao);
-
-  ({
-    montarJSON: function() {
-      return "{ 'login': '" + (this.inputLogin.val()) + "' }";
-    }
-  });
 
   FormCriacaoProjeto = (function(_super) {
 
@@ -381,7 +380,7 @@
     };
 
     FormEdicaoResponsavel.prototype.montarJSON = function() {
-      return "{ 'login': '" + (this.inputLogin.val()) + "' }";
+      return "{ 'login': '" + (this.inputLogin.val()) + "', 'id': '" + this.idItem + "', 'version': '" + this.versionItem + "' }";
     };
 
     return FormEdicaoResponsavel;
@@ -420,8 +419,8 @@
       return alert("ver " + idItem);
     };
 
-    Modulo.prototype.editarItem = function(idItem) {
-      return this.paginaEdicao.abrir(idItem);
+    Modulo.prototype.editarItem = function(idItem, versionItem) {
+      return this.paginaEdicao.abrir(idItem, versionItem);
     };
 
     return Modulo;
