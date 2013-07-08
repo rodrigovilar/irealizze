@@ -196,7 +196,7 @@
       var json,
         _this = this;
       json = this.montarJSON();
-      return this.enviarPut(this.modulo.url + "/" + this.idItem, json, function() {
+      return this.enviarPut(this.modulo.url, json, function() {
         return _this.modulo.abrir();
       });
     };
@@ -380,7 +380,7 @@
     };
 
     FormEdicaoResponsavel.prototype.montarJSON = function() {
-      return "{ 'login': '" + (this.inputLogin.val()) + "', 'id': '" + this.idItem + "', 'version': '" + this.versionItem + "' }";
+      return "{ 'login': '" + (this.inputLogin.val()) + "', 'id': " + this.idItem + ", 'version': " + this.versionItem + " }";
     };
 
     return FormEdicaoResponsavel;
@@ -479,7 +479,7 @@
     };
 
     ModuloResponsaveis.prototype.abrirItem = function(idItem) {
-      return alert("ver responsavel " + idItem);
+      return alert("ver responsaveis " + idItem);
     };
 
     return ModuloResponsaveis;

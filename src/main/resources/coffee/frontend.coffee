@@ -125,7 +125,7 @@ class PaginaEdicao extends Pagina
     
   salvar: =>
     json = this.montarJSON()        
-    this.enviarPut @modulo.url + "/" + @idItem, json, =>
+    this.enviarPut @modulo.url, json, =>
         @modulo.abrir()
         
   montarJSON: ->
@@ -247,7 +247,7 @@ class FormEdicaoResponsavel extends PaginaEdicao
     divLogin.append @inputLogin
 
   montarJSON: ->
-    "{ 'login': '#{@inputLogin.val()}', 'id': '#{@idItem}', 'version': '#{@versionItem}' }"
+    "{ 'login': '#{@inputLogin.val()}', 'id': #{@idItem}, 'version': #{@versionItem} }"
    
 class Modulo
   constructor: (@lista, @nome, @url, @propriedade) ->
@@ -304,7 +304,7 @@ class ModuloResponsaveis extends Modulo
     new FormCriacaoResponsavel(this)
   
   abrirItem: (idItem) ->
-      alert "ver responsavel " + idItem
+      alert "ver responsaveis " + idItem
   
 addMenu = (menu, modulo) ->
   item = $('<li data-theme="c"><a href="#' + modulo.paginaListagem.getId() + '" data-transition="slide">' + modulo.nome + '</a></li>')
