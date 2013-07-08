@@ -88,7 +88,7 @@ class App.PaginaListagem extends App.Pagina
     ver.click =>
       @modulo.abrirItem(registro.id)
     editar.click =>
-      @modulo.editarItem(registro.id)
+      @modulo.editarItem(registro.id, registro.version)
 
 
   desenharBotaoNovo: ->
@@ -110,7 +110,7 @@ class App.PaginaEdicao extends App.Pagina
   desenharConteudo: ->
     @form.empty()    
     
-  abrir: (@idItem) ->
+  abrir: (@idItem, @versionItem) ->
     this.desenharConteudo()    
     $.getJSON @modulo.url + "/" + @idItem, (jsonObj) =>
       this.desenharConteudoForm(jsonObj)
@@ -128,7 +128,7 @@ class App.PaginaEdicao extends App.Pagina
     
   salvar: =>
     json = this.montarJSON()        
-    this.enviarPut @modulo.url + "/" + @idItem, json, =>
+    this.enviarPut @modulo.url, json, =>
         @modulo.abrir()
         
   montarJSON: ->
@@ -193,6 +193,6 @@ class App.Modulo
   abrirItem: (idItem) ->
     alert "ver " + idItem
   
-  editarItem: (idItem) ->
-    @paginaEdicao.abrir(idItem)
+  editarItem: (idItem, versionItem) ->
+    @paginaEdicao.abrir(idItem, versionItem)
 

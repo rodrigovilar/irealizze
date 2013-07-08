@@ -28,7 +28,7 @@
     };
 
     FormEdicaoProjeto.prototype.montarJSON = function() {
-      return "{ 'nome': '" + (this.inputNome.val()) + "', 'cliente': '" + (this.inputCliente.val()) + "' }";
+      return "{ 'nome': '" + (this.inputNome.val()) + "', 'cliente': '" + (this.inputCliente.val()) + "', 'id': " + this.idItem + ", 'version': " + this.versionItem + " }";
     };
 
     return FormEdicaoProjeto;

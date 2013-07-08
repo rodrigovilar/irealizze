@@ -20,7 +20,7 @@ class App.FormEdicaoProjeto extends App.PaginaEdicao
     divNome.append @inputCliente
 
   montarJSON: ->
-    "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}' }"                
+    "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}', 'id': #{@idItem}, 'version': #{@versionItem} }"                
 
 class App.FormCriacaoProjeto extends App.PaginaCriacao
   constructor: (@modulo) ->
