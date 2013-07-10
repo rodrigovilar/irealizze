@@ -73,10 +73,6 @@
       return new App.FormCriacaoResponsavel(this);
     };
 
-    ModuloResponsaveis.prototype.abrirItem = function(idItem) {
-      return alert("ver responsaveis " + idItem);
-    };
-
     return ModuloResponsaveis;
 
   })(App.Modulo);

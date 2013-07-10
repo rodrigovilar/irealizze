@@ -39,6 +39,3 @@ class App.ModuloResponsaveis extends App.Modulo
     
   criarPaginaCriacao: ->
     new App.FormCriacaoResponsavel(this)
-  
-  abrirItem: (idItem) ->
-      alert "ver responsaveis " + idItem       

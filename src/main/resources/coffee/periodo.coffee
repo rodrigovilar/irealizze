@@ -59,3 +59,5 @@ class App.ModuloProjetos extends App.Modulo
   criarPaginaCriacao: ->
     new App.FormCriacaoProjeto(this)
   
+  abrirItem: (idItem) ->
+      alert "ver projeto " + idItem

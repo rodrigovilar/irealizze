@@ -85,6 +85,10 @@
       return new App.FormCriacaoProjeto(this);
     };
 
+    ModuloProjetos.prototype.abrirItem = function(idItem) {
+      return alert("ver projeto " + idItem);
+    };
+
     return ModuloProjetos;
 
   })(App.Modulo);
