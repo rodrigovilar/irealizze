@@ -15,7 +15,7 @@ abrirTelaPrincipal = ->
 
   addMenu(menu, new App.ModuloProjetos content)
   addMenu(menu, new App.ModuloResponsaveis content)
-  addMenu(menu, new App.Modulo content, 'Itens', 'tipositens', 'nome')
+  addMenu(menu, new App.ModuloTipoItem content)
   addMenu(menu, new App.ModuloTabelaPreco content)
   
 iniciar = ->
