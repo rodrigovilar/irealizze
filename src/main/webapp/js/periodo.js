@@ -2,95 +2,114 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  App.FormEdicaoProjeto = (function(_super) {
+  App.FormEdicaoPeriodo = (function(_super) {
 
-    __extends(FormEdicaoProjeto, _super);
+    __extends(FormEdicaoPeriodo, _super);
 
-    function FormEdicaoProjeto(modulo) {
+    function FormEdicaoPeriodo(modulo) {
       this.modulo = modulo;
-      FormEdicaoProjeto.__super__.constructor.call(this, this.modulo);
+      FormEdicaoPeriodo.__super__.constructor.call(this, this.modulo);
     }
 
-    FormEdicaoProjeto.prototype.desenharConteudoForm = function(jsonObj) {
-      var divCliente, divNome, labelCliente, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
-      divNome.append(labelNome);
-      divNome.append(this.inputNome);
-      divCliente = $('<div data-role="fieldcontain">');
-      this.form.append(divCliente);
-      labelCliente = $('<label for="cliente">Cliente</label>');
-      this.inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="' + jsonObj.cliente + '" type="text">');
-      divNome.append(labelCliente);
-      return divNome.append(this.inputCliente);
+    FormEdicaoPeriodo.prototype.desenharConteudoForm = function(jsonObj) {
+      var divDataLimite, divProjeto, labelDataLimite, labelProjeto;
+      divDataLimite = $('<div data-role="fieldcontain">');
+      this.form.append(divDataLimite);
+      labelDataLimite = $('<label for="dataLimite">DataLimite</label>');
+      this.inputDataLimite = $('<input name="dataLimite" id="dataLimite" placeholder="" value="' + jsonObj.dataLimite + '" type="text">');
+      divDataLimite.append(labelDataLimite);
+      divDataLimite.append(this.inputDataLimite);
+      divProjeto = $('<div data-role="fieldcontain">');
+      this.form.append(divProjeto);
+      labelProjeto = $('<label for="projeto">Projeto</label>');
+      this.inputProjeto = $('<input name="projeto" id="projeto" placeholder="" value="' + jsonObj.cliente + '" type="text">');
+      divProjeto.append(labelProjeto);
+      return divProjeto.append(this.inputProjeto);
     };
 
-    FormEdicaoProjeto.prototype.montarJSON = function() {
-      return "{ 'nome': '" + (this.inputNome.val()) + "', 'cliente': '" + (this.inputCliente.val()) + "', 'id': " + this.idItem + ", 'version': " + this.versionItem + " }";
+    FormEdicaoPeriodo.prototype.montarJSON = function() {
+      return "{ 'dataLimite': '" + (this.inputDataLimite.val()) + "', 'projeto': '" + (this.inputProjeto.val()) + "', 'id': " + this.idItem + ", 'version': " + this.versionItem + " }";
     };
 
-    return FormEdicaoProjeto;
+    return FormEdicaoPeriodo;
 
   })(App.PaginaEdicao);
 
-  App.FormCriacaoProjeto = (function(_super) {
+  App.FormCriacaoPeriodo = (function(_super) {
 
-    __extends(FormCriacaoProjeto, _super);
+    __extends(FormCriacaoPeriodo, _super);
 
-    function FormCriacaoProjeto(modulo) {
+    function FormCriacaoPeriodo(modulo) {
       this.modulo = modulo;
-      FormCriacaoProjeto.__super__.constructor.call(this, this.modulo);
+      FormCriacaoPeriodo.__super__.constructor.call(this, this.modulo);
     }
 
-    FormCriacaoProjeto.prototype.desenharConteudoForm = function() {
-      var divCliente, divNome, labelCliente, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">');
-      divNome.append(labelNome);
-      divNome.append(this.inputNome);
-      divCliente = $('<div data-role="fieldcontain">');
-      this.form.append(divCliente);
-      labelCliente = $('<label for="cliente">Cliente</label>');
-      this.inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="" type="text">');
-      divNome.append(labelCliente);
-      return divNome.append(this.inputCliente);
+    FormCriacaoPeriodo.prototype.desenharConteudoForm = function() {
+      var divDataLimite, labelDataLimite;
+      divDataLimite = $('<div data-role="fieldcontain">');
+      this.form.append(divDataLimite);
+      labelDataLimite = $('<label for="dataLimite">DataLimite</label>');
+      this.inputDataLimite = $('<input name="dataLimite" id="dataLimite" placeholder="" value="" type="date">');
+      divDataLimite.append(labelDataLimite);
+      return divDataLimite.append(this.inputDataLimite);
     };
 
-    FormCriacaoProjeto.prototype.montarJSON = function() {
-      return "{ 'nome': '" + (this.inputNome.val()) + "', 'cliente': '" + (this.inputCliente.val()) + "' }";
+    FormCriacaoPeriodo.prototype.montarJSON = function() {
+      return "{ 'dataLimite': '" + (this.inputDataLimite.val()) + "', 'projeto': '" + this.modulo.idObjetoPai + "' }";
     };
 
-    return FormCriacaoProjeto;
+    return FormCriacaoPeriodo;
 
   })(App.PaginaCriacao);
 
-  App.ModuloProjetos = (function(_super) {
+  App.PaginaDetalhesPeriodo = (function(_super) {
 
-    __extends(ModuloProjetos, _super);
+    __extends(PaginaDetalhesPeriodo, _super);
 
-    function ModuloProjetos(lista) {
-      this.lista = lista;
-      ModuloProjetos.__super__.constructor.call(this, this.lista, 'Projetos', 'projetos', 'nome');
+    function PaginaDetalhesPeriodo(modulo) {
+      this.modulo = modulo;
+      PaginaDetalhesPeriodo.__super__.constructor.call(this, this.modulo);
     }
 
-    ModuloProjetos.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoProjeto(this);
+    PaginaDetalhesPeriodo.prototype.carregar = function(registro) {
+      return this.titulo.html("" + registro[this.modulo.propriedade]);
     };
 
-    ModuloProjetos.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoProjeto(this);
+    PaginaDetalhesPeriodo.prototype.montarJSON = function() {
+      return "{ 'periodo do projeto', 'periodos': '" + (this.inputPeriodos.val()) + "' }";
     };
 
-    ModuloProjetos.prototype.abrirItem = function(idItem) {
-      return alert("ver projeto " + idItem);
+    return PaginaDetalhesPeriodo;
+
+  })(App.PaginaDetalhes);
+
+  App.ModuloPeriodos = (function(_super) {
+
+    __extends(ModuloPeriodos, _super);
+
+    function ModuloPeriodos(moduloPai) {
+      this.moduloPai = moduloPai;
+      ModuloPeriodos.__super__.constructor.call(this, 'Períodos', 'periodos', 'dataLimite', this.moduloPai);
+    }
+
+    ModuloPeriodos.prototype.criarPaginaEdicao = function() {
+      return new App.FormEdicaoPeriodo(this);
     };
 
-    return ModuloProjetos;
+    ModuloPeriodos.prototype.criarPaginaCriacao = function() {
+      return new App.FormCriacaoPeriodo(this);
+    };
 
-  })(App.Modulo);
+    ModuloPeriodos.prototype.criarPaginaDetalhes = function() {
+      return new App.PaginaDetalhesPeriodo(this);
+    };
+
+    ModuloPeriodos.prototype.abrirItem = function(idItem) {
+      return alert("ver periodo " + idItem);
+    };
+
+    return ModuloPeriodos;
+
+  })(App.SubModulo);
 
 }).call(this);

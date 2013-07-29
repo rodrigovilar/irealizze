@@ -13,10 +13,10 @@ abrirTelaPrincipal = ->
   content.append menu
   menu.append('<li data-role="list-divider" role="heading">Módulos</li>')
 
-  addMenu(menu, new App.ModuloProjetos content)
-  addMenu(menu, new App.ModuloResponsaveis content)
-  addMenu(menu, new App.ModuloTipoItem content)
-  addMenu(menu, new App.ModuloTabelaPreco content)
+  addMenu(menu, new App.ModuloProjetos)
+  addMenu(menu, new App.ModuloResponsaveis)
+  addMenu(menu, new App.ModuloTipoItem)
+  addMenu(menu, new App.ModuloTabelaPreco)
   
 iniciar = ->
   abrirTelaPrincipal()

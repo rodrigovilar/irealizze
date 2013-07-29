@@ -30,12 +30,29 @@ class App.FormEdicaoResponsavel extends App.PaginaEdicao
   montarJSON: ->
     "{ 'login': '#{@inputLogin.val()}', 'id': #{@idItem}, 'version': #{@versionItem} }"
     
+class App.PaginaDetalhesResponsavel extends App.PaginaDetalhes
+  constructor:(@modulo)->
+    super(@modulo)
+     
+  carregar: (registro) ->
+    @titulo.html "#{registro[@modulo.propriedade]}"
+        
+    botaoResponsavel = $('<a data-role="button" data-inline="true" href="#' + @modulo.moduloResponsavel.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Responsavel</a>')
+    @content.append botaoResponsavel
+    botaoResponsavel.click =>
+      @modulo.moduloResponsavel.abrir(registro.id)
+    
+    
+  montarJSON: ->
+    "{ 'periodo do projeto', 'periodos': '#{@inputPeriodos.val()}' }"
+ 
+
 class App.ModuloResponsaveis extends App.Modulo
-  constructor: (@lista) ->
-    super(@lista, 'Responsavel', 'responsaveis', 'login')
+  constructor: () ->
+    super('Responsavel', 'responsaveis', 'login')
     
   criarPaginaEdicao: ->
     new App.FormEdicaoResponsavel(this)
     
   criarPaginaCriacao: ->
-    new App.FormCriacaoResponsavel(this)
+    new App.FormCriacaoResponsavel(this)  

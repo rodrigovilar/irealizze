@@ -103,8 +103,8 @@ class App.PaginaListagem extends App.Pagina
 
 class App.PaginaDetalhes extends App.Pagina
 
-  constructor: (@modulo, @idMae) ->
-    super(@modulo, @idMae)
+  constructor: (@modulo) ->
+    super(@modulo, @modulo.paginaListagem.getId())
 
   getId: ->
     "detalhes" + @modulo.url
@@ -205,20 +205,23 @@ class App.PaginaCriacao extends App.Pagina
 
 class App.Modulo
 
-  constructor: (@lista, @nome, @url, @propriedade) ->
-    @paginaListagem = new App.PaginaListagem(this, "principal")
+  constructor: (@nome, @url, @propriedade) ->
+    @paginaListagem = @criarPaginaListagem()
     @paginaEdicao = @criarPaginaEdicao()
     @paginaCriacao = @criarPaginaCriacao()
     @paginaDetalhes = @criarPaginaDetalhes()
   
+  criarPaginaListagem: ->
+    new App.PaginaListagem(this, "principal")
+   
   criarPaginaEdicao: ->
-    new App.PaginaEdicao(this, @paginaListagem.getId())
+    new App.PaginaEdicao(this)
 
   criarPaginaCriacao: ->
-    new App.PaginaCriacao(this, @paginaListagem.getId())
+    new App.PaginaCriacao(this)
 
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhes(this, @paginaListagem.getId())
+    new App.PaginaDetalhes(this)
     
   abrir: ->
     @paginaListagem.desenharConteudo()
@@ -232,3 +235,14 @@ class App.Modulo
   editarItem: (idItem, versionItem) ->
     @paginaEdicao.abrir(idItem, versionItem)
 
+class App.SubModulo extends App.Modulo
+  constructor: (@nome, @url, @propriedade, @moduloPai) ->
+    super(@nome, @url, @propriedade)
+    
+  criarPaginaListagem: ->
+    new App.PaginaListagem(this, @moduloPai.paginaDetalhes.getId())
+  
+  abrir: (@idObjetoPai) ->
+    @paginaListagem.desenharConteudo()
+
+  

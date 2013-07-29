@@ -56,13 +56,40 @@
 
   })(App.PaginaEdicao);
 
+  App.PaginaDetalhesResponsavel = (function(_super) {
+
+    __extends(PaginaDetalhesResponsavel, _super);
+
+    function PaginaDetalhesResponsavel(modulo) {
+      this.modulo = modulo;
+      PaginaDetalhesResponsavel.__super__.constructor.call(this, this.modulo);
+    }
+
+    PaginaDetalhesResponsavel.prototype.carregar = function(registro) {
+      var botaoResponsavel,
+        _this = this;
+      this.titulo.html("" + registro[this.modulo.propriedade]);
+      botaoResponsavel = $('<a data-role="button" data-inline="true" href="#' + this.modulo.moduloResponsavel.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Responsavel</a>');
+      this.content.append(botaoResponsavel);
+      return botaoResponsavel.click(function() {
+        return _this.modulo.moduloResponsavel.abrir(registro.id);
+      });
+    };
+
+    PaginaDetalhesResponsavel.prototype.montarJSON = function() {
+      return "{ 'periodo do projeto', 'periodos': '" + (this.inputPeriodos.val()) + "' }";
+    };
+
+    return PaginaDetalhesResponsavel;
+
+  })(App.PaginaDetalhes);
+
   App.ModuloResponsaveis = (function(_super) {
 
     __extends(ModuloResponsaveis, _super);
 
-    function ModuloResponsaveis(lista) {
-      this.lista = lista;
-      ModuloResponsaveis.__super__.constructor.call(this, this.lista, 'Responsavel', 'responsaveis', 'login');
+    function ModuloResponsaveis() {
+      ModuloResponsaveis.__super__.constructor.call(this, 'Responsavel', 'responsaveis', 'login');
     }
 
     ModuloResponsaveis.prototype.criarPaginaEdicao = function() {
