@@ -20,7 +20,8 @@ class App.FormEdicaoPeriodo extends App.PaginaEdicao
     divProjeto.append @inputProjeto
 
   montarJSON: ->
-    "{ 'dataLimite': '#{@inputDataLimite.val()}', 'projeto': '#{@inputProjeto.val()}', 'id': #{@idItem}, 'version': #{@versionItem} }"                
+    '{ "dataLimite": "' + @inputDataLimite.val() + '", "projeto": ' + @inputProjeto.val() + 
+      ', "id": ' + @idItem + ', "version": ' + @versionItem + ' }'                
 
 class App.FormCriacaoPeriodo extends App.PaginaCriacao
   constructor: (@modulo) ->
@@ -36,7 +37,7 @@ class App.FormCriacaoPeriodo extends App.PaginaCriacao
     divDataLimite.append @inputDataLimite
 
   montarJSON: ->
-    "{ 'dataLimite': '#{@inputDataLimite.val()}', 'projeto': '#{@modulo.idObjetoPai}' }"                
+    '{ "dataLimite": "' + @inputDataLimite.val() + '", "projeto": ' + @modulo.idObjetoPai + ' }'                
 
 class App.PaginaDetalhesPeriodo extends App.PaginaDetalhes
   constructor:(@modulo)->

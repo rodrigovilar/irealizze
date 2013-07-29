@@ -12,18 +12,6 @@ import java.util.List;
 
 privileged aspect Periodo_Roo_Json {
     
-    public String Periodo.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
-    }
-    
-    public static Periodo Periodo.fromJsonToPeriodo(String json) {
-        return new JSONDeserializer<Periodo>().use(null, Periodo.class).deserialize(json);
-    }
-    
-    public static String Periodo.toJsonArray(Collection<Periodo> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
-    }
-    
     public static Collection<Periodo> Periodo.fromJsonArrayToPeriodoes(String json) {
         return new JSONDeserializer<List<Periodo>>().use(null, ArrayList.class).use("values", Periodo.class).deserialize(json);
     }

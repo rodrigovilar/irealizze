@@ -28,7 +28,7 @@
     };
 
     FormEdicaoPeriodo.prototype.montarJSON = function() {
-      return "{ 'dataLimite': '" + (this.inputDataLimite.val()) + "', 'projeto': '" + (this.inputProjeto.val()) + "', 'id': " + this.idItem + ", 'version': " + this.versionItem + " }";
+      return '{ "dataLimite": "' + this.inputDataLimite.val() + '", "projeto": ' + this.inputProjeto.val() + ', "id": ' + this.idItem + ', "version": ' + this.versionItem + ' }';
     };
 
     return FormEdicaoPeriodo;
@@ -55,7 +55,7 @@
     };
 
     FormCriacaoPeriodo.prototype.montarJSON = function() {
-      return "{ 'dataLimite': '" + (this.inputDataLimite.val()) + "', 'projeto': '" + this.modulo.idObjetoPai + "' }";
+      return '{ "dataLimite": "' + this.inputDataLimite.val() + '", "projeto": ' + this.modulo.idObjetoPai + ' }';
     };
 
     return FormCriacaoPeriodo;
