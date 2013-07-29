@@ -2,7 +2,6 @@ class App.FormEdicaoTipoItem extends App.PaginaEdicao
   constructor: (@modulo) ->
     super(@modulo)
     
-      
   desenharConteudoForm: (jsonObj) ->
     divNome = $('<div data-role="fieldcontain">')
     @form.append divNome    
@@ -36,8 +35,8 @@ class App.FormCriacaoTipoItem extends App.PaginaCriacao
 
 
 class App.ModuloTipoItem extends App.Modulo
-  constructor: (@lista) ->
-    super(@lista, 'TipoItem', 'tipositens', 'nome')
+  constructor: () ->
+    super('TipoItem', 'tipositens', 'nome')
     
   criarPaginaEdicao: ->
     new App.FormEdicaoTipoItem(this)

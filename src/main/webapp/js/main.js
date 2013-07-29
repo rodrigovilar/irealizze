@@ -17,10 +17,10 @@
     menu = $('<ul data-role="listview" data-divider-theme="b" data-inset="true">');
     content.append(menu);
     menu.append('<li data-role="list-divider" role="heading">Módulos</li>');
-    addMenu(menu, new App.ModuloProjetos(content));
-    addMenu(menu, new App.ModuloResponsaveis(content));
-    addMenu(menu, new App.Modulo(content, 'Itens', 'tipositens', 'nome'));
-    return addMenu(menu, new App.ModuloTabelaPreco(content));
+    addMenu(menu, new App.ModuloProjetos);
+    addMenu(menu, new App.ModuloResponsaveis);
+    addMenu(menu, new App.ModuloTipoItem);
+    return addMenu(menu, new App.ModuloTabelaPreco);
   };
 
   iniciar = function() {
