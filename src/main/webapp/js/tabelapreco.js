@@ -60,9 +60,8 @@
 
     __extends(ModuloTabelaPreco, _super);
 
-    function ModuloTabelaPreco(lista) {
-      this.lista = lista;
-      ModuloTabelaPreco.__super__.constructor.call(this, this.lista, 'TabelaPreco', 'tabelasprecos', 'nome');
+    function ModuloTabelaPreco() {
+      ModuloTabelaPreco.__super__.constructor.call(this, 'TabelaPreco', 'tabelasprecos', 'nome');
     }
 
     ModuloTabelaPreco.prototype.criarPaginaEdicao = function() {

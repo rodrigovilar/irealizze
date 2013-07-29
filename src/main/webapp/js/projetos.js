@@ -68,13 +68,41 @@
 
   })(App.PaginaCriacao);
 
+  App.PaginaDetalhesProjeto = (function(_super) {
+
+    __extends(PaginaDetalhesProjeto, _super);
+
+    function PaginaDetalhesProjeto(modulo) {
+      this.modulo = modulo;
+      PaginaDetalhesProjeto.__super__.constructor.call(this, this.modulo);
+    }
+
+    PaginaDetalhesProjeto.prototype.carregar = function(registro) {
+      var botaoPeriodos,
+        _this = this;
+      this.titulo.html("" + registro[this.modulo.propriedade]);
+      botaoPeriodos = $('<a data-role="button" data-inline="true" href="#' + this.modulo.moduloPeriodo.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Per�odos</a>');
+      this.content.append(botaoPeriodos);
+      return botaoPeriodos.click(function() {
+        return _this.modulo.moduloPeriodo.abrir(registro.id);
+      });
+    };
+
+    PaginaDetalhesProjeto.prototype.montarJSON = function() {
+      return "{ 'periodo do projeto', 'periodos': '" + (this.inputPeriodos.val()) + "' }";
+    };
+
+    return PaginaDetalhesProjeto;
+
+  })(App.PaginaDetalhes);
+
   App.ModuloProjetos = (function(_super) {
 
     __extends(ModuloProjetos, _super);
 
-    function ModuloProjetos(lista) {
-      this.lista = lista;
-      ModuloProjetos.__super__.constructor.call(this, this.lista, 'Projetos', 'projetos', 'nome');
+    function ModuloProjetos() {
+      ModuloProjetos.__super__.constructor.call(this, 'Projetos', 'projetos', 'nome');
+      this.moduloPeriodo = new App.ModuloPeriodos(this);
     }
 
     ModuloProjetos.prototype.criarPaginaEdicao = function() {
@@ -83,6 +111,10 @@
 
     ModuloProjetos.prototype.criarPaginaCriacao = function() {
       return new App.FormCriacaoProjeto(this);
+    };
+
+    ModuloProjetos.prototype.criarPaginaDetalhes = function() {
+      return new App.PaginaDetalhesProjeto(this);
     };
 
     return ModuloProjetos;

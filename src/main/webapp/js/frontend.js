@@ -151,10 +151,9 @@
 
     __extends(PaginaDetalhes, _super);
 
-    function PaginaDetalhes(modulo, idMae) {
+    function PaginaDetalhes(modulo) {
       this.modulo = modulo;
-      this.idMae = idMae;
-      PaginaDetalhes.__super__.constructor.call(this, this.modulo, this.idMae);
+      PaginaDetalhes.__super__.constructor.call(this, this.modulo, this.modulo.paginaListagem.getId());
     }
 
     PaginaDetalhes.prototype.getId = function() {
@@ -310,27 +309,30 @@
 
   App.Modulo = (function() {
 
-    function Modulo(lista, nome, url, propriedade) {
-      this.lista = lista;
+    function Modulo(nome, url, propriedade) {
       this.nome = nome;
       this.url = url;
       this.propriedade = propriedade;
-      this.paginaListagem = new App.PaginaListagem(this, "principal");
+      this.paginaListagem = this.criarPaginaListagem();
       this.paginaEdicao = this.criarPaginaEdicao();
       this.paginaCriacao = this.criarPaginaCriacao();
       this.paginaDetalhes = this.criarPaginaDetalhes();
     }
 
+    Modulo.prototype.criarPaginaListagem = function() {
+      return new App.PaginaListagem(this, "principal");
+    };
+
     Modulo.prototype.criarPaginaEdicao = function() {
-      return new App.PaginaEdicao(this, this.paginaListagem.getId());
+      return new App.PaginaEdicao(this);
     };
 
     Modulo.prototype.criarPaginaCriacao = function() {
-      return new App.PaginaCriacao(this, this.paginaListagem.getId());
+      return new App.PaginaCriacao(this);
     };
 
     Modulo.prototype.criarPaginaDetalhes = function() {
-      return new App.PaginaDetalhes(this, this.paginaListagem.getId());
+      return new App.PaginaDetalhes(this);
     };
 
     Modulo.prototype.abrir = function() {
@@ -352,5 +354,30 @@
     return Modulo;
 
   })();
+
+  App.SubModulo = (function(_super) {
+
+    __extends(SubModulo, _super);
+
+    function SubModulo(nome, url, propriedade, moduloPai) {
+      this.nome = nome;
+      this.url = url;
+      this.propriedade = propriedade;
+      this.moduloPai = moduloPai;
+      SubModulo.__super__.constructor.call(this, this.nome, this.url, this.propriedade);
+    }
+
+    SubModulo.prototype.criarPaginaListagem = function() {
+      return new App.PaginaListagem(this, this.moduloPai.paginaDetalhes.getId());
+    };
+
+    SubModulo.prototype.abrir = function(idObjetoPai) {
+      this.idObjetoPai = idObjetoPai;
+      return this.paginaListagem.desenharConteudo();
+    };
+
+    return SubModulo;
+
+  })(App.Modulo);
 
 }).call(this);
