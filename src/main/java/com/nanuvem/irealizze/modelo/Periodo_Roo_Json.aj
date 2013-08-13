@@ -5,7 +5,6 @@ package com.nanuvem.irealizze.modelo;
 
 import com.nanuvem.irealizze.modelo.Periodo;
 import flexjson.JSONDeserializer;
-import flexjson.JSONSerializer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

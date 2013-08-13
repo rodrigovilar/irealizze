@@ -27,10 +27,10 @@ privileged aspect ElementoFolhaDataOnDemand_Roo_DataOnDemand {
     private List<ElementoFolha> ElementoFolhaDataOnDemand.data;
     
     @Autowired
-    private ItemDataOnDemand ElementoFolhaDataOnDemand.itemDataOnDemand;
+    ItemDataOnDemand ElementoFolhaDataOnDemand.itemDataOnDemand;
     
     @Autowired
-    private ElementoDataOnDemand ElementoFolhaDataOnDemand.elementoDataOnDemand;
+    ElementoDataOnDemand ElementoFolhaDataOnDemand.elementoDataOnDemand;
     
     public ElementoFolha ElementoFolhaDataOnDemand.getNewTransientElementoFolha(int index) {
         ElementoFolha obj = new ElementoFolha();

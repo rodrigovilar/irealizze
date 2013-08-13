@@ -24,7 +24,7 @@ privileged aspect PeriodoIntegrationTest_Roo_IntegrationTest {
     declare @type: PeriodoIntegrationTest: @Transactional;
     
     @Autowired
-    private PeriodoDataOnDemand PeriodoIntegrationTest.dod;
+    PeriodoDataOnDemand PeriodoIntegrationTest.dod;
     
     @Test
     public void PeriodoIntegrationTest.testCountPeriodoes() {

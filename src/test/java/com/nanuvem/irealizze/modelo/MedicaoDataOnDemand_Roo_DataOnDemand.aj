@@ -33,16 +33,16 @@ privileged aspect MedicaoDataOnDemand_Roo_DataOnDemand {
     private List<Medicao> MedicaoDataOnDemand.data;
     
     @Autowired
-    private AlocacaoDataOnDemand MedicaoDataOnDemand.alocacaoDataOnDemand;
+    AlocacaoDataOnDemand MedicaoDataOnDemand.alocacaoDataOnDemand;
     
     @Autowired
-    private ElementoFolhaDataOnDemand MedicaoDataOnDemand.elementoFolhaDataOnDemand;
+    ElementoFolhaDataOnDemand MedicaoDataOnDemand.elementoFolhaDataOnDemand;
     
     @Autowired
-    private PeriodoDataOnDemand MedicaoDataOnDemand.periodoDataOnDemand;
+    PeriodoDataOnDemand MedicaoDataOnDemand.periodoDataOnDemand;
     
     @Autowired
-    private PrecoDataOnDemand MedicaoDataOnDemand.precoDataOnDemand;
+    PrecoDataOnDemand MedicaoDataOnDemand.precoDataOnDemand;
     
     public Medicao MedicaoDataOnDemand.getNewTransientMedicao(int index) {
         Medicao obj = new Medicao();
