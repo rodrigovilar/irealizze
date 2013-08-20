@@ -28,10 +28,10 @@ privileged aspect PrecoDataOnDemand_Roo_DataOnDemand {
     private List<Preco> PrecoDataOnDemand.data;
     
     @Autowired
-    private ItemDataOnDemand PrecoDataOnDemand.itemDataOnDemand;
+    ItemDataOnDemand PrecoDataOnDemand.itemDataOnDemand;
     
     @Autowired
-    private TabelaPrecoDataOnDemand PrecoDataOnDemand.tabelaPrecoDataOnDemand;
+    TabelaPrecoDataOnDemand PrecoDataOnDemand.tabelaPrecoDataOnDemand;
     
     public Preco PrecoDataOnDemand.getNewTransientPreco(int index) {
         Preco obj = new Preco();

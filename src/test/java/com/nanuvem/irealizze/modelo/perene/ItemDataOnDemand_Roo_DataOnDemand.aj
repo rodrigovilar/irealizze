@@ -26,7 +26,7 @@ privileged aspect ItemDataOnDemand_Roo_DataOnDemand {
     private List<Item> ItemDataOnDemand.data;
     
     @Autowired
-    private TipoItemDataOnDemand ItemDataOnDemand.tipoItemDataOnDemand;
+    TipoItemDataOnDemand ItemDataOnDemand.tipoItemDataOnDemand;
     
     public Item ItemDataOnDemand.getNewTransientItem(int index) {
         Item obj = new Item();

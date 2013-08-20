@@ -24,7 +24,7 @@ privileged aspect ElementoFolhaIntegrationTest_Roo_IntegrationTest {
     declare @type: ElementoFolhaIntegrationTest: @Transactional;
     
     @Autowired
-    private ElementoFolhaDataOnDemand ElementoFolhaIntegrationTest.dod;
+    ElementoFolhaDataOnDemand ElementoFolhaIntegrationTest.dod;
     
     @Test
     public void ElementoFolhaIntegrationTest.testCountElementoFolhas() {

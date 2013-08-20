@@ -101,7 +101,7 @@
     __extends(ModuloProjetos, _super);
 
     function ModuloProjetos() {
-      ModuloProjetos.__super__.constructor.call(this, 'Projetos', 'projetos', 'nome');
+      ModuloProjetos.__super__.constructor.call(this, 'Projetos', '/projetos', 'nome');
       this.moduloPeriodo = new App.ModuloPeriodos(this);
     }
 
