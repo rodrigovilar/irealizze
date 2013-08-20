@@ -108,6 +108,13 @@
       return alert("ver periodo " + idItem);
     };
 
+    ModuloPeriodos.prototype.prepararLinhaListagem = function(registro) {
+      var formatoAAAAMMDD, formatoDDMMAAAA;
+      formatoAAAAMMDD = registro[this.propriedade];
+      formatoDDMMAAAA = formatoAAAAMMDD;
+      return formatoDDMMAAAA;
+    };
+
     return ModuloPeriodos;
 
   })(App.SubModulo);

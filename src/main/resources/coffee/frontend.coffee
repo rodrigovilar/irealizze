@@ -68,7 +68,7 @@ class App.PaginaListagem extends App.Pagina
   constructor: (@modulo, @idMae) ->
     super(@modulo, @idMae)
 
-  desenharConteudo: ->
+  desenharConteudo: (linkGet) ->
     @content.empty()
     @lista = $('<ul data-role="listview" data-divider-theme="b" data-inset="true">')
     @content.append @lista
@@ -77,14 +77,14 @@ class App.PaginaListagem extends App.Pagina
     @desenharBotaoNovo()
     @desenharBotaoVoltar()
     @atualizar()
-    alert(@modulo.url)
-    $.getJSON @modulo.url, (jsonObj) =>
+    $.getJSON linkGet, (jsonObj) =>
       $.each jsonObj, (i, registro) =>
         @listar(registro)
       @lista.listview('refresh')
     
   listar: (registro) ->
-    ver = $("<a href='#" + @modulo.paginaDetalhes.getId() + "' data-transition='slide'>#{registro[@modulo.propriedade]}</a>")
+    linha = @modulo.prepararLinhaListagem(registro)
+    ver = $("<a href='#" + @modulo.paginaDetalhes.getId() + "' data-transition='slide'>#{linha}</a>")
     editar = $("<a href='#" + @modulo.paginaEdicao.getId() + "' data-transition='slide'>Editar</a>")
     li = $("<li data-theme='c' data-icon='edit'>")
     li.append ver
@@ -225,7 +225,7 @@ class App.Modulo
     new App.PaginaDetalhes(this)
     
   abrir: ->
-    @paginaListagem.desenharConteudo()
+    @paginaListagem.desenharConteudo(@url)
   
   novoItem: () ->
     @paginaCriacao.abrir()
@@ -235,6 +235,9 @@ class App.Modulo
   
   editarItem: (idItem, versionItem) ->
     @paginaEdicao.abrir(idItem, versionItem)
+    
+  prepararLinhaListagem: (registro) ->
+    registro[@propriedade]
 
 class App.SubModulo extends App.Modulo
   constructor: (@nome, @urlFilho, @propriedade, @moduloPai) ->
@@ -243,7 +246,10 @@ class App.SubModulo extends App.Modulo
   criarPaginaListagem: ->
     new App.PaginaListagem(this, @moduloPai.paginaDetalhes.getId())
   
-  abrir: (@idObjetoPai) ->
-    @url = @moduloPai.url + '/' + @idObjetoPai + '/' + @urlFilho
-    @paginaListagem.desenharConteudo()
+  abrir: (idPai) ->
+    if (idPai)
+      @idObjetoPai = idPai
+    
+    link = @moduloPai.url + '/' + @idObjetoPai + '/' + @urlFilho
+    @paginaListagem.desenharConteudo(link)
   

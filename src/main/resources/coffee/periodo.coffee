@@ -63,4 +63,9 @@ class App.ModuloPeriodos extends App.SubModulo
     new App.PaginaDetalhesPeriodo(this)  
   
   abrirItem: (idItem) ->
-      alert "ver periodo " + idItem
+    alert "ver periodo " + idItem
+
+  prepararLinhaListagem: (registro) ->
+    formatoAAAAMMDD = registro[@propriedade]
+    formatoDDMMAAAA = formatoAAAAMMDD
+    return formatoDDMMAAAA

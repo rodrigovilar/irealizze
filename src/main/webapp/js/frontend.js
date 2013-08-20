@@ -99,7 +99,7 @@
       PaginaListagem.__super__.constructor.call(this, this.modulo, this.idMae);
     }
 
-    PaginaListagem.prototype.desenharConteudo = function() {
+    PaginaListagem.prototype.desenharConteudo = function(linkGet) {
       var _this = this;
       this.content.empty();
       this.lista = $('<ul data-role="listview" data-divider-theme="b" data-inset="true">');
@@ -108,8 +108,7 @@
       this.desenharBotaoNovo();
       this.desenharBotaoVoltar();
       this.atualizar();
-      alert(this.modulo.url);
-      return $.getJSON(this.modulo.url, function(jsonObj) {
+      return $.getJSON(linkGet, function(jsonObj) {
         $.each(jsonObj, function(i, registro) {
           return _this.listar(registro);
         });
@@ -118,9 +117,10 @@
     };
 
     PaginaListagem.prototype.listar = function(registro) {
-      var editar, li, ver,
+      var editar, li, linha, ver,
         _this = this;
-      ver = $("<a href='#" + this.modulo.paginaDetalhes.getId() + ("' data-transition='slide'>" + registro[this.modulo.propriedade] + "</a>"));
+      linha = this.modulo.prepararLinhaListagem(registro);
+      ver = $("<a href='#" + this.modulo.paginaDetalhes.getId() + ("' data-transition='slide'>" + linha + "</a>"));
       editar = $("<a href='#" + this.modulo.paginaEdicao.getId() + "' data-transition='slide'>Editar</a>");
       li = $("<li data-theme='c' data-icon='edit'>");
       li.append(ver);
@@ -337,7 +337,7 @@
     };
 
     Modulo.prototype.abrir = function() {
-      return this.paginaListagem.desenharConteudo();
+      return this.paginaListagem.desenharConteudo(this.url);
     };
 
     Modulo.prototype.novoItem = function() {
@@ -350,6 +350,10 @@
 
     Modulo.prototype.editarItem = function(idItem, versionItem) {
       return this.paginaEdicao.abrir(idItem, versionItem);
+    };
+
+    Modulo.prototype.prepararLinhaListagem = function(registro) {
+      return registro[this.propriedade];
     };
 
     return Modulo;
@@ -372,10 +376,13 @@
       return new App.PaginaListagem(this, this.moduloPai.paginaDetalhes.getId());
     };
 
-    SubModulo.prototype.abrir = function(idObjetoPai) {
-      this.idObjetoPai = idObjetoPai;
-      this.url = this.moduloPai.url + '/' + this.idObjetoPai + '/' + this.urlFilho;
-      return this.paginaListagem.desenharConteudo();
+    SubModulo.prototype.abrir = function(idPai) {
+      var link;
+      if (idPai) {
+        this.idObjetoPai = idPai;
+      }
+      link = this.moduloPai.url + '/' + this.idObjetoPai + '/' + this.urlFilho;
+      return this.paginaListagem.desenharConteudo(link);
     };
 
     return SubModulo;

@@ -65,7 +65,7 @@ class App.PaginaDetalhesProjeto extends App.PaginaDetalhes
 
 class App.ModuloProjetos extends App.Modulo
   constructor: () ->
-    super('Projetos', '/projetos', 'nome')
+    super('Projetos', 'projetos', 'nome')
     @moduloPeriodo = new App.ModuloPeriodos(this)
     
   criarPaginaEdicao: ->
