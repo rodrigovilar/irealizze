@@ -77,6 +77,7 @@ class App.PaginaListagem extends App.Pagina
     @desenharBotaoNovo()
     @desenharBotaoVoltar()
     @atualizar()
+    alert(@modulo.url)
     $.getJSON @modulo.url, (jsonObj) =>
       $.each jsonObj, (i, registro) =>
         @listar(registro)
@@ -236,13 +237,13 @@ class App.Modulo
     @paginaEdicao.abrir(idItem, versionItem)
 
 class App.SubModulo extends App.Modulo
-  constructor: (@nome, @url, @propriedade, @moduloPai) ->
-    super(@nome, @url, @propriedade)
+  constructor: (@nome, @urlFilho, @propriedade, @moduloPai) ->
+    super(@nome, @urlFilho, @propriedade)
     
   criarPaginaListagem: ->
     new App.PaginaListagem(this, @moduloPai.paginaDetalhes.getId())
   
   abrir: (@idObjetoPai) ->
+    @url = @moduloPai.url + '/' + @idObjetoPai + '/' + @urlFilho
     @paginaListagem.desenharConteudo()
-
   

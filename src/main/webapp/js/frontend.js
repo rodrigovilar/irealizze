@@ -108,6 +108,7 @@
       this.desenharBotaoNovo();
       this.desenharBotaoVoltar();
       this.atualizar();
+      alert(this.modulo.url);
       return $.getJSON(this.modulo.url, function(jsonObj) {
         $.each(jsonObj, function(i, registro) {
           return _this.listar(registro);
@@ -359,12 +360,12 @@
 
     __extends(SubModulo, _super);
 
-    function SubModulo(nome, url, propriedade, moduloPai) {
+    function SubModulo(nome, urlFilho, propriedade, moduloPai) {
       this.nome = nome;
-      this.url = url;
+      this.urlFilho = urlFilho;
       this.propriedade = propriedade;
       this.moduloPai = moduloPai;
-      SubModulo.__super__.constructor.call(this, this.nome, this.url, this.propriedade);
+      SubModulo.__super__.constructor.call(this, this.nome, this.urlFilho, this.propriedade);
     }
 
     SubModulo.prototype.criarPaginaListagem = function() {
@@ -373,6 +374,7 @@
 
     SubModulo.prototype.abrir = function(idObjetoPai) {
       this.idObjetoPai = idObjetoPai;
+      this.url = this.moduloPai.url + '/' + this.idObjetoPai + '/' + this.urlFilho;
       return this.paginaListagem.desenharConteudo();
     };
 

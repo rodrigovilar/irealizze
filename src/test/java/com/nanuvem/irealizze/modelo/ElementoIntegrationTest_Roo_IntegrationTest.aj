@@ -24,7 +24,7 @@ privileged aspect ElementoIntegrationTest_Roo_IntegrationTest {
     declare @type: ElementoIntegrationTest: @Transactional;
     
     @Autowired
-    private ElementoDataOnDemand ElementoIntegrationTest.dod;
+    ElementoDataOnDemand ElementoIntegrationTest.dod;
     
     @Test
     public void ElementoIntegrationTest.testCountElementoes() {
