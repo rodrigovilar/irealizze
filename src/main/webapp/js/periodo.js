@@ -89,7 +89,7 @@
 
     function ModuloPeriodos(moduloPai) {
       this.moduloPai = moduloPai;
-      ModuloPeriodos.__super__.constructor.call(this, 'Períodos', 'periodos', 'dataLimite', this.moduloPai);
+      ModuloPeriodos.__super__.constructor.call(this, 'Periodos', 'periodos', 'dataLimite', this.moduloPai);
     }
 
     ModuloPeriodos.prototype.criarPaginaEdicao = function() {

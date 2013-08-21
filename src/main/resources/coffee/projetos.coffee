@@ -54,19 +54,22 @@ class App.PaginaDetalhesProjeto extends App.PaginaDetalhes
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
     
-    botaoPeriodos = $('<a data-role="button" data-inline="true" href="#' + @modulo.moduloPeriodo.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Per�odos</a>')
+    botaoPeriodos = $('<a data-role="button" data-inline="true" href="#' + @modulo.moduloPeriodo.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Períodos</a>')
     @content.append botaoPeriodos
     botaoPeriodos.click =>
       @modulo.moduloPeriodo.abrir(registro.id)
-    
-    
-  montarJSON: ->
-    "{ 'periodo do projeto', 'periodos': '#{@inputPeriodos.val()}' }"
 
+    botaoElementos = $('<a data-role="button" data-inline="true" href="#' + @modulo.moduloElemento.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Elementos</a>')
+    @content.append botaoElementos
+    botaoElementos.click =>
+      @modulo.moduloElemento.abrir(registro.id)
+    
+    
 class App.ModuloProjetos extends App.Modulo
   constructor: () ->
     super('Projetos', 'projetos', 'nome')
     @moduloPeriodo = new App.ModuloPeriodos(this)
+    @moduloElemento = new App.ModuloElementos(this)
     
   criarPaginaEdicao: ->
     new App.FormEdicaoProjeto(this)

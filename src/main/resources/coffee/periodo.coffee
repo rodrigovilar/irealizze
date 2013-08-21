@@ -51,7 +51,7 @@ class App.PaginaDetalhesPeriodo extends App.PaginaDetalhes
 
 class App.ModuloPeriodos extends App.SubModulo
   constructor: (@moduloPai) ->
-    super('Períodos', 'periodos', 'dataLimite', @moduloPai)
+    super('Periodos', 'periodos', 'dataLimite', @moduloPai)
     
   criarPaginaEdicao: ->
     new App.FormEdicaoPeriodo(this)

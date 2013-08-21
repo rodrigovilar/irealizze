@@ -78,18 +78,19 @@
     }
 
     PaginaDetalhesProjeto.prototype.carregar = function(registro) {
-      var botaoPeriodos,
+      var botaoElementos, botaoPeriodos,
         _this = this;
       this.titulo.html("" + registro[this.modulo.propriedade]);
-      botaoPeriodos = $('<a data-role="button" data-inline="true" href="#' + this.modulo.moduloPeriodo.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Per�odos</a>');
+      botaoPeriodos = $('<a data-role="button" data-inline="true" href="#' + this.modulo.moduloPeriodo.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Períodos</a>');
       this.content.append(botaoPeriodos);
-      return botaoPeriodos.click(function() {
+      botaoPeriodos.click(function() {
         return _this.modulo.moduloPeriodo.abrir(registro.id);
       });
-    };
-
-    PaginaDetalhesProjeto.prototype.montarJSON = function() {
-      return "{ 'periodo do projeto', 'periodos': '" + (this.inputPeriodos.val()) + "' }";
+      botaoElementos = $('<a data-role="button" data-inline="true" href="#' + this.modulo.moduloElemento.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Elementos</a>');
+      this.content.append(botaoElementos);
+      return botaoElementos.click(function() {
+        return _this.modulo.moduloElemento.abrir(registro.id);
+      });
     };
 
     return PaginaDetalhesProjeto;
@@ -103,6 +104,7 @@
     function ModuloProjetos() {
       ModuloProjetos.__super__.constructor.call(this, 'Projetos', 'projetos', 'nome');
       this.moduloPeriodo = new App.ModuloPeriodos(this);
+      this.moduloElemento = new App.ModuloElementos(this);
     }
 
     ModuloProjetos.prototype.criarPaginaEdicao = function() {

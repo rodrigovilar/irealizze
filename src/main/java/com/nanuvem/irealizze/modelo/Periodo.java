@@ -82,26 +82,26 @@ public class Periodo {
     }
     
     private static ObjectNode periodo2json(Periodo periodo) {
-		ObjectNode noJogo = JsonNodeFactory.instance.objectNode();
+		ObjectNode noPeriodo = JsonNodeFactory.instance.objectNode();
 		
-		noJogo.put("id", periodo.getId());
-		noJogo.put("dataLimite", JSON.generateString(periodo.getDataLimite()));			
-		noJogo.put("projeto", periodo.getProjeto().getId());
-		noJogo.put("version", periodo.getVersion());
+		noPeriodo.put("id", periodo.getId());
+		noPeriodo.put("dataLimite", JSON.generateString(periodo.getDataLimite()));			
+		noPeriodo.put("projeto", periodo.getProjeto().getId());
+		noPeriodo.put("version", periodo.getVersion());
 		
-		return noJogo;
+		return noPeriodo;
 	}
 
     
     public static String toJsonArray(Collection<Periodo> collection) {
-    	ArrayNode arrayDeJogos = JsonNodeFactory.instance.arrayNode();
+    	ArrayNode arrayDePeriodos = JsonNodeFactory.instance.arrayNode();
 
 		for (Periodo periodo : collection) {
-			ObjectNode noJogo = periodo2json(periodo);
-			arrayDeJogos.add(noJogo);
+			ObjectNode noPeriodo = periodo2json(periodo);
+			arrayDePeriodos.add(noPeriodo);
 		}
 
-    	return arrayDeJogos.toString();
+    	return arrayDePeriodos.toString();
     }
     
 

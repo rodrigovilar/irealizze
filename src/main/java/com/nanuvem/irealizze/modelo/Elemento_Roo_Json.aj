@@ -12,17 +12,6 @@ import java.util.List;
 
 privileged aspect Elemento_Roo_Json {
     
-    public String Elemento.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
-    }
-    
-    public static Elemento Elemento.fromJsonToElemento(String json) {
-        return new JSONDeserializer<Elemento>().use(null, Elemento.class).deserialize(json);
-    }
-    
-    public static String Elemento.toJsonArray(Collection<Elemento> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
-    }
     
     public static Collection<Elemento> Elemento.fromJsonArrayToElementoes(String json) {
         return new JSONDeserializer<List<Elemento>>().use(null, ArrayList.class).use("values", Elemento.class).deserialize(json);
