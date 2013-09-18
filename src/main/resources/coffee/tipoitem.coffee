@@ -36,5 +36,6 @@ class App.ModuloTipoItem extends App.Modulo
   criarPaginaEdicao: ->
     new App.FormEdicaoTipoItem(this)
 
+    
   criarPaginaCriacao: ->
     new App.FormCriacaoTipoItem(this)   

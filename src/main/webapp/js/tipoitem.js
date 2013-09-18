@@ -17,7 +17,7 @@
       divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nom + '" type="text">');
+      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
       divNome.append(labelNome);
       divNome.append(this.inputNome);
       ({
@@ -58,6 +58,31 @@
 
   })(App.PaginaCriacao);
 
+  App.PaginaDetalhesTipoItem = (function(_super) {
+
+    __extends(PaginaDetalhesTipoItem, _super);
+
+    function PaginaDetalhesTipoItem(modulo) {
+      this.modulo = modulo;
+      PaginaDetalhesTipoItem.__super__.constructor.call(this, this.modulo);
+    }
+
+    PaginaDetalhesTipoItem.prototype.carregar = function(registro) {
+      var botaoItens,
+        _this = this;
+      this.titulo.html("" + registro[this.modulo.propriedade]);
+      botaoItens = $('<a data-role="button" data-inline="true" href="#' + this.modulo.moduloItem.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Itens</a>');
+      this.content.append(botaoItens);
+      App.atualizarGUI(this.page);
+      return botaoItens.click(function() {
+        return _this.modulo.moduloItem.abrir(registro.id);
+      });
+    };
+
+    return PaginaDetalhesTipoItem;
+
+  })(App.PaginaDetalhes);
+
   App.ModuloTipoItem = (function(_super) {
 
     __extends(ModuloTipoItem, _super);
@@ -73,6 +98,10 @@
 
     ModuloTipoItem.prototype.criarPaginaCriacao = function() {
       return new App.FormCriacaoTipoItem(this);
+    };
+
+    ModuloTipoItem.prototype.criarPaginaDetalhesTipoItem = function() {
+      return new App.PaginaDetalhesTipoItem(this);
     };
 
     return ModuloTipoItem;
