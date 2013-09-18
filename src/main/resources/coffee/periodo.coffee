@@ -67,5 +67,5 @@ class App.ModuloPeriodos extends App.SubModulo
 
   prepararLinhaListagem: (registro) ->
     formatoAAAAMMDD = registro[@propriedade]
-    formatoDDMMAAAA = formatoAAAAMMDD
+    formatoDDMMAAAA = formatoAAAAMMDD.split('-').reverse().join('/')
     return formatoDDMMAAAA
