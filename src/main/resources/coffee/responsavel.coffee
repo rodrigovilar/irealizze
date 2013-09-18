@@ -1,13 +1,12 @@
 class App.FormCriacaoResponsavel extends App.PaginaCriacao
-  constructor: (@modulo) ->
-    super(@modulo)
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
     
   desenharConteudoForm: () ->
-    divLogin = $('<div data-role="fieldcontain">')
+    divLogin = $('<div>')
     @form.append divLogin    
     labelLogin = $('<label for="login">Login</label>')        
     @inputLogin = $('<input name="login" id="login" placeholder="" value="" type="text">')
-                
     divLogin.append labelLogin
     divLogin.append @inputLogin
 
@@ -15,15 +14,14 @@ class App.FormCriacaoResponsavel extends App.PaginaCriacao
     "{ 'login': '#{@inputLogin.val()}' }"
     
 class App.FormEdicaoResponsavel extends App.PaginaEdicao
-  constructor: (@modulo) ->
-    super(@modulo)
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
     
   desenharConteudoForm: (jsonObj) ->
-    divLogin = $('<div data-role="fieldcontain">')
+    divLogin = $('<div>')
     @form.append divLogin    
     labelLogin = $('<label for="login">Login</label>')        
     @inputLogin = $('<input name="login" id="login" placeholder="" value="' + jsonObj.login + '" type="text">')
-                
     divLogin.append labelLogin
     divLogin.append @inputLogin
 
@@ -31,20 +29,11 @@ class App.FormEdicaoResponsavel extends App.PaginaEdicao
     "{ 'login': '#{@inputLogin.val()}', 'id': #{@idItem}, 'version': #{@versionItem} }"
     
 class App.PaginaDetalhesResponsavel extends App.PaginaDetalhes
-  constructor:(@modulo)->
-    super(@modulo)
+  constructor:(@modulo, @paginaMae)->
+    super(@modulo, @paginaMae)
      
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
-        
-    botaoResponsavel = $('<a data-role="button" data-inline="true" href="#' + @modulo.moduloResponsavel.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Responsavel</a>')
-    @content.append botaoResponsavel
-    botaoResponsavel.click =>
-      @modulo.moduloResponsavel.abrir(registro.id)
-    
-    
-  montarJSON: ->
-    "{ 'periodo do projeto', 'periodos': '#{@inputPeriodos.val()}' }"
  
 
 class App.ModuloResponsaveis extends App.Modulo
@@ -52,7 +41,7 @@ class App.ModuloResponsaveis extends App.Modulo
     super('Responsavel', 'responsaveis', 'login')
     
   criarPaginaEdicao: ->
-    new App.FormEdicaoResponsavel(this)
+    new App.FormEdicaoResponsavel(this, @paginaListagem)
     
   criarPaginaCriacao: ->
-    new App.FormCriacaoResponsavel(this)  
+    new App.FormCriacaoResponsavel(this, @paginaListagem)  

@@ -6,14 +6,15 @@
 
     __extends(FormEdicaoElemento, _super);
 
-    function FormEdicaoElemento(modulo) {
+    function FormEdicaoElemento(modulo, paginaMae) {
       this.modulo = modulo;
-      FormEdicaoElemento.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormEdicaoElemento.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormEdicaoElemento.prototype.desenharConteudoForm = function(jsonObj) {
       var divNome, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
+      divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
       this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
@@ -33,14 +34,15 @@
 
     __extends(FormCriacaoElemento, _super);
 
-    function FormCriacaoElemento(modulo) {
+    function FormCriacaoElemento(modulo, paginaMae) {
       this.modulo = modulo;
-      FormCriacaoElemento.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormCriacaoElemento.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormCriacaoElemento.prototype.desenharConteudoForm = function() {
       var divNome, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
+      divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
       this.inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">');
@@ -60,9 +62,10 @@
 
     __extends(PaginaDetalhesElemento, _super);
 
-    function PaginaDetalhesElemento(modulo) {
+    function PaginaDetalhesElemento(modulo, paginaMae) {
       this.modulo = modulo;
-      PaginaDetalhesElemento.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      PaginaDetalhesElemento.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     PaginaDetalhesElemento.prototype.carregar = function(registro) {
@@ -83,15 +86,15 @@
     }
 
     ModuloElementos.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoElemento(this);
+      return new App.FormEdicaoElemento(this, this.paginaListagem);
     };
 
     ModuloElementos.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoElemento(this);
+      return new App.FormCriacaoElemento(this, this.paginaListagem);
     };
 
     ModuloElementos.prototype.criarPaginaDetalhes = function() {
-      return new App.PaginaDetalhesElemento(this);
+      return new App.PaginaDetalhesElemento(this, this.paginaListagem);
     };
 
     ModuloElementos.prototype.abrirItem = function(idItem) {

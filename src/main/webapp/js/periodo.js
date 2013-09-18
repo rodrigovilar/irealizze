@@ -6,20 +6,21 @@
 
     __extends(FormEdicaoPeriodo, _super);
 
-    function FormEdicaoPeriodo(modulo) {
+    function FormEdicaoPeriodo(modulo, paginaMae) {
       this.modulo = modulo;
-      FormEdicaoPeriodo.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormEdicaoPeriodo.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormEdicaoPeriodo.prototype.desenharConteudoForm = function(jsonObj) {
       var divDataLimite, divProjeto, labelDataLimite, labelProjeto;
-      divDataLimite = $('<div data-role="fieldcontain">');
+      divDataLimite = $('<div>');
       this.form.append(divDataLimite);
       labelDataLimite = $('<label for="dataLimite">DataLimite</label>');
       this.inputDataLimite = $('<input name="dataLimite" id="dataLimite" placeholder="" value="' + jsonObj.dataLimite + '" type="text">');
       divDataLimite.append(labelDataLimite);
       divDataLimite.append(this.inputDataLimite);
-      divProjeto = $('<div data-role="fieldcontain">');
+      divProjeto = $('<div>');
       this.form.append(divProjeto);
       labelProjeto = $('<label for="projeto">Projeto</label>');
       this.inputProjeto = $('<input name="projeto" id="projeto" placeholder="" value="' + jsonObj.cliente + '" type="text">');
@@ -46,7 +47,7 @@
 
     FormCriacaoPeriodo.prototype.desenharConteudoForm = function() {
       var divDataLimite, labelDataLimite;
-      divDataLimite = $('<div data-role="fieldcontain">');
+      divDataLimite = $('<div>');
       this.form.append(divDataLimite);
       labelDataLimite = $('<label for="dataLimite">DataLimite</label>');
       this.inputDataLimite = $('<input name="dataLimite" id="dataLimite" placeholder="" value="" type="date">');
@@ -75,10 +76,6 @@
       return this.titulo.html("" + registro[this.modulo.propriedade]);
     };
 
-    PaginaDetalhesPeriodo.prototype.montarJSON = function() {
-      return "{ 'periodo do projeto', 'periodos': '" + (this.inputPeriodos.val()) + "' }";
-    };
-
     return PaginaDetalhesPeriodo;
 
   })(App.PaginaDetalhes);
@@ -93,15 +90,15 @@
     }
 
     ModuloPeriodos.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoPeriodo(this);
+      return new App.FormEdicaoPeriodo(this, this.paginaListagem);
     };
 
     ModuloPeriodos.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoPeriodo(this);
+      return new App.FormCriacaoPeriodo(this, this.paginaListagem);
     };
 
     ModuloPeriodos.prototype.criarPaginaDetalhes = function() {
-      return new App.PaginaDetalhesPeriodo(this);
+      return new App.PaginaDetalhesPeriodo(this, this.paginaListagem);
     };
 
     ModuloPeriodos.prototype.abrirItem = function(idItem) {

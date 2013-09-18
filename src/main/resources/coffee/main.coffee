@@ -1,27 +1,32 @@
-  
-addMenu = (menu, modulo) ->
-  item = $('<li data-theme="c"><a href="#' + modulo.paginaListagem.getId() + '" data-transition="slide">' + modulo.nome + '</a></li>')
-  menu.append item
-  item.click -> 
-    modulo.abrir()
+class App.PaginaPrincipal extends App.Pagina
 
-abrirTelaPrincipal = ->
-  content  = $("div[data-role='content']")
-  content.empty()
-  
-  menu = $('<ul data-role="listview" data-divider-theme="b" data-inset="true">') 
-  content.append menu
-  menu.append('<li data-role="list-divider" role="heading">Módulos</li>')
+  constructor: ->
+    super(null, null)
 
-  addMenu(menu, new App.ModuloProjetos)
-  addMenu(menu, new App.ModuloResponsaveis)
-  addMenu(menu, new App.ModuloTipoItem)
-  addMenu(menu, new App.ModuloTabelaPreco)
+  getId: ->
+    "paginaPrincipal"
+ 
+  desenharConteudo: ->
+    @mudarPagina()
+    @abrirTelaPrincipal()
+
+  abrirTelaPrincipal: ->
+    @pagina.append '<p>Módulos</p>'
   
-iniciar = ->
-  abrirTelaPrincipal()
-  $("#principal").page()
+    menu = $('<ul>') 
+    @pagina.append menu
+
+    @addMenu(menu, new App.ModuloProjetos this)
+    @addMenu(menu, new App.ModuloResponsaveis this)
+    @addMenu(menu, new App.ModuloTipoItem this)
+    @addMenu(menu, new App.ModuloTabelaPreco this)
+
+  addMenu: (menu, modulo) ->
+    item = $('<li>' + modulo.nome + '</li>')
+    menu.append item
+    item.click -> 
+      modulo.abrir()
   
 $ -> 
-  iniciar()
-  App.atualizarGUI($('#principal'))
+  principal = new App.PaginaPrincipal
+  principal.desenharConteudo()

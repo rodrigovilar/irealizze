@@ -1,14 +1,12 @@
 class App.FormEdicaoTabelaPreco extends App.PaginaEdicao
-  constructor: (@modulo) ->
-    super(@modulo)
-    
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
       
   desenharConteudoForm: (jsonObj) ->
-    divNome = $('<div data-role="fieldcontain">')
+    divNome = $('<div>')
     @form.append divNome    
     labelNome = $('<label for="nome">Nome</label>')        
     @inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">')
-                
     divNome.append labelNome
     divNome.append @inputNome
 
@@ -16,35 +14,28 @@ class App.FormEdicaoTabelaPreco extends App.PaginaEdicao
     "{ 'nome': '#{@inputNome.val()}' }"         
     
 class App.FormCriacaoTabelaPreco extends App.PaginaCriacao
-  constructor: (@modulo) ->
-    super(@modulo)
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
     
   desenharConteudoForm: () ->
-    divNome = $('<div data-role="fieldcontain">')
+    divNome = $('<div>')
     @form.append divNome    
     labelNome = $('<label for="nome">Nome</label>')        
     @inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">')
-                
     divNome.append labelNome
     divNome.append @inputNome
-
 
    montarJSON: ->
     "{ 'nome': '#{@inputNome.val()}' }"                
 
 
-
-
 class App.ModuloTabelaPreco extends App.Modulo
-  constructor: () ->
-    super('TabelaPreco', 'tabelasprecos', 'nome')
+  constructor: (@paginaMae) ->
+    super(@paginaMae, 'TabelaPreco', 'tabelasprecos', 'nome')
     
   criarPaginaEdicao: ->
-    new App.FormEdicaoTabelaPreco(this)
+    new App.FormEdicaoTabelaPreco(this, @paginaListagem)
+
   criarPaginaCriacao: ->
-    new App.FormCriacaoTabelaPreco(this)
+    new App.FormCriacaoTabelaPreco(this, @paginaListagem)
   
- 
-           
-    
-    

@@ -1,166 +1,159 @@
 window.App={}
 
-
-App.atualizarGUI = (page) ->
-  page.trigger('create')
-
+App.enviarPut = (link, json, callback) ->
+  dadosAjax = 
+    type: "PUT"
+    url: link
+    data: json
+    processData: true
+    contentType: "application/json"
+    headers: 
+      Accept: "application/json"
+    
+  request = $.ajax(dadosAjax)
+  request.always =>
+    callback()
+    
+App.enviarPost = (link, json, callback) ->
+  dadosAjax = 
+    type: "POST"
+    url: link
+    data: json
+    processData: true
+    contentType: "application/json"
+    headers: 
+      Accept: "application/json"
+    
+  request = $.ajax(dadosAjax)
+  request.always =>
+    callback()
+  
+App.desenharBotao = (elemento, texto, callback) ->
+    botao = $('<button type="button">' + texto + '</button>')
+    elemento.append botao
+    botao.click =>
+      callback()
+  
 
 class App.Pagina
 
-  constructor: (@modulo, @idMae) ->
-    body  = $("body")
-    @page = $('<div data-role="page" data-theme="a" id="' + this.getId() + '">"')
-    @header = $('<div data-role="header" data-theme="a"><h1>iRealizze</h1></div>')
-    @content = $('<div data-role="content" data-theme="a" id="' + this.getId() + 'content">')
-    @footer = $('<div data-role="footer" data-theme="a"><h4>Realizzare Empreendimentos Imobiliários LTDA</h4></div>')  
-  
-    body.append @page
-    @page.append @header
-    @page.append @content
-    @page.append @footer
-    
-    @page.page()
+  constructor: (@modulo, @paginaMae) ->
     
   getId: ->
     "pagina" + @modulo.url
-    
-  atualizar: ->
-    App.atualizarGUI @page
 
   desenharConteudo: ->
-    this.desenharBotaoVoltar()
+    @mudarPagina()
+    @desenharBotaoVoltar()
         
+  mudarPagina: ->
+    body  = $("body")
+    body.empty()
+    
+    @pagina = $('<div id="' + @getId() + '">"')
+    body.append @pagina
+    
   desenharBotaoVoltar: ->
-    @content.append $('<a data-role="button" data-inline="true" href="#' + 
-      @idMae + '" data-icon="arrow-l" data-iconpos="left">Voltar</a>')
+    App.desenharBotao @pagina, 'Voltar', =>
+      @paginaMae.desenharConteudo()
 
-  enviarPut: (link, json, callback)=>
-    dadosAjax = 
-      type: "PUT"
-      url: link
-      data: json
-      processData: true
-      contentType: "application/json"
-      headers: 
-        Accept: "application/json"
-    
-    request = $.ajax(dadosAjax)
-    request.always =>
-        callback()
-    
-  enviarPost: (link, json, callback)=>
-    dadosAjax = 
-      type: "POST"
-      url: link
-      data: json
-      processData: true
-      contentType: "application/json"
-      headers: 
-        Accept: "application/json"
-    
-    request = $.ajax(dadosAjax)
-    request.always =>
-        callback()
   
-
 class App.PaginaListagem extends App.Pagina
 
-  constructor: (@modulo, @idMae) ->
+  constructor: (@modulo, @idMae, @linkGet) ->
     super(@modulo, @idMae)
 
-  desenharConteudo: (linkGet) ->
-    @content.empty()
-    @lista = $('<ul data-role="listview" data-divider-theme="b" data-inset="true">')
-    @content.append @lista
-    
-    @lista.append $('<li data-role="list-divider" role="heading">' + @modulo.nome + '</li>')
+  desenharConteudo: =>
+    @mudarPagina()
+
+    @pagina.append $('<p>' + @modulo.nome + '</p>')
     @desenharBotaoNovo()
+
+    @lista = $('<table>')
+    @pagina.append @lista
+    
     @desenharBotaoVoltar()
-    @atualizar()
-    $.getJSON linkGet, (jsonObj) =>
+
+    $.getJSON @linkGet, (jsonObj) =>
       $.each jsonObj, (i, registro) =>
         @listar(registro)
-      @lista.listview('refresh')
     
   listar: (registro) ->
-    linha = @modulo.prepararLinhaListagem(registro)
-    ver = $("<a href='#" + @modulo.paginaDetalhes.getId() + "' data-transition='slide'>#{linha}</a>")
-    editar = $("<a href='#" + @modulo.paginaEdicao.getId() + "' data-transition='slide'>Editar</a>")
-    li = $("<li data-theme='c' data-icon='edit'>")
-    li.append ver
-    li.append editar
-    @lista.append li
+    tr = $('<tr>')
+    @lista.append tr
+    
+    texto = @modulo.prepararLinhaListagem(registro)
+    ver = $("<td>#{texto}</td>")
+    tr.append ver
+
+    editar = $("<td>Editar</td>")
+    tr.append editar
+
     ver.click =>
       @modulo.abrirItem(registro.id)
+
     editar.click =>
       @modulo.editarItem(registro.id, registro.version)
 
   desenharBotaoNovo: ->
-    criar = $('<a data-role="button" data-inline="true" href="#criacao' + @modulo.url + '" data-icon="create" data-iconpos="left">Criar</a>')
-    @content.append criar
-    criar.click =>
+    App.desenharBotao @pagina, 'Criar', =>
       @modulo.novoItem()
 
 
 class App.PaginaDetalhes extends App.Pagina
 
-  constructor: (@modulo) ->
-    super(@modulo, @modulo.paginaListagem.getId())
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
 
   getId: ->
     "detalhes" + @modulo.url
 
   abrir: (@idItem) ->
-    this.desenharConteudo()    
+    @desenharConteudo()    
     $.getJSON @modulo.url + "/" + @idItem, (jsonObj) =>
       this.carregar(jsonObj)
-      this.atualizar()
 
   desenharConteudo: ->
-    @content.empty()
+    @mudarPagina()
+
     @titulo = $("<div>#{@modulo.nome} </div>")
-    @content.append @titulo
+    @pagina.append @titulo
     
     @desenharBotaoVoltar()
-    @atualizar()
 
   carregar: (registro) ->
     @titulo.html "#{@modulo.nome} #{registro[@modulo.propriedade]}"
 
 
 class App.PaginaEdicao extends App.Pagina
-  constructor: (@modulo) ->
-    super(@modulo, @modulo.paginaListagem.getId())
-    @form = $('<form>')
-    @content.append @form
-    @desenharBotaoVoltar()
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
     
   getId: ->
     "edicao" + @modulo.url
 
   desenharConteudo: ->
-    @form.empty()    
+    @mudarPagina()
+    @form = $('<form>')
+    @pagina.append @form
+    @desenharBotaoVoltar()
     
   abrir: (@idItem, @versionItem) ->
-    this.desenharConteudo()    
+    @desenharConteudo()    
     $.getJSON @modulo.url + "/" + @idItem, (jsonObj) =>
       this.desenharConteudoForm(jsonObj)
       this.desenharBotaoSalvar()      
-      this.atualizar()
 
   desenharConteudoForm: (jsonObj) ->
 
   desenharBotaoSalvar: ->
-    submit = $('<a href="#' + @idMae +
-      '" data-role="button" data-inline="true" data-icon="arrow-l" data-iconpos="left">Salvar</a>')       
-    @form.append submit
-    submit.click =>
-      this.salvar()
+    App.desenharBotao @form, 'Salvar', =>
+      @salvar()
     
   salvar: =>
-    json = this.montarJSON()        
-    this.enviarPut @modulo.url, json, =>
-        @modulo.abrir()
+    json = @montarJSON()        
+    App.enviarPut @modulo.url, json, =>
+      @modulo.abrir()
         
   montarJSON: ->
     "{}"   
@@ -168,37 +161,33 @@ class App.PaginaEdicao extends App.Pagina
 
 class App.PaginaCriacao extends App.Pagina
 
-  constructor: (@modulo) ->
-    super(@modulo, @modulo.paginaListagem.getId())
-    @form = $('<form>')
-    @content.append @form
-    @desenharBotaoVoltar()
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
     
   getId: ->
     "criacao" + @modulo.url
 
   desenharConteudo: ->
-    @form.empty()    
+    @mudarPagina()
+    @form = $('<form>')
+    @pagina.append @form
+    @desenharBotaoVoltar()
     
   abrir: () ->
     @desenharConteudo()    
     @desenharConteudoForm()
     @desenharBotaoSalvar()      
-    @atualizar()
 
   desenharConteudoForm: () ->
 
   desenharBotaoSalvar: ->
-    submit = $('<a href="#' + @idMae +
-      '" data-role="button" data-inline="true" data-icon="arrow-l" data-iconpos="left">Criar</a>')       
-    @form.append submit
-    submit.click =>
-      this.salvar()
+    App.desenharBotao @form, 'Salvar', =>
+      @salvar()
     
   salvar: =>
     json = this.montarJSON()        
-    this.enviarPost @modulo.url, json, =>
-        @modulo.abrir()
+    App.enviarPost @modulo.url, json, =>
+      @modulo.abrir()
         
   montarJSON: ->
     "{}"   
@@ -206,26 +195,26 @@ class App.PaginaCriacao extends App.Pagina
 
 class App.Modulo
 
-  constructor: (@nome, @url, @propriedade) ->
+  constructor: (@paginaMae, @nome, @url, @propriedade) ->
     @paginaListagem = @criarPaginaListagem()
     @paginaEdicao = @criarPaginaEdicao()
     @paginaCriacao = @criarPaginaCriacao()
     @paginaDetalhes = @criarPaginaDetalhes()
   
   criarPaginaListagem: ->
-    new App.PaginaListagem(this, "principal")
+    new App.PaginaListagem(this, @paginaMae, @url)
    
   criarPaginaEdicao: ->
-    new App.PaginaEdicao(this)
+    new App.PaginaEdicao(this, @paginaListagem)
 
   criarPaginaCriacao: ->
-    new App.PaginaCriacao(this)
+    new App.PaginaCriacao(this, @paginaListagem)
 
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhes(this)
+    new App.PaginaDetalhes(this, @paginaListagem)
     
   abrir: ->
-    @paginaListagem.desenharConteudo(@url)
+    @paginaListagem.desenharConteudo()
   
   novoItem: () ->
     @paginaCriacao.abrir()
@@ -241,15 +230,16 @@ class App.Modulo
 
 class App.SubModulo extends App.Modulo
   constructor: (@nome, @urlFilho, @propriedade, @moduloPai) ->
-    super(@nome, @urlFilho, @propriedade)
+    super(@moduloPai.paginaDetalhes, @nome, @urlFilho, @propriedade)
     
   criarPaginaListagem: ->
-    new App.PaginaListagem(this, @moduloPai.paginaDetalhes.getId())
+    new App.PaginaListagem(this, @moduloPai.paginaDetalhes)
   
   abrir: (idPai) ->
     if (idPai)
       @idObjetoPai = idPai
     
     link = @moduloPai.url + '/' + @idObjetoPai + '/' + @urlFilho
-    @paginaListagem.desenharConteudo(link)
+    @paginaListagem = new App.PaginaListagem(this, @paginaMae, link)
+    @paginaListagem.desenharConteudo()
   

@@ -1,21 +1,19 @@
 class App.FormEdicaoProjeto extends App.PaginaEdicao
-  constructor: (@modulo) ->
-    super(@modulo)
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
     
   desenharConteudoForm: (jsonObj) ->
-    divNome = $('<div data-role="fieldcontain">')
+    divNome = $('<div>')
     @form.append divNome    
     labelNome = $('<label for="nome">Nome</label>')        
     @inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">')
-                
     divNome.append labelNome
     divNome.append @inputNome
 
-    divCliente = $('<div data-role="fieldcontain">')
+    divCliente = $('<div>')
     @form.append divCliente    
     labelCliente = $('<label for="cliente">Cliente</label>')        
     @inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="' + jsonObj.cliente + '" type="text">')
-                
     divNome.append labelCliente
     divNome.append @inputCliente
 
@@ -23,23 +21,21 @@ class App.FormEdicaoProjeto extends App.PaginaEdicao
     "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}', 'id': #{@idItem}, 'version': #{@versionItem} }"                
 
 class App.FormCriacaoProjeto extends App.PaginaCriacao
-  constructor: (@modulo) ->
-    super(@modulo)
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
     
   desenharConteudoForm: () ->
-    divNome = $('<div data-role="fieldcontain">')
+    divNome = $('<div>')
     @form.append divNome    
     labelNome = $('<label for="nome">Nome</label>')        
     @inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">')
-                
     divNome.append labelNome
     divNome.append @inputNome
 
-    divCliente = $('<div data-role="fieldcontain">')
+    divCliente = $('<div>')
     @form.append divCliente    
     labelCliente = $('<label for="cliente">Cliente</label>')        
     @inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="" type="text">')
-                
     divNome.append labelCliente
     divNome.append @inputCliente
 
@@ -48,34 +44,30 @@ class App.FormCriacaoProjeto extends App.PaginaCriacao
 
 
 class App.PaginaDetalhesProjeto extends App.PaginaDetalhes
-  constructor:(@modulo)->
-    super(@modulo)
+  constructor:(@modulo, @paginaMae)->
+    super(@modulo, @paginaMae)
   
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
     
-    botaoPeriodos = $('<a data-role="button" data-inline="true" href="#' + @modulo.moduloPeriodo.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Períodos</a>')
-    @content.append botaoPeriodos
-    botaoPeriodos.click =>
+    App.desenharBotao @pagina, 'Períodos', =>
       @modulo.moduloPeriodo.abrir(registro.id)
 
-    botaoElementos = $('<a data-role="button" data-inline="true" href="#' + @modulo.moduloElemento.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Elementos</a>')
-    @content.append botaoElementos
-    botaoElementos.click =>
+    App.desenharBotao @pagina, 'Elementos', =>
       @modulo.moduloElemento.abrir(registro.id)
     
     
 class App.ModuloProjetos extends App.Modulo
-  constructor: () ->
-    super('Projetos', 'projetos', 'nome')
+  constructor: (@paginaMae) ->
+    super(@paginaMae, 'Projetos', 'projetos', 'nome')
     @moduloPeriodo = new App.ModuloPeriodos(this)
     @moduloElemento = new App.ModuloElementos(this)
     
   criarPaginaEdicao: ->
-    new App.FormEdicaoProjeto(this)
+    new App.FormEdicaoProjeto(this, @paginaListagem)
     
   criarPaginaCriacao: ->
-    new App.FormCriacaoProjeto(this)
+    new App.FormCriacaoProjeto(this, @paginaListagem)
     
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhesProjeto(this)
+    new App.PaginaDetalhesProjeto(this, @paginaListagem)

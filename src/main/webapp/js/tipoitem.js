@@ -6,14 +6,15 @@
 
     __extends(FormEdicaoTipoItem, _super);
 
-    function FormEdicaoTipoItem(modulo) {
+    function FormEdicaoTipoItem(modulo, paginaMae) {
       this.modulo = modulo;
-      FormEdicaoTipoItem.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormEdicaoTipoItem.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormEdicaoTipoItem.prototype.desenharConteudoForm = function(jsonObj) {
       var divNome, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
+      divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
       this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nom + '" type="text">');
@@ -33,14 +34,15 @@
 
     __extends(FormCriacaoTipoItem, _super);
 
-    function FormCriacaoTipoItem(modulo) {
+    function FormCriacaoTipoItem(modulo, paginaMae) {
       this.modulo = modulo;
-      FormCriacaoTipoItem.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormCriacaoTipoItem.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormCriacaoTipoItem.prototype.desenharConteudoForm = function() {
       var divNome, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
+      divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
       this.inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">');
@@ -60,8 +62,9 @@
 
     __extends(ModuloTipoItem, _super);
 
-    function ModuloTipoItem() {
-      ModuloTipoItem.__super__.constructor.call(this, 'TipoItem', 'tipositens', 'nome');
+    function ModuloTipoItem(paginaMae) {
+      this.paginaMae = paginaMae;
+      ModuloTipoItem.__super__.constructor.call(this, this.paginaMae, 'TipoItem', 'tipositens', 'nome');
     }
 
     ModuloTipoItem.prototype.criarPaginaEdicao = function() {

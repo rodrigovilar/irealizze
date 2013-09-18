@@ -6,14 +6,15 @@
 
     __extends(FormCriacaoResponsavel, _super);
 
-    function FormCriacaoResponsavel(modulo) {
+    function FormCriacaoResponsavel(modulo, paginaMae) {
       this.modulo = modulo;
-      FormCriacaoResponsavel.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormCriacaoResponsavel.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormCriacaoResponsavel.prototype.desenharConteudoForm = function() {
       var divLogin, labelLogin;
-      divLogin = $('<div data-role="fieldcontain">');
+      divLogin = $('<div>');
       this.form.append(divLogin);
       labelLogin = $('<label for="login">Login</label>');
       this.inputLogin = $('<input name="login" id="login" placeholder="" value="" type="text">');
@@ -33,14 +34,15 @@
 
     __extends(FormEdicaoResponsavel, _super);
 
-    function FormEdicaoResponsavel(modulo) {
+    function FormEdicaoResponsavel(modulo, paginaMae) {
       this.modulo = modulo;
-      FormEdicaoResponsavel.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormEdicaoResponsavel.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormEdicaoResponsavel.prototype.desenharConteudoForm = function(jsonObj) {
       var divLogin, labelLogin;
-      divLogin = $('<div data-role="fieldcontain">');
+      divLogin = $('<div>');
       this.form.append(divLogin);
       labelLogin = $('<label for="login">Login</label>');
       this.inputLogin = $('<input name="login" id="login" placeholder="" value="' + jsonObj.login + '" type="text">');
@@ -60,24 +62,14 @@
 
     __extends(PaginaDetalhesResponsavel, _super);
 
-    function PaginaDetalhesResponsavel(modulo) {
+    function PaginaDetalhesResponsavel(modulo, paginaMae) {
       this.modulo = modulo;
-      PaginaDetalhesResponsavel.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      PaginaDetalhesResponsavel.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     PaginaDetalhesResponsavel.prototype.carregar = function(registro) {
-      var botaoResponsavel,
-        _this = this;
-      this.titulo.html("" + registro[this.modulo.propriedade]);
-      botaoResponsavel = $('<a data-role="button" data-inline="true" href="#' + this.modulo.moduloResponsavel.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Responsavel</a>');
-      this.content.append(botaoResponsavel);
-      return botaoResponsavel.click(function() {
-        return _this.modulo.moduloResponsavel.abrir(registro.id);
-      });
-    };
-
-    PaginaDetalhesResponsavel.prototype.montarJSON = function() {
-      return "{ 'periodo do projeto', 'periodos': '" + (this.inputPeriodos.val()) + "' }";
+      return this.titulo.html("" + registro[this.modulo.propriedade]);
     };
 
     return PaginaDetalhesResponsavel;
@@ -93,11 +85,11 @@
     }
 
     ModuloResponsaveis.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoResponsavel(this);
+      return new App.FormEdicaoResponsavel(this, this.paginaListagem);
     };
 
     ModuloResponsaveis.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoResponsavel(this);
+      return new App.FormCriacaoResponsavel(this, this.paginaListagem);
     };
 
     return ModuloResponsaveis;

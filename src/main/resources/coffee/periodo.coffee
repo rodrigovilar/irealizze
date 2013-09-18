@@ -1,21 +1,19 @@
 class App.FormEdicaoPeriodo extends App.PaginaEdicao
-  constructor: (@modulo) ->
-    super(@modulo)
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
     
   desenharConteudoForm: (jsonObj) ->
-    divDataLimite = $('<div data-role="fieldcontain">')
+    divDataLimite = $('<div>')
     @form.append divDataLimite    
     labelDataLimite = $('<label for="dataLimite">DataLimite</label>')        
     @inputDataLimite = $('<input name="dataLimite" id="dataLimite" placeholder="" value="' + jsonObj.dataLimite + '" type="text">')
-                
     divDataLimite.append labelDataLimite
     divDataLimite.append @inputDataLimite
 
-    divProjeto = $('<div data-role="fieldcontain">')
+    divProjeto = $('<div>')
     @form.append divProjeto    
     labelProjeto = $('<label for="projeto">Projeto</label>')        
     @inputProjeto = $('<input name="projeto" id="projeto" placeholder="" value="' + jsonObj.cliente + '" type="text">')
-                
     divProjeto.append labelProjeto
     divProjeto.append @inputProjeto
 
@@ -28,11 +26,10 @@ class App.FormCriacaoPeriodo extends App.PaginaCriacao
     super(@modulo)
     
   desenharConteudoForm: () ->
-    divDataLimite = $('<div data-role="fieldcontain">')
+    divDataLimite = $('<div>')
     @form.append divDataLimite    
     labelDataLimite = $('<label for="dataLimite">DataLimite</label>')        
     @inputDataLimite = $('<input name="dataLimite" id="dataLimite" placeholder="" value="" type="date">')
-                
     divDataLimite.append labelDataLimite
     divDataLimite.append @inputDataLimite
 
@@ -46,21 +43,18 @@ class App.PaginaDetalhesPeriodo extends App.PaginaDetalhes
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
         
-  montarJSON: ->
-    "{ 'periodo do projeto', 'periodos': '#{@inputPeriodos.val()}' }"
-
 class App.ModuloPeriodos extends App.SubModulo
   constructor: (@moduloPai) ->
     super('Periodos', 'periodos', 'dataLimite', @moduloPai)
     
   criarPaginaEdicao: ->
-    new App.FormEdicaoPeriodo(this)
+    new App.FormEdicaoPeriodo(this, @paginaListagem)
     
   criarPaginaCriacao: ->
-    new App.FormCriacaoPeriodo(this)
+    new App.FormCriacaoPeriodo(this, @paginaListagem)
     
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhesPeriodo(this)  
+    new App.PaginaDetalhesPeriodo(this, @paginaListagem)  
   
   abrirItem: (idItem) ->
     alert "ver periodo " + idItem

@@ -6,14 +6,15 @@
 
     __extends(FormEdicaoTabelaPreco, _super);
 
-    function FormEdicaoTabelaPreco(modulo) {
+    function FormEdicaoTabelaPreco(modulo, paginaMae) {
       this.modulo = modulo;
-      FormEdicaoTabelaPreco.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormEdicaoTabelaPreco.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormEdicaoTabelaPreco.prototype.desenharConteudoForm = function(jsonObj) {
       var divNome, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
+      divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
       this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
@@ -33,14 +34,15 @@
 
     __extends(FormCriacaoTabelaPreco, _super);
 
-    function FormCriacaoTabelaPreco(modulo) {
+    function FormCriacaoTabelaPreco(modulo, paginaMae) {
       this.modulo = modulo;
-      FormCriacaoTabelaPreco.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormCriacaoTabelaPreco.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormCriacaoTabelaPreco.prototype.desenharConteudoForm = function() {
       var divNome, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
+      divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
       this.inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">');
@@ -60,16 +62,17 @@
 
     __extends(ModuloTabelaPreco, _super);
 
-    function ModuloTabelaPreco() {
-      ModuloTabelaPreco.__super__.constructor.call(this, 'TabelaPreco', 'tabelasprecos', 'nome');
+    function ModuloTabelaPreco(paginaMae) {
+      this.paginaMae = paginaMae;
+      ModuloTabelaPreco.__super__.constructor.call(this, this.paginaMae, 'TabelaPreco', 'tabelasprecos', 'nome');
     }
 
     ModuloTabelaPreco.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoTabelaPreco(this);
+      return new App.FormEdicaoTabelaPreco(this, this.paginaListagem);
     };
 
     ModuloTabelaPreco.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoTabelaPreco(this);
+      return new App.FormCriacaoTabelaPreco(this, this.paginaListagem);
     };
 
     return ModuloTabelaPreco;

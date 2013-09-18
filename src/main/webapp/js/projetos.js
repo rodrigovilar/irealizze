@@ -6,20 +6,21 @@
 
     __extends(FormEdicaoProjeto, _super);
 
-    function FormEdicaoProjeto(modulo) {
+    function FormEdicaoProjeto(modulo, paginaMae) {
       this.modulo = modulo;
-      FormEdicaoProjeto.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormEdicaoProjeto.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormEdicaoProjeto.prototype.desenharConteudoForm = function(jsonObj) {
       var divCliente, divNome, labelCliente, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
+      divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
       this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
       divNome.append(labelNome);
       divNome.append(this.inputNome);
-      divCliente = $('<div data-role="fieldcontain">');
+      divCliente = $('<div>');
       this.form.append(divCliente);
       labelCliente = $('<label for="cliente">Cliente</label>');
       this.inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="' + jsonObj.cliente + '" type="text">');
@@ -39,20 +40,21 @@
 
     __extends(FormCriacaoProjeto, _super);
 
-    function FormCriacaoProjeto(modulo) {
+    function FormCriacaoProjeto(modulo, paginaMae) {
       this.modulo = modulo;
-      FormCriacaoProjeto.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormCriacaoProjeto.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormCriacaoProjeto.prototype.desenharConteudoForm = function() {
       var divCliente, divNome, labelCliente, labelNome;
-      divNome = $('<div data-role="fieldcontain">');
+      divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
       this.inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">');
       divNome.append(labelNome);
       divNome.append(this.inputNome);
-      divCliente = $('<div data-role="fieldcontain">');
+      divCliente = $('<div>');
       this.form.append(divCliente);
       labelCliente = $('<label for="cliente">Cliente</label>');
       this.inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="" type="text">');
@@ -72,23 +74,19 @@
 
     __extends(PaginaDetalhesProjeto, _super);
 
-    function PaginaDetalhesProjeto(modulo) {
+    function PaginaDetalhesProjeto(modulo, paginaMae) {
       this.modulo = modulo;
-      PaginaDetalhesProjeto.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      PaginaDetalhesProjeto.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     PaginaDetalhesProjeto.prototype.carregar = function(registro) {
-      var botaoElementos, botaoPeriodos,
-        _this = this;
+      var _this = this;
       this.titulo.html("" + registro[this.modulo.propriedade]);
-      botaoPeriodos = $('<a data-role="button" data-inline="true" href="#' + this.modulo.moduloPeriodo.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Períodos</a>');
-      this.content.append(botaoPeriodos);
-      botaoPeriodos.click(function() {
+      App.desenharBotao(this.pagina, 'Períodos', function() {
         return _this.modulo.moduloPeriodo.abrir(registro.id);
       });
-      botaoElementos = $('<a data-role="button" data-inline="true" href="#' + this.modulo.moduloElemento.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Elementos</a>');
-      this.content.append(botaoElementos);
-      return botaoElementos.click(function() {
+      return App.desenharBotao(this.pagina, 'Elementos', function() {
         return _this.modulo.moduloElemento.abrir(registro.id);
       });
     };
@@ -101,22 +99,23 @@
 
     __extends(ModuloProjetos, _super);
 
-    function ModuloProjetos() {
-      ModuloProjetos.__super__.constructor.call(this, 'Projetos', 'projetos', 'nome');
+    function ModuloProjetos(paginaMae) {
+      this.paginaMae = paginaMae;
+      ModuloProjetos.__super__.constructor.call(this, this.paginaMae, 'Projetos', 'projetos', 'nome');
       this.moduloPeriodo = new App.ModuloPeriodos(this);
       this.moduloElemento = new App.ModuloElementos(this);
     }
 
     ModuloProjetos.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoProjeto(this);
+      return new App.FormEdicaoProjeto(this, this.paginaListagem);
     };
 
     ModuloProjetos.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoProjeto(this);
+      return new App.FormCriacaoProjeto(this, this.paginaListagem);
     };
 
     ModuloProjetos.prototype.criarPaginaDetalhes = function() {
-      return new App.PaginaDetalhesProjeto(this);
+      return new App.PaginaDetalhesProjeto(this, this.paginaListagem);
     };
 
     return ModuloProjetos;

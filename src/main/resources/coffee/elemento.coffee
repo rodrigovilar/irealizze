@@ -1,13 +1,12 @@
 class App.FormEdicaoElemento extends App.PaginaEdicao
-  constructor: (@modulo) ->
-    super(@modulo)
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
     
   desenharConteudoForm: (jsonObj) ->
-    divNome = $('<div data-role="fieldcontain">')
+    divNome = $('<div>')
     @form.append divNome    
     labelNome = $('<label for="nome">Nome</label>')        
     @inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">')
-                
     divNome.append labelNome
     divNome.append @inputNome
 
@@ -17,15 +16,14 @@ class App.FormEdicaoElemento extends App.PaginaEdicao
 
 
 class App.FormCriacaoElemento extends App.PaginaCriacao
-  constructor: (@modulo) ->
-    super(@modulo)
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
     
   desenharConteudoForm: () ->
-    divNome = $('<div data-role="fieldcontain">')
+    divNome = $('<div>')
     @form.append divNome    
     labelNome = $('<label for="nome">Nome</label>')        
     @inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">')
-                
     divNome.append labelNome
     divNome.append @inputNome
 
@@ -34,8 +32,8 @@ class App.FormCriacaoElemento extends App.PaginaCriacao
 
 
 class App.PaginaDetalhesElemento extends App.PaginaDetalhes
-  constructor:(@modulo)->
-    super(@modulo)
+  constructor:(@modulo, @paginaMae)->
+    super(@modulo, @paginaMae)
   
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
@@ -46,13 +44,13 @@ class App.ModuloElementos extends App.SubModulo
     super('Elementos', 'elementos', 'nome', @moduloPai)
     
   criarPaginaEdicao: ->
-    new App.FormEdicaoElemento(this)
+    new App.FormEdicaoElemento(this, @paginaListagem)
     
   criarPaginaCriacao: ->
-    new App.FormCriacaoElemento(this)
+    new App.FormCriacaoElemento(this, @paginaListagem)
     
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhesElemento(this)  
+    new App.PaginaDetalhesElemento(this, @paginaListagem)  
   
   abrirItem: (idItem) ->
     alert "ver elemento " + idItem

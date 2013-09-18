@@ -5,83 +5,82 @@
 
   window.App = {};
 
-  App.atualizarGUI = function(page) {
-    return page.trigger('create');
+  App.enviarPut = function(link, json, callback) {
+    var dadosAjax, request,
+      _this = this;
+    dadosAjax = {
+      type: "PUT",
+      url: link,
+      data: json,
+      processData: true,
+      contentType: "application/json",
+      headers: {
+        Accept: "application/json"
+      }
+    };
+    request = $.ajax(dadosAjax);
+    return request.always(function() {
+      return callback();
+    });
+  };
+
+  App.enviarPost = function(link, json, callback) {
+    var dadosAjax, request,
+      _this = this;
+    dadosAjax = {
+      type: "POST",
+      url: link,
+      data: json,
+      processData: true,
+      contentType: "application/json",
+      headers: {
+        Accept: "application/json"
+      }
+    };
+    request = $.ajax(dadosAjax);
+    return request.always(function() {
+      return callback();
+    });
+  };
+
+  App.desenharBotao = function(elemento, texto, callback) {
+    var botao,
+      _this = this;
+    botao = $('<button type="button">' + texto + '</button>');
+    elemento.append(botao);
+    return botao.click(function() {
+      return callback();
+    });
   };
 
   App.Pagina = (function() {
 
-    function Pagina(modulo, idMae) {
-      var body;
+    function Pagina(modulo, paginaMae) {
       this.modulo = modulo;
-      this.idMae = idMae;
-      this.enviarPost = __bind(this.enviarPost, this);
-
-      this.enviarPut = __bind(this.enviarPut, this);
-
-      body = $("body");
-      this.page = $('<div data-role="page" data-theme="a" id="' + this.getId() + '">"');
-      this.header = $('<div data-role="header" data-theme="a"><h1>iRealizze</h1></div>');
-      this.content = $('<div data-role="content" data-theme="a" id="' + this.getId() + 'content">');
-      this.footer = $('<div data-role="footer" data-theme="a"><h4>Realizzare Empreendimentos Imobiliários LTDA</h4></div>');
-      body.append(this.page);
-      this.page.append(this.header);
-      this.page.append(this.content);
-      this.page.append(this.footer);
-      this.page.page();
+      this.paginaMae = paginaMae;
     }
 
     Pagina.prototype.getId = function() {
       return "pagina" + this.modulo.url;
     };
 
-    Pagina.prototype.atualizar = function() {
-      return App.atualizarGUI(this.page);
-    };
-
     Pagina.prototype.desenharConteudo = function() {
+      this.mudarPagina();
       return this.desenharBotaoVoltar();
     };
 
+    Pagina.prototype.mudarPagina = function() {
+      var body;
+      body = $("body");
+      body.empty();
+      this.pagina = $('<div id="' + this.getId() + '">"');
+      return body.append(this.pagina);
+    };
+
     Pagina.prototype.desenharBotaoVoltar = function() {
-      return this.content.append($('<a data-role="button" data-inline="true" href="#' + this.idMae + '" data-icon="arrow-l" data-iconpos="left">Voltar</a>'));
-    };
-
-    Pagina.prototype.enviarPut = function(link, json, callback) {
-      var dadosAjax, request,
-        _this = this;
-      dadosAjax = {
-        type: "PUT",
-        url: link,
-        data: json,
-        processData: true,
-        contentType: "application/json",
-        headers: {
-          Accept: "application/json"
-        }
-      };
-      request = $.ajax(dadosAjax);
-      return request.always(function() {
-        return callback();
-      });
-    };
-
-    Pagina.prototype.enviarPost = function(link, json, callback) {
-      var dadosAjax, request,
-        _this = this;
-      dadosAjax = {
-        type: "POST",
-        url: link,
-        data: json,
-        processData: true,
-        contentType: "application/json",
-        headers: {
-          Accept: "application/json"
-        }
-      };
-      request = $.ajax(dadosAjax);
-      return request.always(function() {
-        return callback();
+      var _this = this;
+      return App.desenharBotao(this.pagina, 'Voltar', function() {
+        return _this.paginaMae.desenharConteudo();
       });
     };
 
@@ -93,39 +92,40 @@
 
     __extends(PaginaListagem, _super);
 
-    function PaginaListagem(modulo, idMae) {
+    function PaginaListagem(modulo, idMae, linkGet) {
       this.modulo = modulo;
       this.idMae = idMae;
+      this.linkGet = linkGet;
+      this.desenharConteudo = __bind(this.desenharConteudo, this);
+
       PaginaListagem.__super__.constructor.call(this, this.modulo, this.idMae);
     }
 
-    PaginaListagem.prototype.desenharConteudo = function(linkGet) {
+    PaginaListagem.prototype.desenharConteudo = function() {
       var _this = this;
-      this.content.empty();
-      this.lista = $('<ul data-role="listview" data-divider-theme="b" data-inset="true">');
-      this.content.append(this.lista);
-      this.lista.append($('<li data-role="list-divider" role="heading">' + this.modulo.nome + '</li>'));
+      this.mudarPagina();
+      this.pagina.append($('<p>' + this.modulo.nome + '</p>'));
       this.desenharBotaoNovo();
+      this.lista = $('<table>');
+      this.pagina.append(this.lista);
       this.desenharBotaoVoltar();
-      this.atualizar();
-      return $.getJSON(linkGet, function(jsonObj) {
-        $.each(jsonObj, function(i, registro) {
+      return $.getJSON(this.linkGet, function(jsonObj) {
+        return $.each(jsonObj, function(i, registro) {
           return _this.listar(registro);
         });
-        return _this.lista.listview('refresh');
       });
     };
 
     PaginaListagem.prototype.listar = function(registro) {
-      var editar, li, linha, ver,
+      var editar, texto, tr, ver,
         _this = this;
-      linha = this.modulo.prepararLinhaListagem(registro);
-      ver = $("<a href='#" + this.modulo.paginaDetalhes.getId() + ("' data-transition='slide'>" + linha + "</a>"));
-      editar = $("<a href='#" + this.modulo.paginaEdicao.getId() + "' data-transition='slide'>Editar</a>");
-      li = $("<li data-theme='c' data-icon='edit'>");
-      li.append(ver);
-      li.append(editar);
-      this.lista.append(li);
+      tr = $('<tr>');
+      this.lista.append(tr);
+      texto = this.modulo.prepararLinhaListagem(registro);
+      ver = $("<td>" + texto + "</td>");
+      tr.append(ver);
+      editar = $("<td>Editar</td>");
+      tr.append(editar);
       ver.click(function() {
         return _this.modulo.abrirItem(registro.id);
       });
@@ -135,11 +135,8 @@
     };
 
     PaginaListagem.prototype.desenharBotaoNovo = function() {
-      var criar,
-        _this = this;
-      criar = $('<a data-role="button" data-inline="true" href="#criacao' + this.modulo.url + '" data-icon="create" data-iconpos="left">Criar</a>');
-      this.content.append(criar);
-      return criar.click(function() {
+      var _this = this;
+      return App.desenharBotao(this.pagina, 'Criar', function() {
         return _this.modulo.novoItem();
       });
     };
@@ -152,9 +149,10 @@
 
     __extends(PaginaDetalhes, _super);
 
-    function PaginaDetalhes(modulo) {
+    function PaginaDetalhes(modulo, paginaMae) {
       this.modulo = modulo;
-      PaginaDetalhes.__super__.constructor.call(this, this.modulo, this.modulo.paginaListagem.getId());
+      this.paginaMae = paginaMae;
+      PaginaDetalhes.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     PaginaDetalhes.prototype.getId = function() {
@@ -166,17 +164,15 @@
       this.idItem = idItem;
       this.desenharConteudo();
       return $.getJSON(this.modulo.url + "/" + this.idItem, function(jsonObj) {
-        _this.carregar(jsonObj);
-        return _this.atualizar();
+        return _this.carregar(jsonObj);
       });
     };
 
     PaginaDetalhes.prototype.desenharConteudo = function() {
-      this.content.empty();
+      this.mudarPagina();
       this.titulo = $("<div>" + this.modulo.nome + " </div>");
-      this.content.append(this.titulo);
-      this.desenharBotaoVoltar();
-      return this.atualizar();
+      this.pagina.append(this.titulo);
+      return this.desenharBotaoVoltar();
     };
 
     PaginaDetalhes.prototype.carregar = function(registro) {
@@ -191,14 +187,12 @@
 
     __extends(PaginaEdicao, _super);
 
-    function PaginaEdicao(modulo) {
+    function PaginaEdicao(modulo, paginaMae) {
       this.modulo = modulo;
+      this.paginaMae = paginaMae;
       this.salvar = __bind(this.salvar, this);
 
-      PaginaEdicao.__super__.constructor.call(this, this.modulo, this.modulo.paginaListagem.getId());
-      this.form = $('<form>');
-      this.content.append(this.form);
-      this.desenharBotaoVoltar();
+      PaginaEdicao.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     PaginaEdicao.prototype.getId = function() {
@@ -206,7 +200,10 @@
     };
 
     PaginaEdicao.prototype.desenharConteudo = function() {
-      return this.form.empty();
+      this.mudarPagina();
+      this.form = $('<form>');
+      this.pagina.append(this.form);
+      return this.desenharBotaoVoltar();
     };
 
     PaginaEdicao.prototype.abrir = function(idItem, versionItem) {
@@ -216,19 +213,15 @@
       this.desenharConteudo();
       return $.getJSON(this.modulo.url + "/" + this.idItem, function(jsonObj) {
         _this.desenharConteudoForm(jsonObj);
-        _this.desenharBotaoSalvar();
-        return _this.atualizar();
+        return _this.desenharBotaoSalvar();
       });
     };
 
     PaginaEdicao.prototype.desenharConteudoForm = function(jsonObj) {};
 
     PaginaEdicao.prototype.desenharBotaoSalvar = function() {
-      var submit,
-        _this = this;
-      submit = $('<a href="#' + this.idMae + '" data-role="button" data-inline="true" data-icon="arrow-l" data-iconpos="left">Salvar</a>');
-      this.form.append(submit);
-      return submit.click(function() {
+      var _this = this;
+      return App.desenharBotao(this.form, 'Salvar', function() {
         return _this.salvar();
       });
     };
@@ -237,7 +230,7 @@
       var json,
         _this = this;
       json = this.montarJSON();
-      return this.enviarPut(this.modulo.url, json, function() {
+      return App.enviarPut(this.modulo.url, json, function() {
         return _this.modulo.abrir();
       });
     };
@@ -254,14 +247,12 @@
 
     __extends(PaginaCriacao, _super);
 
-    function PaginaCriacao(modulo) {
+    function PaginaCriacao(modulo, paginaMae) {
       this.modulo = modulo;
+      this.paginaMae = paginaMae;
       this.salvar = __bind(this.salvar, this);
 
-      PaginaCriacao.__super__.constructor.call(this, this.modulo, this.modulo.paginaListagem.getId());
-      this.form = $('<form>');
-      this.content.append(this.form);
-      this.desenharBotaoVoltar();
+      PaginaCriacao.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     PaginaCriacao.prototype.getId = function() {
@@ -269,24 +260,23 @@
     };
 
     PaginaCriacao.prototype.desenharConteudo = function() {
-      return this.form.empty();
+      this.mudarPagina();
+      this.form = $('<form>');
+      this.pagina.append(this.form);
+      return this.desenharBotaoVoltar();
     };
 
     PaginaCriacao.prototype.abrir = function() {
       this.desenharConteudo();
       this.desenharConteudoForm();
-      this.desenharBotaoSalvar();
-      return this.atualizar();
+      return this.desenharBotaoSalvar();
     };
 
     PaginaCriacao.prototype.desenharConteudoForm = function() {};
 
     PaginaCriacao.prototype.desenharBotaoSalvar = function() {
-      var submit,
-        _this = this;
-      submit = $('<a href="#' + this.idMae + '" data-role="button" data-inline="true" data-icon="arrow-l" data-iconpos="left">Criar</a>');
-      this.form.append(submit);
-      return submit.click(function() {
+      var _this = this;
+      return App.desenharBotao(this.form, 'Salvar', function() {
         return _this.salvar();
       });
     };
@@ -295,7 +285,7 @@
       var json,
         _this = this;
       json = this.montarJSON();
-      return this.enviarPost(this.modulo.url, json, function() {
+      return App.enviarPost(this.modulo.url, json, function() {
         return _this.modulo.abrir();
       });
     };
@@ -310,7 +300,8 @@
 
   App.Modulo = (function() {
 
-    function Modulo(nome, url, propriedade) {
+    function Modulo(paginaMae, nome, url, propriedade) {
+      this.paginaMae = paginaMae;
       this.nome = nome;
       this.url = url;
       this.propriedade = propriedade;
@@ -321,23 +312,23 @@
     }
 
     Modulo.prototype.criarPaginaListagem = function() {
-      return new App.PaginaListagem(this, "principal");
+      return new App.PaginaListagem(this, this.paginaMae, this.url);
     };
 
     Modulo.prototype.criarPaginaEdicao = function() {
-      return new App.PaginaEdicao(this);
+      return new App.PaginaEdicao(this, this.paginaListagem);
     };
 
     Modulo.prototype.criarPaginaCriacao = function() {
-      return new App.PaginaCriacao(this);
+      return new App.PaginaCriacao(this, this.paginaListagem);
     };
 
     Modulo.prototype.criarPaginaDetalhes = function() {
-      return new App.PaginaDetalhes(this);
+      return new App.PaginaDetalhes(this, this.paginaListagem);
     };
 
     Modulo.prototype.abrir = function() {
-      return this.paginaListagem.desenharConteudo(this.url);
+      return this.paginaListagem.desenharConteudo();
     };
 
     Modulo.prototype.novoItem = function() {
@@ -369,11 +360,11 @@
       this.urlFilho = urlFilho;
       this.propriedade = propriedade;
       this.moduloPai = moduloPai;
-      SubModulo.__super__.constructor.call(this, this.nome, this.urlFilho, this.propriedade);
+      SubModulo.__super__.constructor.call(this, this.moduloPai.paginaDetalhes, this.nome, this.urlFilho, this.propriedade);
     }
 
     SubModulo.prototype.criarPaginaListagem = function() {
-      return new App.PaginaListagem(this, this.moduloPai.paginaDetalhes.getId());
+      return new App.PaginaListagem(this, this.moduloPai.paginaDetalhes);
     };
 
     SubModulo.prototype.abrir = function(idPai) {
@@ -382,7 +373,8 @@
         this.idObjetoPai = idPai;
       }
       link = this.moduloPai.url + '/' + this.idObjetoPai + '/' + this.urlFilho;
-      return this.paginaListagem.desenharConteudo(link);
+      this.paginaListagem = new App.PaginaListagem(this, this.paginaMae, link);
+      return this.paginaListagem.desenharConteudo();
     };
 
     return SubModulo;
