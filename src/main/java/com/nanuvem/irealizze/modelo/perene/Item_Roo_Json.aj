@@ -5,25 +5,12 @@ package com.nanuvem.irealizze.modelo.perene;
 
 import com.nanuvem.irealizze.modelo.perene.Item;
 import flexjson.JSONDeserializer;
-import flexjson.JSONSerializer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 privileged aspect Item_Roo_Json {
-    
-    public String Item.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
-    }
-    
-    public static Item Item.fromJsonToItem(String json) {
-        return new JSONDeserializer<Item>().use(null, Item.class).deserialize(json);
-    }
-    
-    public static String Item.toJsonArray(Collection<Item> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
-    }
-    
+       
     public static Collection<Item> Item.fromJsonArrayToItems(String json) {
         return new JSONDeserializer<List<Item>>().use(null, ArrayList.class).use("values", Item.class).deserialize(json);
     }

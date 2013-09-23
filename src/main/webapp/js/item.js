@@ -6,20 +6,21 @@
 
     __extends(FormEdicaoItem, _super);
 
-    function FormEdicaoItem(modulo) {
+    function FormEdicaoItem(modulo, paginaMae) {
       this.modulo = modulo;
-      FormEdicaoItem.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      FormEdicaoItem.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     FormEdicaoItem.prototype.desenharConteudoForm = function(jsonObj) {
       var divNome, divUnidade, labelNome, labelUnidade;
-      divNome = $('<div data-role="fieldcontain">');
+      divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
       this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
       divNome.append(labelNome);
       divNome.append(this.inputNome);
-      divUnidade = $('<div data-role="fieldcontain">');
+      divUnidade = $('<div>');
       this.form.append(divUnidade);
       labelUnidade = $('<label for="unidade">Unidade</label>');
       this.inputUnidade = $('<input name="unidade" id="unidade" placeholder="" value="' + jsonObj.unidade + '" type="text">');
@@ -28,7 +29,7 @@
     };
 
     FormEdicaoItem.prototype.montarJSON = function() {
-      return '{ "nome": "' + this.inputNome.val() + '", "unidade": ' + this.inputUnidade.val() + ', "id": ' + this.idItem + ', "version": ' + this.versionItem + ' }';
+      return '{ "nome": "' + this.inputNome.val() + '", "unidade": "' + this.inputUnidade.val() + '", "tipoitem": ' + this.modulo.idObjetoPai + ', "id": ' + this.idItem + ', "version": ' + this.versionItem + ' }';
     };
 
     return FormEdicaoItem;
@@ -46,13 +47,13 @@
 
     FormCriacaoItem.prototype.desenharConteudoForm = function() {
       var divNome, divUnidade, labelNome, labelUnidade;
-      divNome = $('<div data-role="fieldcontain">');
+      divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
       this.inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">');
       divNome.append(labelNome);
       divNome.append(this.inputNome);
-      divUnidade = $('<div data-role="fieldcontain">');
+      divUnidade = $('<div>');
       this.form.append(divUnidade);
       labelUnidade = $('<label for="unidade">Unidade</label>');
       this.inputUnidade = $('<input name="unidade" id="unidade" placeholder="" value="" type="text">');
@@ -61,7 +62,10 @@
     };
 
     FormCriacaoItem.prototype.montarJSON = function() {
-      return '{ "nome": "' + this.inputNome.val() + '", "unidade": ' + this.inputUnidade.val() + ', "TipoItem": ' + this.modulo.idObjetoPai + ' }';
+      var j;
+      j = '{ "nome": "' + this.inputNome.val() + '", "unidade": "' + this.inputUnidade.val() + '", "tipoitem": ' + this.modulo.idObjetoPai + ' }';
+      alert(j);
+      return j;
     };
 
     return FormCriacaoItem;
@@ -79,10 +83,6 @@
 
     PaginaDetalhesItem.prototype.carregar = function(registro) {
       return this.titulo.html("" + registro[this.modulo.propriedade]);
-    };
-
-    PaginaDetalhesItem.prototype.montarJSON = function() {
-      return "{ 'item do tipoitem', 'itens': '" + (this.inputItens.val()) + "' }";
     };
 
     return PaginaDetalhesItem;

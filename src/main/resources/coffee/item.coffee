@@ -1,34 +1,32 @@
 class App.FormEdicaoItem extends App.PaginaEdicao
-  constructor: (@modulo) ->
-    super(@modulo)
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
     
   desenharConteudoForm: (jsonObj) ->
-    divNome = $('<div data-role="fieldcontain">')
+    divNome = $('<div>')
     @form.append divNome    
     labelNome = $('<label for="nome">Nome</label>')        
-    @inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">')
-                
+    @inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">')          
     divNome.append labelNome
     divNome.append @inputNome
 
-    divUnidade = $('<div data-role="fieldcontain">')
+    divUnidade = $('<div>')
     @form.append divUnidade    
     labelUnidade = $('<label for="unidade">Unidade</label>')        
-    @inputUnidade = $('<input name="unidade" id="unidade" placeholder="" value="' + jsonObj.unidade + '" type="text">')
-                
+    @inputUnidade = $('<input name="unidade" id="unidade" placeholder="" value="' + jsonObj.unidade + '" type="text">')             
     divUnidade.append labelUnidade
     divUnidade.append @inputUnidade
 
   montarJSON: ->
-    '{ "nome": "' + @inputNome.val() + '", "unidade": ' + @inputUnidade.val() + 
-      ', "id": ' + @idItem + ', "version": ' + @versionItem + ' }'                
+    '{ "nome": "' + @inputNome.val() + '", "unidade": "' + @inputUnidade.val() + 
+      '", "tipoitem": ' + @modulo.idObjetoPai + ', "id": ' + @idItem + ', "version": ' + @versionItem + ' }'                
 
 class App.FormCriacaoItem extends App.PaginaCriacao
   constructor: (@modulo) ->
     super(@modulo)
     
   desenharConteudoForm: () ->
-    divNome = $('<div data-role="fieldcontain">')
+    divNome = $('<div>')
     @form.append divNome    
     labelNome = $('<label for="nome">Nome</label>')        
     @inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">')
@@ -36,7 +34,7 @@ class App.FormCriacaoItem extends App.PaginaCriacao
     divNome.append labelNome
     divNome.append @inputNome
     
-    divUnidade = $('<div data-role="fieldcontain">')
+    divUnidade = $('<div>')
     @form.append divUnidade    
     labelUnidade = $('<label for="unidade">Unidade</label>')        
     @inputUnidade = $('<input name="unidade" id="unidade" placeholder="" value="" type="text">')
@@ -45,8 +43,9 @@ class App.FormCriacaoItem extends App.PaginaCriacao
     divUnidade.append @inputUnidade
 
   montarJSON: ->
-    '{ "nome": "' + @inputNome.val() + '", "unidade": ' + @inputUnidade.val() + ', "TipoItem": ' + @modulo.idObjetoPai + ' }'                
-
+    j = '{ "nome": "' + @inputNome.val() + '", "unidade": "' + @inputUnidade.val() + '", "tipoitem": ' + @modulo.idObjetoPai + ' }'                
+    alert j
+    return j
 
 class App.PaginaDetalhesItem extends App.PaginaDetalhes
   constructor:(@modulo)->
@@ -55,9 +54,6 @@ class App.PaginaDetalhesItem extends App.PaginaDetalhes
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
         
-  montarJSON: ->
-    "{ 'item do tipoitem', 'itens': '#{@inputItens.val()}' }"
-
 class App.ModuloItem extends App.SubModulo
   constructor: (@moduloPai) ->
     super('Itens', 'itens', 'nome', @moduloPai)

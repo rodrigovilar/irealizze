@@ -17,7 +17,7 @@
       divNome = $('<div>');
       this.form.append(divNome);
       labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
+      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nom + '" type="text">');
       divNome.append(labelNome);
       divNome.append(this.inputNome);
       ({
@@ -62,19 +62,16 @@
 
     __extends(PaginaDetalhesTipoItem, _super);
 
-    function PaginaDetalhesTipoItem(modulo) {
+    function PaginaDetalhesTipoItem(modulo, paginaMae) {
       this.modulo = modulo;
-      PaginaDetalhesTipoItem.__super__.constructor.call(this, this.modulo);
+      this.paginaMae = paginaMae;
+      PaginaDetalhesTipoItem.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     PaginaDetalhesTipoItem.prototype.carregar = function(registro) {
-      var botaoItens,
-        _this = this;
+      var _this = this;
       this.titulo.html("" + registro[this.modulo.propriedade]);
-      botaoItens = $('<a data-role="button" data-inline="true" href="#' + this.modulo.moduloItem.paginaListagem.getId() + '" data-icon="create" data-iconpos="left">Itens</a>');
-      this.content.append(botaoItens);
-      App.atualizarGUI(this.page);
-      return botaoItens.click(function() {
+      return App.desenharBotao(this.pagina, 'Itens', function() {
         return _this.modulo.moduloItem.abrir(registro.id);
       });
     };
@@ -90,6 +87,7 @@
     function ModuloTipoItem(paginaMae) {
       this.paginaMae = paginaMae;
       ModuloTipoItem.__super__.constructor.call(this, this.paginaMae, 'TipoItem', 'tipositens', 'nome');
+      this.moduloItem = new App.ModuloItem(this);
     }
 
     ModuloTipoItem.prototype.criarPaginaEdicao = function() {
@@ -100,8 +98,8 @@
       return new App.FormCriacaoTipoItem(this);
     };
 
-    ModuloTipoItem.prototype.criarPaginaDetalhesTipoItem = function() {
-      return new App.PaginaDetalhesTipoItem(this);
+    ModuloTipoItem.prototype.criarPaginaDetalhes = function() {
+      return new App.PaginaDetalhesTipoItem(this, this.paginaListagem);
     };
 
     return ModuloTipoItem;

@@ -29,13 +29,27 @@ class App.FormCriacaoTipoItem extends App.PaginaCriacao
     "{ 'nome': '#{@inputNome.val()}' }"                
 
 
+class App.PaginaDetalhesTipoItem extends App.PaginaDetalhes
+  constructor:(@modulo, @paginaMae)->
+    super(@modulo, @paginaMae)
+  
+  carregar: (registro) ->
+    @titulo.html "#{registro[@modulo.propriedade]}"
+    
+    App.desenharBotao @pagina, 'Itens', =>
+      @modulo.moduloItem.abrir(registro.id)
+
+
 class App.ModuloTipoItem extends App.Modulo
   constructor: (@paginaMae) ->
     super(@paginaMae, 'TipoItem', 'tipositens', 'nome')
-    
+    @moduloItem = new App.ModuloItem(this)
+        
   criarPaginaEdicao: ->
     new App.FormEdicaoTipoItem(this)
 
-    
   criarPaginaCriacao: ->
     new App.FormCriacaoTipoItem(this)   
+    
+  criarPaginaDetalhes: ->
+    new App.PaginaDetalhesTipoItem(this, @paginaListagem)

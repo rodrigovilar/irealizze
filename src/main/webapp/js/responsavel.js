@@ -80,8 +80,9 @@
 
     __extends(ModuloResponsaveis, _super);
 
-    function ModuloResponsaveis() {
-      ModuloResponsaveis.__super__.constructor.call(this, 'Responsavel', 'responsaveis', 'login');
+    function ModuloResponsaveis(paginaMae) {
+      this.paginaMae = paginaMae;
+      ModuloResponsaveis.__super__.constructor.call(this, this.paginaMae, 'Responsavel', 'responsaveis', 'login');
     }
 
     ModuloResponsaveis.prototype.criarPaginaEdicao = function() {
