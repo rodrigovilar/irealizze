@@ -43,9 +43,8 @@ class App.FormCriacaoItem extends App.PaginaCriacao
     divUnidade.append @inputUnidade
 
   montarJSON: ->
-    j = '{ "nome": "' + @inputNome.val() + '", "unidade": "' + @inputUnidade.val() + '", "tipoitem": ' + @modulo.idObjetoPai + ' }'                
-    alert j
-    return j
+    '{ "nome": "' + @inputNome.val() + '", "unidade": "' + @inputUnidade.val() + '", "tipoitem": ' + @modulo.idObjetoPai + ' }'                
+    
 
 class App.PaginaDetalhesItem extends App.PaginaDetalhes
   constructor:(@modulo)->
