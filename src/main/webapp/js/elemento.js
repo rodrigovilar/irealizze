@@ -69,7 +69,11 @@
     }
 
     PaginaDetalhesElemento.prototype.carregar = function(registro) {
-      return this.titulo.html("" + registro[this.modulo.propriedade]);
+      var _this = this;
+      this.titulo.html("" + registro[this.modulo.propriedade]);
+      return App.desenharBotao(this.pagina, 'ElementosFolhas', function() {
+        return _this.modulo.moduloElementoFolha.abrir(registro.id);
+      });
     };
 
     return PaginaDetalhesElemento;
@@ -83,6 +87,7 @@
     function ModuloElementos(moduloPai) {
       this.moduloPai = moduloPai;
       ModuloElementos.__super__.constructor.call(this, 'Elementos', 'elementos', 'nome', this.moduloPai);
+      this.moduloElementoFolha = new App.ModuloElementoFolha(this);
     }
 
     ModuloElementos.prototype.criarPaginaEdicao = function() {
@@ -95,10 +100,6 @@
 
     ModuloElementos.prototype.criarPaginaDetalhes = function() {
       return new App.PaginaDetalhesElemento(this, this.paginaListagem);
-    };
-
-    ModuloElementos.prototype.abrirItem = function(idItem) {
-      return alert("ver elemento " + idItem);
     };
 
     return ModuloElementos;

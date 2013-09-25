@@ -21,6 +21,7 @@ class App.FormEdicaoItem extends App.PaginaEdicao
     '{ "nome": "' + @inputNome.val() + '", "unidade": "' + @inputUnidade.val() + 
       '", "tipoitem": ' + @modulo.idObjetoPai + ', "id": ' + @idItem + ', "version": ' + @versionItem + ' }'                
 
+
 class App.FormCriacaoItem extends App.PaginaCriacao
   constructor: (@modulo) ->
     super(@modulo)
@@ -52,10 +53,15 @@ class App.PaginaDetalhesItem extends App.PaginaDetalhes
   
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
+    
+    App.desenharBotao @pagina, 'ElementosFolhas', =>
+      @modulo.moduloElementoFolha.abrir(registro.id)
+        
         
 class App.ModuloItem extends App.SubModulo
   constructor: (@moduloPai) ->
     super('Itens', 'itens', 'nome', @moduloPai)
+    @moduloElementoFolha = new App.ModuloElementoFolha(this)
     
   criarPaginaEdicao: ->
     new App.FormEdicaoItem(this)

@@ -54,13 +54,13 @@ class App.ModuloElementoFolha extends App.SubModulo
     super('ElementosFolhas', 'elementosfolhas', 'quantidade', 'status', @moduloPai)
     
   criarPaginaEdicao: ->
-    new App.FormEdicaoElemento(this, @paginaListagem)
+    new App.FormEdicaoElementoFolha(this, @paginaListagem)
     
   criarPaginaCriacao: ->
-    new App.FormCriacaoElemento(this, @paginaListagem)
+    new App.FormCriacaoElementoFolha(this, @paginaListagem)
     
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhesElemento(this, @paginaListagem)  
+    new App.PaginaDetalhesElementoFolha(this, @paginaListagem)  
   
   abrirItem: (idItem) ->
     alert "ver elementofolha " + idItem

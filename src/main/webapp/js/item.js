@@ -62,10 +62,7 @@
     };
 
     FormCriacaoItem.prototype.montarJSON = function() {
-      var j;
-      j = '{ "nome": "' + this.inputNome.val() + '", "unidade": "' + this.inputUnidade.val() + '", "tipoitem": ' + this.modulo.idObjetoPai + ' }';
-      alert(j);
-      return j;
+      return '{ "nome": "' + this.inputNome.val() + '", "unidade": "' + this.inputUnidade.val() + '", "tipoitem": ' + this.modulo.idObjetoPai + ' }';
     };
 
     return FormCriacaoItem;
@@ -82,7 +79,11 @@
     }
 
     PaginaDetalhesItem.prototype.carregar = function(registro) {
-      return this.titulo.html("" + registro[this.modulo.propriedade]);
+      var _this = this;
+      this.titulo.html("" + registro[this.modulo.propriedade]);
+      return App.desenharBotao(this.pagina, 'ElementosFolhas', function() {
+        return _this.modulo.moduloElementoFolha.abrir(registro.id);
+      });
     };
 
     return PaginaDetalhesItem;
@@ -96,6 +97,7 @@
     function ModuloItem(moduloPai) {
       this.moduloPai = moduloPai;
       ModuloItem.__super__.constructor.call(this, 'Itens', 'itens', 'nome', this.moduloPai);
+      this.moduloElementoFolha = new App.ModuloElementoFolha(this);
     }
 
     ModuloItem.prototype.criarPaginaEdicao = function() {

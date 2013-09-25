@@ -37,11 +37,15 @@ class App.PaginaDetalhesElemento extends App.PaginaDetalhes
   
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
+    
+    App.desenharBotao @pagina, 'ElementosFolhas', =>
+      @modulo.moduloElementoFolha.abrir(registro.id)
         
 
 class App.ModuloElementos extends App.SubModulo
   constructor: (@moduloPai) ->
     super('Elementos', 'elementos', 'nome', @moduloPai)
+    @moduloElementoFolha = new App.ModuloElementoFolha(this)
     
   criarPaginaEdicao: ->
     new App.FormEdicaoElemento(this, @paginaListagem)
@@ -50,7 +54,4 @@ class App.ModuloElementos extends App.SubModulo
     new App.FormCriacaoElemento(this, @paginaListagem)
     
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhesElemento(this, @paginaListagem)  
-  
-  abrirItem: (idItem) ->
-    alert "ver elemento " + idItem
+    new App.PaginaDetalhesElemento(this, @paginaListagem)
