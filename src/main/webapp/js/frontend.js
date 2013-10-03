@@ -60,10 +60,6 @@
       this.paginaMae = paginaMae;
     }
 
-    Pagina.prototype.getId = function() {
-      return "pagina" + this.modulo.url;
-    };
-
     Pagina.prototype.desenharConteudo = function() {
       this.mudarPagina();
       return this.desenharBotaoVoltar();
@@ -73,7 +69,7 @@
       var body;
       body = $("body");
       body.empty();
-      this.pagina = $('<div id="' + this.getId() + '">"');
+      this.pagina = $('<div>"');
       return body.append(this.pagina);
     };
 
@@ -92,13 +88,12 @@
 
     __extends(PaginaListagem, _super);
 
-    function PaginaListagem(modulo, idMae, linkGet) {
+    function PaginaListagem(modulo, paginaMae) {
       this.modulo = modulo;
-      this.idMae = idMae;
-      this.linkGet = linkGet;
+      this.paginaMae = paginaMae;
       this.desenharConteudo = __bind(this.desenharConteudo, this);
 
-      PaginaListagem.__super__.constructor.call(this, this.modulo, this.idMae);
+      PaginaListagem.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
     PaginaListagem.prototype.desenharConteudo = function() {
@@ -109,7 +104,7 @@
       this.lista = $('<table>');
       this.pagina.append(this.lista);
       this.desenharBotaoVoltar();
-      return $.getJSON(this.linkGet, function(jsonObj) {
+      return $.getJSON(this.modulo.url, function(jsonObj) {
         return $.each(jsonObj, function(i, registro) {
           return _this.listar(registro);
         });
@@ -155,10 +150,6 @@
       PaginaDetalhes.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
-    PaginaDetalhes.prototype.getId = function() {
-      return "detalhes" + this.modulo.url;
-    };
-
     PaginaDetalhes.prototype.abrir = function(idItem) {
       var _this = this;
       this.idItem = idItem;
@@ -194,10 +185,6 @@
 
       PaginaEdicao.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
-
-    PaginaEdicao.prototype.getId = function() {
-      return "edicao" + this.modulo.url;
-    };
 
     PaginaEdicao.prototype.desenharConteudo = function() {
       this.mudarPagina();
@@ -255,10 +242,6 @@
       PaginaCriacao.__super__.constructor.call(this, this.modulo, this.paginaMae);
     }
 
-    PaginaCriacao.prototype.getId = function() {
-      return "criacao" + this.modulo.url;
-    };
-
     PaginaCriacao.prototype.desenharConteudo = function() {
       this.mudarPagina();
       this.form = $('<form>');
@@ -312,7 +295,7 @@
     }
 
     Modulo.prototype.criarPaginaListagem = function() {
-      return new App.PaginaListagem(this, this.paginaMae, this.url);
+      return new App.PaginaListagem(this, this.paginaMae);
     };
 
     Modulo.prototype.criarPaginaEdicao = function() {
@@ -373,6 +356,10 @@
         this.idObjetoPai = idPai;
       }
       link = this.moduloPai.url + '/' + this.idObjetoPai + '/' + this.urlFilho;
+      if (this.moduloPai.urlFilho) {
+        link = this.moduloPai.urlFilho + '/' + this.idObjetoPai + '/' + this.urlFilho;
+      }
+      alert(link);
       this.paginaListagem = new App.PaginaListagem(this, this.paginaMae, link);
       return this.paginaListagem.desenharConteudo();
     };

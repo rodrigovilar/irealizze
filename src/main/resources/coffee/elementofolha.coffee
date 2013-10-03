@@ -51,7 +51,7 @@ class App.PaginaDetalhesElementoFolha extends App.PaginaDetalhes
         
 class App.ModuloElementoFolha extends App.SubModulo
   constructor: (@moduloPai) ->
-    super('ElementosFolhas', 'elementosfolhas', 'quantidade', 'status', @moduloPai)
+    super('ElementosFolhas', 'elementosfolhas', 'status', @moduloPai)
     
   criarPaginaEdicao: ->
     new App.FormEdicaoElementoFolha(this, @paginaListagem)

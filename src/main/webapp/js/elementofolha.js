@@ -94,7 +94,7 @@
 
     function ModuloElementoFolha(moduloPai) {
       this.moduloPai = moduloPai;
-      ModuloElementoFolha.__super__.constructor.call(this, 'ElementosFolhas', 'elementosfolhas', 'quantidade', 'status', this.moduloPai);
+      ModuloElementoFolha.__super__.constructor.call(this, 'ElementosFolhas', 'elementosfolhas', 'status', this.moduloPai);
     }
 
     ModuloElementoFolha.prototype.criarPaginaEdicao = function() {
