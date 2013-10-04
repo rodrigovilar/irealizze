@@ -111,7 +111,7 @@
     ModuloPeriodos.prototype.prepararLinhaListagem = function(registro) {
       var formatoAAAAMMDD, formatoDDMMAAAA;
       formatoAAAAMMDD = registro[this.propriedade];
-      formatoDDMMAAAA = formatoAAAAMMDD;
+      formatoDDMMAAAA = formatoAAAAMMDD.split('-').reverse().join('/');
       return formatoDDMMAAAA;
     };
 
