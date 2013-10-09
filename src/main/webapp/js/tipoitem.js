@@ -58,6 +58,28 @@
 
   })(App.PaginaCriacao);
 
+  App.PaginaDetalhesTipoItem = (function(_super) {
+
+    __extends(PaginaDetalhesTipoItem, _super);
+
+    function PaginaDetalhesTipoItem(modulo, paginaMae) {
+      this.modulo = modulo;
+      this.paginaMae = paginaMae;
+      PaginaDetalhesTipoItem.__super__.constructor.call(this, this.modulo, this.paginaMae);
+    }
+
+    PaginaDetalhesTipoItem.prototype.carregar = function(registro) {
+      var _this = this;
+      this.titulo.html("" + registro[this.modulo.propriedade]);
+      return App.desenharBotao(this.pagina, 'Itens', function() {
+        return _this.modulo.moduloItem.abrir(registro.id);
+      });
+    };
+
+    return PaginaDetalhesTipoItem;
+
+  })(App.PaginaDetalhes);
+
   App.ModuloTipoItem = (function(_super) {
 
     __extends(ModuloTipoItem, _super);
@@ -65,6 +87,7 @@
     function ModuloTipoItem(paginaMae) {
       this.paginaMae = paginaMae;
       ModuloTipoItem.__super__.constructor.call(this, this.paginaMae, 'TipoItem', 'tipositens', 'nome');
+      this.moduloItem = new App.ModuloItem(this);
     }
 
     ModuloTipoItem.prototype.criarPaginaEdicao = function() {
@@ -73,6 +96,10 @@
 
     ModuloTipoItem.prototype.criarPaginaCriacao = function() {
       return new App.FormCriacaoTipoItem(this);
+    };
+
+    ModuloTipoItem.prototype.criarPaginaDetalhes = function() {
+      return new App.PaginaDetalhesTipoItem(this, this.paginaListagem);
     };
 
     return ModuloTipoItem;

@@ -39,9 +39,6 @@ class App.Pagina
 
   constructor: (@modulo, @paginaMae) ->
     
-  getId: ->
-    "pagina" + @modulo.url
-
   desenharConteudo: ->
     @mudarPagina()
     @desenharBotaoVoltar()
@@ -50,7 +47,7 @@ class App.Pagina
     body  = $("body")
     body.empty()
     
-    @pagina = $('<div id="' + @getId() + '">"')
+    @pagina = $('<div>"')
     body.append @pagina
     
   desenharBotaoVoltar: ->
@@ -60,8 +57,8 @@ class App.Pagina
   
 class App.PaginaListagem extends App.Pagina
 
-  constructor: (@modulo, @idMae, @linkGet) ->
-    super(@modulo, @idMae)
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
 
   desenharConteudo: =>
     @mudarPagina()
@@ -74,7 +71,7 @@ class App.PaginaListagem extends App.Pagina
     
     @desenharBotaoVoltar()
 
-    $.getJSON @linkGet, (jsonObj) =>
+    $.getJSON @modulo.url, (jsonObj) =>
       $.each jsonObj, (i, registro) =>
         @listar(registro)
     
@@ -105,9 +102,6 @@ class App.PaginaDetalhes extends App.Pagina
   constructor: (@modulo, @paginaMae) ->
     super(@modulo, @paginaMae)
 
-  getId: ->
-    "detalhes" + @modulo.url
-
   abrir: (@idItem) ->
     @desenharConteudo()    
     $.getJSON @modulo.url + "/" + @idItem, (jsonObj) =>
@@ -129,9 +123,6 @@ class App.PaginaEdicao extends App.Pagina
   constructor: (@modulo, @paginaMae) ->
     super(@modulo, @paginaMae)
     
-  getId: ->
-    "edicao" + @modulo.url
-
   desenharConteudo: ->
     @mudarPagina()
     @form = $('<form>')
@@ -164,9 +155,6 @@ class App.PaginaCriacao extends App.Pagina
   constructor: (@modulo, @paginaMae) ->
     super(@modulo, @paginaMae)
     
-  getId: ->
-    "criacao" + @modulo.url
-
   desenharConteudo: ->
     @mudarPagina()
     @form = $('<form>')
@@ -202,7 +190,7 @@ class App.Modulo
     @paginaDetalhes = @criarPaginaDetalhes()
   
   criarPaginaListagem: ->
-    new App.PaginaListagem(this, @paginaMae, @url)
+    new App.PaginaListagem(this, @paginaMae)
    
   criarPaginaEdicao: ->
     new App.PaginaEdicao(this, @paginaListagem)
@@ -240,6 +228,9 @@ class App.SubModulo extends App.Modulo
       @idObjetoPai = idPai
     
     link = @moduloPai.url + '/' + @idObjetoPai + '/' + @urlFilho
+    if (@moduloPai.urlFilho)
+      link = @moduloPai.urlFilho + '/' + @idObjetoPai + '/' + @urlFilho
+      
     @paginaListagem = new App.PaginaListagem(this, @paginaMae, link)
     @paginaListagem.desenharConteudo()
   

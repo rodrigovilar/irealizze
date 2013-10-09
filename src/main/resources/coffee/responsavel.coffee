@@ -37,8 +37,8 @@ class App.PaginaDetalhesResponsavel extends App.PaginaDetalhes
  
 
 class App.ModuloResponsaveis extends App.Modulo
-  constructor: () ->
-    super('Responsavel', 'responsaveis', 'login')
+  constructor: (@paginaMae) ->
+    super(@paginaMae, 'Responsavel', 'responsaveis', 'login')
     
   criarPaginaEdicao: ->
     new App.FormEdicaoResponsavel(this, @paginaListagem)
