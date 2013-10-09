@@ -11,19 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 privileged aspect Preco_Roo_Json {
-    
-    public String Preco.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
-    }
-    
-    public static Preco Preco.fromJsonToPreco(String json) {
-        return new JSONDeserializer<Preco>().use(null, Preco.class).deserialize(json);
-    }
-    
-    public static String Preco.toJsonArray(Collection<Preco> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
-    }
-    
+        
     public static Collection<Preco> Preco.fromJsonArrayToPrecoes(String json) {
         return new JSONDeserializer<List<Preco>>().use(null, ArrayList.class).use("values", Preco.class).deserialize(json);
     }

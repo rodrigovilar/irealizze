@@ -2,6 +2,7 @@ package com.nanuvem.irealizze.modelo.perene;
 
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
@@ -14,6 +15,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
+import org.springframework.transaction.annotation.Transactional;
 
 @RooJavaBean
 @RooToString
@@ -37,4 +39,20 @@ public class TabelaPreco {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tabela")
     private Set<Preco> precos = new HashSet<Preco>();
+    
+    @Transactional
+    public void persist() {
+        if (this.entityManager == null) this.entityManager = entityManager();
+        this.entityManager.persist(this);
+        
+        List<Item> items = Item.findAllItems();//zerando o preço de todos os itens
+        for (Item item : items) {
+			Preco preco = new Preco();
+			preco.setItem(item);
+			preco.setTabela(this);
+			preco.setValorUnitario(0.0);
+			preco.persist();			
+		}
+    }
+
 }
