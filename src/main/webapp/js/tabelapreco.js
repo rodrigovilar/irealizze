@@ -19,10 +19,10 @@
       labelNome = $('<label for="nome">Nome</label>');
       this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
       divNome.append(labelNome);
-      divNome.append(this.inputNome);
-      ({
-        montarJSON: function() {}
-      });
+      return divNome.append(this.inputNome);
+    };
+
+    FormEdicaoTabelaPreco.prototype.montarJSON = function() {
       return "{ 'nome': '" + (this.inputNome.val()) + "' }";
     };
 
@@ -84,10 +84,18 @@
       cabecalho.append(celulaItem);
       celulaPreco = $('<td>Preço</td>');
       cabecalho.append(celulaPreco);
-      $.getJSON("tabelasprecos/" + registro.id + "/precos", function(jsonObj) {
-        return $.each(jsonObj, function(i, registro) {});
+      return $.getJSON("tabelasprecos/" + registro.id + "/precos", function(jsonObj) {
+        return $.each(jsonObj, function(i, preco) {
+          var item, linha;
+          linha = $('<tr>');
+          tabela.append(linha);
+          item = eval(preco.item);
+          celulaItem = $('<td>' + item.nome + '</td>');
+          linha.append(celulaItem);
+          celulaPreco = $('<td>' + preco.valorUnitario + '</td>');
+          return linha.append(celulaPreco);
+        });
       });
-      return alert("estou aqui");
     };
 
     return PaginaDetalhesTabelaPreco;

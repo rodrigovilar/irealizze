@@ -85,7 +85,7 @@ public class Preco {
     
     public String toJson() {
     	ObjectNode noPreco = preco2json(this);
-		return noPreco.toString();
+		return noPreco.toString().replace("\\", "");
 
     }
     
@@ -109,7 +109,7 @@ public class Preco {
 			arrayDePrecos.add(noPreco);
 		}
 
-    	return arrayDePrecos.toString();
+    	return arrayDePrecos.toString().replace("\\", "");
 
     }
 

@@ -10,13 +10,8 @@ class App.FormEdicaoTabelaPreco extends App.PaginaEdicao
     divNome.append labelNome
     divNome.append @inputNome
 
-    montarJSON: ->
-     "{ 'nome': '#{@inputNome.val()}' }" 
-     
-     <table border="1">
-      <tr>
-      <td>@form.append
-    
+  montarJSON: ->
+     "{ 'nome': '#{@inputNome.val()}' }"     
     
 class App.FormCriacaoTabelaPreco extends App.PaginaCriacao
   constructor: (@modulo, @paginaMae) ->
@@ -30,21 +25,18 @@ class App.FormCriacaoTabelaPreco extends App.PaginaCriacao
     divNome.append labelNome
     divNome.append @inputNome
 
-  
-
-   montarJSON: ->
-    "{ 'nome': '#{@inputNome.val()}'}"                
+  montarJSON: ->
+   "{ 'nome': '#{@inputNome.val()}'}"                
 
 
 class App.PaginaDetalhesTabelaPreco extends App.PaginaDetalhes
   constructor:(@modulo, @paginaMae)->
     super(@modulo, @paginaMae)
- 
-   
-   montarJSON: ->
+     
+  montarJSON: ->
     "{ 'nome': '#{@inputNome.val()}'}" 
   
-   carregar: (registro) ->
+  carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
     
     tabela = $('<table>')
@@ -61,8 +53,17 @@ class App.PaginaDetalhesTabelaPreco extends App.PaginaDetalhes
     cabecalho.append celulaPreco
     
     $.getJSON "tabelasprecos/" + registro.id + "/precos", (jsonObj) =>
-      $.each jsonObj, (i, registro) =>
-
+      $.each jsonObj, (i, preco) =>
+        linha = $('<tr>') 
+        tabela.append linha
+    
+        item = eval(preco.item)
+        celulaItem = $('<td>' + item.nome + '</td>')
+        linha.append celulaItem
+    
+        celulaPreco = $('<td>' + preco.valorUnitario + '</td>')
+        linha.append celulaPreco
+        
 
 class App.ModuloTabelaPreco extends App.Modulo
   constructor: (@paginaMae) ->
