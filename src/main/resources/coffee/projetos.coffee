@@ -1,21 +1,10 @@
 class App.FormCriacaoProjeto extends App.PaginaCriacao
-  constructor: (@modulo, @paginaMae) ->
-    super(@modulo, @paginaMae)
+  constructor: (@modulo) ->
+    super(@modulo)
     
   desenharConteudoForm: () ->
-    divNome = $('<div>')
-    @form.append divNome    
-    labelNome = $('<label for="nome">Nome</label>')        
-    @inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">')
-    divNome.append labelNome
-    divNome.append @inputNome
-
-    divCliente = $('<div>')
-    @form.append divCliente    
-    labelCliente = $('<label for="cliente">Cliente</label>')        
-    @inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="" type="text">')
-    divNome.append labelCliente
-    divNome.append @inputCliente
+    @inputNome = App.inputCriacao(@form, "nome", "Nome", "text")
+    @inputCliente = App.inputCriacao(@form, "cliente", "Cliente", "text")
 
   montarJSON: ->
     "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}' }"                
@@ -26,27 +15,16 @@ class App.FormEdicaoProjeto extends App.PaginaEdicao
     super(@modulo, @paginaMae)
     
   desenharConteudoForm: (jsonObj) ->
-    divNome = $('<div>')
-    @form.append divNome    
-    labelNome = $('<label for="nome">Nome</label>')        
-    @inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">')
-    divNome.append labelNome
-    divNome.append @inputNome
-
-    divCliente = $('<div>')
-    @form.append divCliente    
-    labelCliente = $('<label for="cliente">Cliente</label>')        
-    @inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="' + jsonObj.cliente + '" type="text">')
-    divNome.append labelCliente
-    divNome.append @inputCliente
+    @inputNome = App.inputEdicao(@form, "nome", "Nome", "text", jsonObj.nome)
+    @inputCliente = App.inputEdicao(@form, "cliente", "Cliente", "text", jsonObj.cliente)
 
   montarJSON: ->
-    "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}', 'id': #{@idItem}, 'version': #{@versionItem} }"                
+    "{ 'nome': '#{@inputNome.val()}', 'cliente': '#{@inputCliente.val()}', 'id': #{@dados.idItem}, 'version': #{@dados.versionItem} }"                
 
 
 class App.PaginaDetalhesProjeto extends App.PaginaDetalhes
-  constructor:(@modulo, @paginaMae)->
-    super(@modulo, @paginaMae)
+  constructor:(@modulo)->
+    super(@modulo)
   
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
@@ -64,11 +42,11 @@ class App.ModuloProjetos extends App.Modulo
     @moduloPeriodo = new App.ModuloPeriodos(this)
     @moduloElemento = new App.ModuloElementos(this)
     
-  criarPaginaEdicao: ->
-    new App.FormEdicaoProjeto(this, @paginaListagem)
-    
   criarPaginaCriacao: ->
-    new App.FormCriacaoProjeto(this, @paginaListagem)
+    new App.FormCriacaoProjeto(this)
+    
+  criarPaginaEdicao: ->
+    new App.FormEdicaoProjeto(this)
     
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhesProjeto(this, @paginaListagem)
+    new App.PaginaDetalhesProjeto(this)

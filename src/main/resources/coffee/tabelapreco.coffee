@@ -1,48 +1,35 @@
-class App.FormEdicaoTabelaPreco extends App.PaginaEdicao
-  constructor: (@modulo, @paginaMae) ->
-    super(@modulo, @paginaMae)
-      
-  desenharConteudoForm: (jsonObj) ->
-    divNome = $('<div>')
-    @form.append divNome    
-    labelNome = $('<label for="nome">Nome</label>')        
-    @inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">')
-    divNome.append labelNome
-    divNome.append @inputNome
-
-  montarJSON: ->
-     "{ 'nome': '#{@inputNome.val()}' }"     
-    
 class App.FormCriacaoTabelaPreco extends App.PaginaCriacao
-  constructor: (@modulo, @paginaMae) ->
-    super(@modulo, @paginaMae)
+  constructor: (@modulo) ->
+    super(@modulo)
     
   desenharConteudoForm: () ->
-    divNome = $('<div>')
-    @form.append divNome    
-    labelNome = $('<label for="nome">Nome</label>')        
-    @inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">')
-    divNome.append labelNome
-    divNome.append @inputNome
+    @inputNome = App.inputCriacao(@form, "nome", "Nome", "text")
 
   montarJSON: ->
    "{ 'nome': '#{@inputNome.val()}'}"                
 
 
-class App.PaginaDetalhesTabelaPreco extends App.PaginaDetalhes
-  constructor:(@modulo, @paginaMae)->
+class App.FormEdicaoTabelaPreco extends App.PaginaEdicao
+  constructor: (@modulo, @paginaMae) ->
     super(@modulo, @paginaMae)
-     
+      
+  desenharConteudoForm: (jsonObj) ->
+    @inputNome = App.inputEdicao(@form, "nome", "Nome", "text", jsonObj.nome)
+
   montarJSON: ->
-    "{ 'nome': '#{@inputNome.val()}'}" 
-  
+    "{ 'nome': '#{@inputNome.val()}', 'id': #{@dados.idItem}, 'version': #{@dados.versionItem} }"                
+
+    
+class App.PaginaDetalhesTabelaPreco extends App.PaginaDetalhes
+  constructor:(@modulo)->
+    super(@modulo)
+     
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
     
     tabela = $('<table>')
     @pagina.append tabela
     
-   
     cabecalho = $('<th>') 
     tabela.append cabecalho
     
@@ -51,9 +38,11 @@ class App.PaginaDetalhesTabelaPreco extends App.PaginaDetalhes
     
     celulaPreco = $('<td>Preço</td>')
     cabecalho.append celulaPreco
+    link = "tabelasprecos/" + registro.id + "/precos"
     
-    $.getJSON "tabelasprecos/" + registro.id + "/precos", (jsonObj) =>
-      $.each jsonObj, (i, preco) =>
+    $.getJSON link, (jsonObj) ->
+      alert jsonObj
+      $.each jsonObj, (i, preco) ->
         linha = $('<tr>') 
         tabela.append linha
     
@@ -63,17 +52,17 @@ class App.PaginaDetalhesTabelaPreco extends App.PaginaDetalhes
     
         celulaPreco = $('<td>' + preco.valorUnitario + '</td>')
         linha.append celulaPreco
-        
+    
 
 class App.ModuloTabelaPreco extends App.Modulo
   constructor: (@paginaMae) ->
     super(@paginaMae, 'TabelaPreco', 'tabelasprecos', 'nome')
    
   criarPaginaEdicao: ->
-    new App.FormEdicaoTabelaPreco(this, @paginaListagem)
+    new App.FormEdicaoTabelaPreco(this)
   
   criarPaginaCriacao: ->
-    new App.FormCriacaoTabelaPreco(this, @paginaListagem)
+    new App.FormCriacaoTabelaPreco(this)
   
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhesTabelaPreco(this, @paginaListagem)
+    new App.PaginaDetalhesTabelaPreco(this)

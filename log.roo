@@ -117,3 +117,4 @@ jpa setup --database MYSQL --provider HIBERNATE
 perform tests
 perform tests
 perform tests
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-10-24 10:11:43

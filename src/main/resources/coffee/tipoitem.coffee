@@ -1,37 +1,28 @@
-class App.FormEdicaoTipoItem extends App.PaginaEdicao
-  constructor: (@modulo, @paginaMae) ->
-    super(@modulo, @paginaMae)
-    
-  desenharConteudoForm: (jsonObj) ->
-    divNome = $('<div>')
-    @form.append divNome    
-    labelNome = $('<label for="nome">Nome</label>')        
-    @inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nom + '" type="text">')
-    divNome.append labelNome
-    divNome.append @inputNome
-
-    montarJSON: ->
-    "{ 'nome': '#{@inputNome.val()}' }"         
-    
 class App.FormCriacaoTipoItem extends App.PaginaCriacao
-  constructor: (@modulo, @paginaMae) ->
-    super(@modulo, @paginaMae)
+  constructor: (@modulo) ->
+    super(@modulo)
     
   desenharConteudoForm: () ->
-    divNome = $('<div>')
-    @form.append divNome    
-    labelNome = $('<label for="nome">Nome</label>')        
-    @inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">')
-    divNome.append labelNome
-    divNome.append @inputNome
+    @inputNome = App.inputCriacao(@form, "nome", "Nome", "text")
 
-   montarJSON: ->
+  montarJSON: ->
     "{ 'nome': '#{@inputNome.val()}' }"                
 
 
+class App.FormEdicaoTipoItem extends App.PaginaEdicao
+  constructor: (@modulo) ->
+    super(@modulo)
+    
+  desenharConteudoForm: (jsonObj) ->
+    @inputNome = App.inputEdicao(@form, "nome", "Nome", "text", jsonObj.nome)
+
+  montarJSON: ->
+    "{ 'nome': '#{@inputNome.val()}', 'id': #{@dados.idItem}, 'version': #{@dados.versionItem} }"         
+
+    
 class App.PaginaDetalhesTipoItem extends App.PaginaDetalhes
-  constructor:(@modulo, @paginaMae)->
-    super(@modulo, @paginaMae)
+  constructor:(@modulo)->
+    super(@modulo)
   
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
@@ -52,4 +43,4 @@ class App.ModuloTipoItem extends App.Modulo
     new App.FormCriacaoTipoItem(this)   
     
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhesTipoItem(this, @paginaListagem)
+    new App.PaginaDetalhesTipoItem(this)

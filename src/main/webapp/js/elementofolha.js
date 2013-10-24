@@ -2,82 +2,57 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  App.FormEdicaoElementoFolha = (function(_super) {
-
-    __extends(FormEdicaoElementoFolha, _super);
-
-    function FormEdicaoElementoFolha(modulo, paginaMae) {
-      this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      FormEdicaoElementoFolha.__super__.constructor.call(this, this.modulo, this.paginaMae);
-    }
-
-    FormEdicaoElementoFolha.prototype.desenharConteudoForm = function(jsonObj) {
-      var divQuantidade, divStatus, labelQuantidade, labelStatus;
-      divQuantidade = $('<div>');
-      this.form.append(divQuantidade);
-      labelQuantidade = $('<label for="quantidade">Quantidade</label>');
-      this.inputQuantidade = $('<input name="quantidade" id="quantidade" placeholder="" value="' + jsonObj.quantidade + '" type="text">');
-      divQuantidade.append(labelQuantidade);
-      divQuantidade.append(this.inputQuantidade);
-      divStatus = $('<div>');
-      this.form.append(divStatus);
-      labelStatus = $('<label for="status">Status</label>');
-      this.inputStatus = $('<input name="status" id="status" placeholder="" value="' + jsonObj.status + '" type="text">');
-      divStatus.append(labelStatus);
-      return divStatus.append(this.inputStatus);
-    };
-
-    FormEdicaoElementoFolha.prototype.montarJSON = function() {
-      return '{ "quantidade": "' + this.inputQuantidade.val() + '", "status": "' + this.inputStatus.val() + '", "id": ' + this.idItem + ', "version": ' + this.versionItem + ' }';
-    };
-
-    return FormEdicaoElementoFolha;
-
-  })(App.PaginaEdicao);
-
   App.FormCriacaoElementoFolha = (function(_super) {
 
     __extends(FormCriacaoElementoFolha, _super);
 
-    function FormCriacaoElementoFolha(modulo, paginaMae) {
+    function FormCriacaoElementoFolha(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      FormCriacaoElementoFolha.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      FormCriacaoElementoFolha.__super__.constructor.call(this, this.modulo);
     }
 
     FormCriacaoElementoFolha.prototype.desenharConteudoForm = function(jsonObj) {
-      var divQuantidade, divStatus, labelQuantidade, labelStatus;
-      divQuantidade = $('<div>');
-      this.form.append(divQuantidade);
-      labelQuantidade = $('<label for="quantidade">Quantidade</label>');
-      this.inputQuantidade = $('<input name="quantidade" id="quantidade" placeholder="" value="' + jsonObj.quantidade + '" type="text">');
-      divQuantidade.append(labelQuantidade);
-      divQuantidade.append(this.inputQuantidade);
-      divStatus = $('<div>');
-      this.form.append(divStatus);
-      labelStatus = $('<label for="status">Status</label>');
-      this.inputStatus = $('<input name="status" id="status" placeholder="" value="' + jsonObj.status + '" type="text">');
-      divStatus.append(labelStatus);
-      return divStatus.append(this.inputStatus);
+      this.inputQuantidade = App.inputCriacao(this.form, "quantidade", "Quantidade", "text");
+      return this.inputStatus = App.inputCriacao(this.form, "status", "Status", "text");
     };
 
     FormCriacaoElementoFolha.prototype.montarJSON = function() {
-      return '{ "quantidade": "' + this.inputQuantidade.val() + '", "status": "' + this.inputStatus.val() + '", "id": ' + this.idItem + ', "version": ' + this.versionItem + ' }';
+      return '{ "quantidade": ' + this.inputQuantidade.val() + ', "status": "' + this.inputStatus.val() + '" }';
     };
 
     return FormCriacaoElementoFolha;
 
   })(App.PaginaCriacao);
 
+  App.FormEdicaoElementoFolha = (function(_super) {
+
+    __extends(FormEdicaoElementoFolha, _super);
+
+    function FormEdicaoElementoFolha(modulo) {
+      this.modulo = modulo;
+      FormEdicaoElementoFolha.__super__.constructor.call(this, this.modulo);
+    }
+
+    FormEdicaoElementoFolha.prototype.desenharConteudoForm = function(jsonObj) {
+      this.inputQuantidade = App.inputEdicao(this.form, "quantidade", "Quantidade", "text", jsonObj.quantidade);
+      return this.inputStatus = App.inputEdicao(this.form, "status", "Status", "text", jsonObj.status);
+    };
+
+    FormEdicaoElementoFolha.prototype.montarJSON = function() {
+      return '{ "quantidade": "' + this.inputQuantidade.val() + '", "status": "' + this.inputStatus.val() + '", "id": ' + this.dados.idItem + ', "version": ' + this.dados.versionItem + ' }';
+    };
+
+    return FormEdicaoElementoFolha;
+
+  })(App.PaginaEdicao);
+
   App.PaginaDetalhesElementoFolha = (function(_super) {
 
     __extends(PaginaDetalhesElementoFolha, _super);
 
-    function PaginaDetalhesElementoFolha(modulo, paginaMae) {
+    function PaginaDetalhesElementoFolha(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      PaginaDetalhesElementoFolha.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      PaginaDetalhesElementoFolha.__super__.constructor.call(this, this.modulo);
     }
 
     PaginaDetalhesElementoFolha.prototype.carregar = function(registro) {
@@ -98,15 +73,15 @@
     }
 
     ModuloElementoFolha.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoElementoFolha(this, this.paginaListagem);
+      return new App.FormEdicaoElementoFolha(this);
     };
 
     ModuloElementoFolha.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoElementoFolha(this, this.paginaListagem);
+      return new App.FormCriacaoElementoFolha(this);
     };
 
     ModuloElementoFolha.prototype.criarPaginaDetalhes = function() {
-      return new App.PaginaDetalhesElementoFolha(this, this.paginaListagem);
+      return new App.PaginaDetalhesElementoFolha(this);
     };
 
     ModuloElementoFolha.prototype.abrirItem = function(idItem) {

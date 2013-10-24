@@ -1,66 +1,48 @@
-class App.FormEdicaoElementoFolha extends App.PaginaEdicao
-  constructor: (@modulo, @paginaMae) ->
-    super(@modulo, @paginaMae)
-    
-  desenharConteudoForm: (jsonObj) ->
-    divQuantidade = $('<div>')
-    @form.append divQuantidade    
-    labelQuantidade = $('<label for="quantidade">Quantidade</label>')        
-    @inputQuantidade = $('<input name="quantidade" id="quantidade" placeholder="" value="' + jsonObj.quantidade + '" type="text">')
-    divQuantidade.append labelQuantidade
-    divQuantidade.append @inputQuantidade
-    
-    divStatus = $('<div>')
-    @form.append divStatus    
-    labelStatus = $('<label for="status">Status</label>')        
-    @inputStatus = $('<input name="status" id="status" placeholder="" value="' + jsonObj.status + '" type="text">')
-    divStatus.append labelStatus
-    divStatus.append @inputStatus
-
-  montarJSON: ->
-    '{ "quantidade": "' + @inputQuantidade.val() + '", "status": "' + @inputStatus.val() + '", "id": ' + @idItem + ', "version": ' + @versionItem + ' }'              
-
 class App.FormCriacaoElementoFolha extends App.PaginaCriacao
-  constructor: (@modulo, @paginaMae) ->
-    super(@modulo, @paginaMae)
+  constructor: (@modulo) ->
+    super(@modulo)
     
   desenharConteudoForm: (jsonObj) ->
-    divQuantidade = $('<div>')
-    @form.append divQuantidade    
-    labelQuantidade = $('<label for="quantidade">Quantidade</label>')        
-    @inputQuantidade = $('<input name="quantidade" id="quantidade" placeholder="" value="' + jsonObj.quantidade + '" type="text">')
-    divQuantidade.append labelQuantidade
-    divQuantidade.append @inputQuantidade
-    
-    divStatus = $('<div>')
-    @form.append divStatus    
-    labelStatus = $('<label for="status">Status</label>')        
-    @inputStatus = $('<input name="status" id="status" placeholder="" value="' + jsonObj.status + '" type="text">')
-    divStatus.append labelStatus
-    divStatus.append @inputStatus
+    @inputQuantidade = App.inputCriacao(@form, "quantidade", "Quantidade", "text")
+    @inputStatus = App.inputCriacao(@form, "status", "Status", "text")
 
   montarJSON: ->
-    '{ "quantidade": "' + @inputQuantidade.val() + '", "status": "' + @inputStatus.val() + '", "id": ' + @idItem + ', "version": ' + @versionItem + ' }'              
+    '{ "quantidade": ' + @inputQuantidade.val() + ', "status": "' + @inputStatus.val() + '" }' 
+
+
+class App.FormEdicaoElementoFolha extends App.PaginaEdicao
+  constructor: (@modulo) ->
+    super(@modulo)
+    
+  desenharConteudoForm: (jsonObj) ->
+    @inputQuantidade = App.inputEdicao(@form, "quantidade", "Quantidade", "text", jsonObj.quantidade)
+    @inputStatus = App.inputEdicao(@form, "status", "Status", "text", jsonObj.status)
+
+  montarJSON: ->
+    '{ "quantidade": "' + @inputQuantidade.val() + '", "status": "' + @inputStatus.val() + 
+      '", "id": ' + @dados.idItem + ', "version": ' + @dados.versionItem + ' }'              
+
 
 class App.PaginaDetalhesElementoFolha extends App.PaginaDetalhes
-  constructor:(@modulo, @paginaMae)->
-    super(@modulo, @paginaMae)
+  constructor:(@modulo)->
+    super(@modulo)
   
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
+
         
 class App.ModuloElementoFolha extends App.SubModulo
   constructor: (@moduloPai) ->
     super('ElementosFolhas', 'elementosfolhas', 'status', @moduloPai)
     
   criarPaginaEdicao: ->
-    new App.FormEdicaoElementoFolha(this, @paginaListagem)
+    new App.FormEdicaoElementoFolha(this)
     
   criarPaginaCriacao: ->
-    new App.FormCriacaoElementoFolha(this, @paginaListagem)
+    new App.FormCriacaoElementoFolha(this)
     
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhesElementoFolha(this, @paginaListagem)  
+    new App.PaginaDetalhesElementoFolha(this)  
   
   abrirItem: (idItem) ->
     alert "ver elementofolha " + idItem

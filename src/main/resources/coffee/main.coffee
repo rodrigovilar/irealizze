@@ -1,12 +1,9 @@
 class App.PaginaPrincipal extends App.Pagina
 
   constructor: ->
-    super(null, null)
+    super(null)
 
-  getId: ->
-    "paginaPrincipal"
- 
-  desenharConteudo: ->
+  abrir: ->
     @mudarPagina()
     @abrirTelaPrincipal()
 
@@ -29,4 +26,4 @@ class App.PaginaPrincipal extends App.Pagina
   
 $ -> 
   principal = new App.PaginaPrincipal
-  principal.desenharConteudo()
+  principal.abrir()

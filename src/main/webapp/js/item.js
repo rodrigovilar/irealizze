@@ -2,40 +2,6 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  App.FormEdicaoItem = (function(_super) {
-
-    __extends(FormEdicaoItem, _super);
-
-    function FormEdicaoItem(modulo, paginaMae) {
-      this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      FormEdicaoItem.__super__.constructor.call(this, this.modulo, this.paginaMae);
-    }
-
-    FormEdicaoItem.prototype.desenharConteudoForm = function(jsonObj) {
-      var divNome, divUnidade, labelNome, labelUnidade;
-      divNome = $('<div>');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
-      divNome.append(labelNome);
-      divNome.append(this.inputNome);
-      divUnidade = $('<div>');
-      this.form.append(divUnidade);
-      labelUnidade = $('<label for="unidade">Unidade</label>');
-      this.inputUnidade = $('<input name="unidade" id="unidade" placeholder="" value="' + jsonObj.unidade + '" type="text">');
-      divUnidade.append(labelUnidade);
-      return divUnidade.append(this.inputUnidade);
-    };
-
-    FormEdicaoItem.prototype.montarJSON = function() {
-      return '{ "nome": "' + this.inputNome.val() + '", "unidade": "' + this.inputUnidade.val() + '", "tipoitem": ' + this.modulo.idObjetoPai + ', "id": ' + this.idItem + ', "version": ' + this.versionItem + ' }';
-    };
-
-    return FormEdicaoItem;
-
-  })(App.PaginaEdicao);
-
   App.FormCriacaoItem = (function(_super) {
 
     __extends(FormCriacaoItem, _super);
@@ -46,19 +12,8 @@
     }
 
     FormCriacaoItem.prototype.desenharConteudoForm = function() {
-      var divNome, divUnidade, labelNome, labelUnidade;
-      divNome = $('<div>');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">');
-      divNome.append(labelNome);
-      divNome.append(this.inputNome);
-      divUnidade = $('<div>');
-      this.form.append(divUnidade);
-      labelUnidade = $('<label for="unidade">Unidade</label>');
-      this.inputUnidade = $('<input name="unidade" id="unidade" placeholder="" value="" type="text">');
-      divUnidade.append(labelUnidade);
-      return divUnidade.append(this.inputUnidade);
+      this.inputNome = App.inputCriacao(this.form, "nome", "Nome", "text");
+      return this.inputUnidade = App.inputCriacao(this.form, "unidade", "Unidade", "text");
     };
 
     FormCriacaoItem.prototype.montarJSON = function() {
@@ -68,6 +23,28 @@
     return FormCriacaoItem;
 
   })(App.PaginaCriacao);
+
+  App.FormEdicaoItem = (function(_super) {
+
+    __extends(FormEdicaoItem, _super);
+
+    function FormEdicaoItem(modulo) {
+      this.modulo = modulo;
+      FormEdicaoItem.__super__.constructor.call(this, this.modulo);
+    }
+
+    FormEdicaoItem.prototype.desenharConteudoForm = function(jsonObj) {
+      this.inputNome = App.inputEdicao(this.form, "nome", "Nome", "text", jsonObj.nome);
+      return this.inputUnidade = App.inputEdicao(this.form, "unidade", "Unidade", "text", jsonObj.unidade);
+    };
+
+    FormEdicaoItem.prototype.montarJSON = function() {
+      return '{ "nome": "' + this.inputNome.val() + '", "unidade": "' + this.inputUnidade.val() + '", "tipoitem": ' + this.modulo.idObjetoPai + ', "id": ' + this.dados.idItem + ', "version": ' + this.dados.versionItem + ' }';
+    };
+
+    return FormEdicaoItem;
+
+  })(App.PaginaEdicao);
 
   App.PaginaDetalhesItem = (function(_super) {
 
@@ -97,7 +74,6 @@
     function ModuloItem(moduloPai) {
       this.moduloPai = moduloPai;
       ModuloItem.__super__.constructor.call(this, 'Itens', 'itens', 'nome', this.moduloPai);
-      this.moduloElementoFolha = new App.ModuloElementoFolha(this);
     }
 
     ModuloItem.prototype.criarPaginaEdicao = function() {

@@ -12,13 +12,7 @@
     }
 
     FormCriacaoPeriodo.prototype.desenharConteudoForm = function() {
-      var divDataLimite, labelDataLimite;
-      divDataLimite = $('<div>');
-      this.form.append(divDataLimite);
-      labelDataLimite = $('<label for="dataLimite">Data Final</label>');
-      this.inputDataLimite = $('<input name="dataLimite" id="dataLimite" value="" type="date">');
-      divDataLimite.append(labelDataLimite);
-      return divDataLimite.append(this.inputDataLimite);
+      return this.inputDataLimite = App.inputCriacao(this.form, "dataLimite", "Data Final", "date");
     };
 
     FormCriacaoPeriodo.prototype.montarJSON = function() {
@@ -33,24 +27,17 @@
 
     __extends(FormEdicaoPeriodo, _super);
 
-    function FormEdicaoPeriodo(modulo, paginaMae) {
+    function FormEdicaoPeriodo(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      FormEdicaoPeriodo.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      FormEdicaoPeriodo.__super__.constructor.call(this, this.modulo);
     }
 
     FormEdicaoPeriodo.prototype.desenharConteudoForm = function(jsonObj) {
-      var divDataLimite, labelDataLimite;
-      divDataLimite = $('<div>');
-      this.form.append(divDataLimite);
-      labelDataLimite = $('<label for="dataLimite">Data Final</label>');
-      this.inputDataLimite = $('<input name="dataLimite" id="dataLimite" value="' + jsonObj.dataLimite + '" type="date">');
-      divDataLimite.append(labelDataLimite);
-      return divDataLimite.append(this.inputDataLimite);
+      return this.inputDataLimite = App.inputEdicao(this.form, "dataLimite", "Data Final", "date", jsonObj.dataLimite);
     };
 
     FormEdicaoPeriodo.prototype.montarJSON = function() {
-      return '{ "dataLimite": "' + this.inputDataLimite.val() + '", "projeto": ' + this.modulo.idObjetoPai + ', "id": ' + this.idItem + ', "version": ' + this.versionItem + ' }';
+      return '{ "dataLimite": "' + this.inputDataLimite.val() + '", "projeto": ' + this.modulo.idObjetoPai + ', "id": ' + this.dados.idItem + ', "version": ' + this.dados.versionItem + ' }';
     };
 
     return FormEdicaoPeriodo;
@@ -83,16 +70,16 @@
       ModuloPeriodos.__super__.constructor.call(this, 'Períodos', 'periodos', 'dataLimite', this.moduloPai);
     }
 
-    ModuloPeriodos.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoPeriodo(this, this.paginaListagem);
+    ModuloPeriodos.prototype.criarPaginaCriacao = function() {
+      return new App.FormCriacaoPeriodo(this);
     };
 
-    ModuloPeriodos.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoPeriodo(this, this.paginaListagem);
+    ModuloPeriodos.prototype.criarPaginaEdicao = function() {
+      return new App.FormEdicaoPeriodo(this);
     };
 
     ModuloPeriodos.prototype.criarPaginaDetalhes = function() {
-      return new App.PaginaDetalhesPeriodo(this, this.paginaListagem);
+      return new App.PaginaDetalhesPeriodo(this);
     };
 
     ModuloPeriodos.prototype.abrirItem = function(idItem) {

@@ -7,14 +7,10 @@
     __extends(PaginaPrincipal, _super);
 
     function PaginaPrincipal() {
-      PaginaPrincipal.__super__.constructor.call(this, null, null);
+      PaginaPrincipal.__super__.constructor.call(this, null);
     }
 
-    PaginaPrincipal.prototype.getId = function() {
-      return "paginaPrincipal";
-    };
-
-    PaginaPrincipal.prototype.desenharConteudo = function() {
+    PaginaPrincipal.prototype.abrir = function() {
       this.mudarPagina();
       return this.abrirTelaPrincipal();
     };
@@ -46,7 +42,7 @@
   $(function() {
     var principal;
     principal = new App.PaginaPrincipal;
-    return principal.desenharConteudo();
+    return principal.abrir();
   });
 
 }).call(this);

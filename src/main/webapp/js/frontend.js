@@ -43,6 +43,21 @@
     });
   };
 
+  App.dataJson2Gui = function(formatoAAAAMMDD) {
+    var formatoDDMMAAAA;
+    formatoDDMMAAAA = formatoAAAAMMDD.split('-').reverse().join('/');
+    return formatoDDMMAAAA;
+  };
+
+  App.novaPagina = function() {
+    var body, pagina;
+    body = $("body");
+    body.empty();
+    pagina = $('<div>');
+    body.append(pagina);
+    return pagina;
+  };
+
   App.desenharBotao = function(elemento, texto, callback) {
     var botao,
       _this = this;
@@ -53,36 +68,51 @@
     });
   };
 
-  App.dataJson2Gui = function(formatoAAAAMMDD) {
-    var formatoDDMMAAAA;
-    formatoDDMMAAAA = formatoAAAAMMDD.split('-').reverse().join('/');
-    return formatoDDMMAAAA;
+  App.inputCriacao = function(formEl, id, label, type) {
+    var div, inputEl, labelEl;
+    div = $('<div>');
+    formEl.append(div);
+    labelEl = $('<label for="' + id + '">' + label + '</label>');
+    inputEl = $('<input name="' + id + '" id="' + id + '" type="' + type + '">');
+    div.append(labelEl);
+    div.append(inputEl);
+    return inputEl;
+  };
+
+  App.inputEdicao = function(formEl, id, label, type, value) {
+    var div, inputEl, labelEl;
+    div = $('<div>');
+    formEl.append(div);
+    labelEl = $('<label for="' + id + '">' + label + '</label>');
+    inputEl = $('<input name="' + id + '" id="' + id + '" value="' + value + '" type="' + type + '">');
+    div.append(labelEl);
+    div.append(inputEl);
+    return inputEl;
   };
 
   App.Pagina = (function() {
 
-    function Pagina(modulo, paginaMae) {
+    function Pagina(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
     }
 
-    Pagina.prototype.desenharConteudo = function() {
+    Pagina.prototype.configurar = function(dados) {
+      this.dados = dados;
+    };
+
+    Pagina.prototype.abrir = function() {
       this.mudarPagina();
       return this.desenharBotaoVoltar();
     };
 
     Pagina.prototype.mudarPagina = function() {
-      var body;
-      body = $("body");
-      body.empty();
-      this.pagina = $('<div>"');
-      return body.append(this.pagina);
+      return this.pagina = App.novaPagina();
     };
 
     Pagina.prototype.desenharBotaoVoltar = function() {
       var _this = this;
       return App.desenharBotao(this.pagina, 'Voltar', function() {
-        return _this.paginaMae.desenharConteudo();
+        return _this.dados.paginaMae.abrir();
       });
     };
 
@@ -94,16 +124,14 @@
 
     __extends(PaginaListagem, _super);
 
-    function PaginaListagem(modulo, paginaMae, linkGet) {
+    function PaginaListagem(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      this.linkGet = linkGet;
-      this.desenharConteudo = __bind(this.desenharConteudo, this);
+      this.abrir = __bind(this.abrir, this);
 
-      PaginaListagem.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      PaginaListagem.__super__.constructor.call(this, this.modulo);
     }
 
-    PaginaListagem.prototype.desenharConteudo = function() {
+    PaginaListagem.prototype.abrir = function() {
       var _this = this;
       this.mudarPagina();
       this.pagina.append($('<p>' + this.modulo.nome + '</p>'));
@@ -111,7 +139,7 @@
       this.lista = $('<table>');
       this.pagina.append(this.lista);
       this.desenharBotaoVoltar();
-      return $.getJSON(this.linkGet, function(jsonObj) {
+      return $.getJSON(this.dados.url, function(jsonObj) {
         return $.each(jsonObj, function(i, registro) {
           return _this.listar(registro);
         });
@@ -151,26 +179,20 @@
 
     __extends(PaginaDetalhes, _super);
 
-    function PaginaDetalhes(modulo, paginaMae) {
+    function PaginaDetalhes(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      PaginaDetalhes.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      PaginaDetalhes.__super__.constructor.call(this, this.modulo);
     }
 
-    PaginaDetalhes.prototype.abrir = function(idItem) {
+    PaginaDetalhes.prototype.abrir = function() {
       var _this = this;
-      this.idItem = idItem;
-      this.desenharConteudo();
-      return $.getJSON(this.modulo.url + "/" + this.idItem, function(jsonObj) {
-        return _this.carregar(jsonObj);
-      });
-    };
-
-    PaginaDetalhes.prototype.desenharConteudo = function() {
       this.mudarPagina();
       this.titulo = $("<div>" + this.modulo.nome + " </div>");
       this.pagina.append(this.titulo);
-      return this.desenharBotaoVoltar();
+      this.desenharBotaoVoltar();
+      return $.getJSON(this.modulo.url + "/" + this.dados.idItem, function(jsonObj) {
+        return _this.carregar(jsonObj);
+      });
     };
 
     PaginaDetalhes.prototype.carregar = function(registro) {
@@ -181,31 +203,70 @@
 
   })(App.Pagina);
 
+  App.PaginaCriacao = (function(_super) {
+
+    __extends(PaginaCriacao, _super);
+
+    function PaginaCriacao(modulo) {
+      this.modulo = modulo;
+      this.salvar = __bind(this.salvar, this);
+
+      PaginaCriacao.__super__.constructor.call(this, this.modulo);
+    }
+
+    PaginaCriacao.prototype.abrir = function() {
+      this.mudarPagina();
+      this.form = $('<form>');
+      this.pagina.append(this.form);
+      this.desenharBotaoVoltar();
+      this.desenharConteudoForm();
+      return this.desenharBotaoSalvar();
+    };
+
+    PaginaCriacao.prototype.desenharConteudoForm = function() {};
+
+    PaginaCriacao.prototype.desenharBotaoSalvar = function() {
+      var _this = this;
+      return App.desenharBotao(this.form, 'Salvar', function() {
+        return _this.salvar();
+      });
+    };
+
+    PaginaCriacao.prototype.salvar = function() {
+      var json,
+        _this = this;
+      json = this.montarJSON();
+      return App.enviarPost(this.modulo.url, json, function() {
+        return _this.modulo.abrir();
+      });
+    };
+
+    PaginaCriacao.prototype.montarJSON = function() {
+      return "{}";
+    };
+
+    return PaginaCriacao;
+
+  })(App.Pagina);
+
   App.PaginaEdicao = (function(_super) {
 
     __extends(PaginaEdicao, _super);
 
-    function PaginaEdicao(modulo, paginaMae) {
+    function PaginaEdicao(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
       this.salvar = __bind(this.salvar, this);
 
-      PaginaEdicao.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      PaginaEdicao.__super__.constructor.call(this, this.modulo);
     }
 
-    PaginaEdicao.prototype.desenharConteudo = function() {
+    PaginaEdicao.prototype.abrir = function() {
+      var _this = this;
       this.mudarPagina();
       this.form = $('<form>');
       this.pagina.append(this.form);
-      return this.desenharBotaoVoltar();
-    };
-
-    PaginaEdicao.prototype.abrir = function(idItem, versionItem) {
-      var _this = this;
-      this.idItem = idItem;
-      this.versionItem = versionItem;
-      this.desenharConteudo();
-      return $.getJSON(this.modulo.url + "/" + this.idItem, function(jsonObj) {
+      this.desenharBotaoVoltar();
+      return $.getJSON(this.modulo.url + "/" + this.dados.idItem, function(jsonObj) {
         _this.desenharConteudoForm(jsonObj);
         return _this.desenharBotaoSalvar();
       });
@@ -237,80 +298,46 @@
 
   })(App.Pagina);
 
-  App.PaginaCriacao = (function(_super) {
-
-    __extends(PaginaCriacao, _super);
-
-    function PaginaCriacao(modulo, paginaMae) {
-      this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      this.salvar = __bind(this.salvar, this);
-
-      PaginaCriacao.__super__.constructor.call(this, this.modulo, this.paginaMae);
-    }
-
-    PaginaCriacao.prototype.desenharConteudo = function() {
-      this.mudarPagina();
-      this.form = $('<form>');
-      this.pagina.append(this.form);
-      return this.desenharBotaoVoltar();
-    };
-
-    PaginaCriacao.prototype.abrir = function() {
-      this.desenharConteudo();
-      this.desenharConteudoForm();
-      return this.desenharBotaoSalvar();
-    };
-
-    PaginaCriacao.prototype.desenharConteudoForm = function() {};
-
-    PaginaCriacao.prototype.desenharBotaoSalvar = function() {
-      var _this = this;
-      return App.desenharBotao(this.form, 'Salvar', function() {
-        return _this.salvar();
-      });
-    };
-
-    PaginaCriacao.prototype.salvar = function() {
-      var json,
-        _this = this;
-      json = this.montarJSON();
-      return App.enviarPost(this.modulo.url, json, function() {
-        return _this.modulo.abrir();
-      });
-    };
-
-    PaginaCriacao.prototype.montarJSON = function() {
-      return "{}";
-    };
-
-    return PaginaCriacao;
-
-  })(App.Pagina);
-
   App.Modulo = (function() {
 
     function Modulo(paginaMae, nome, url, propriedade) {
+      var dados;
       this.paginaMae = paginaMae;
       this.nome = nome;
       this.url = url;
       this.propriedade = propriedade;
       this.paginaListagem = this.criarPaginaListagem();
-      this.paginaEdicao = this.criarPaginaEdicao();
+      this.configurarPaginaListagem();
+      dados = {
+        paginaMae: this.paginaListagem
+      };
       this.paginaCriacao = this.criarPaginaCriacao();
+      this.paginaCriacao.configurar(dados);
+      this.paginaEdicao = this.criarPaginaEdicao();
+      this.paginaEdicao.configurar(dados);
       this.paginaDetalhes = this.criarPaginaDetalhes();
+      this.paginaDetalhes.configurar(dados);
     }
 
     Modulo.prototype.criarPaginaListagem = function() {
-      return new App.PaginaListagem(this, this.paginaMae, this.url);
+      return new App.PaginaListagem(this);
     };
 
-    Modulo.prototype.criarPaginaEdicao = function() {
-      return new App.PaginaEdicao(this, this.paginaListagem);
+    Modulo.prototype.configurarPaginaListagem = function() {
+      var dados;
+      dados = {
+        paginaMae: this.paginaMae,
+        url: this.url
+      };
+      return this.paginaListagem.configurar(dados);
     };
 
     Modulo.prototype.criarPaginaCriacao = function() {
-      return new App.PaginaCriacao(this, this.paginaListagem);
+      return new App.PaginaCriacao(this);
+    };
+
+    Modulo.prototype.criarPaginaEdicao = function() {
+      return new App.PaginaEdicao(this);
     };
 
     Modulo.prototype.criarPaginaDetalhes = function() {
@@ -318,7 +345,7 @@
     };
 
     Modulo.prototype.abrir = function() {
-      return this.paginaListagem.desenharConteudo();
+      return this.paginaListagem.abrir();
     };
 
     Modulo.prototype.novoItem = function() {
@@ -326,11 +353,24 @@
     };
 
     Modulo.prototype.abrirItem = function(idItem) {
-      return this.paginaDetalhes.abrir(idItem);
+      var dados;
+      dados = {
+        paginaMae: this.paginaListagem,
+        idItem: idItem
+      };
+      this.paginaDetalhes.configurar(dados);
+      return this.paginaDetalhes.abrir();
     };
 
     Modulo.prototype.editarItem = function(idItem, versionItem) {
-      return this.paginaEdicao.abrir(idItem, versionItem);
+      var dados;
+      dados = {
+        paginaMae: this.paginaListagem,
+        idItem: idItem,
+        versionItem: versionItem
+      };
+      this.paginaEdicao.configurar(dados);
+      return this.paginaEdicao.abrir();
     };
 
     Modulo.prototype.prepararLinhaListagem = function(registro) {
@@ -353,12 +393,17 @@
       SubModulo.__super__.constructor.call(this, this.moduloPai.paginaDetalhes, this.nome, this.urlFilho, this.propriedade);
     }
 
-    SubModulo.prototype.criarPaginaListagem = function() {
-      return new App.PaginaListagem(this, this.moduloPai.paginaDetalhes, this.url);
+    SubModulo.prototype.configurarPaginaListagem = function() {
+      var dados;
+      dados = {
+        paginaMae: this.moduloPai.paginaDetalhes,
+        url: this.url
+      };
+      return this.paginaListagem.configurar(dados);
     };
 
     SubModulo.prototype.abrir = function(idPai) {
-      var link;
+      var dados, link;
       if (idPai) {
         this.idObjetoPai = idPai;
       }
@@ -366,8 +411,12 @@
       if (this.moduloPai.urlFilho) {
         link = this.moduloPai.urlFilho + '/' + this.idObjetoPai + '/' + this.urlFilho;
       }
-      this.paginaListagem = new App.PaginaListagem(this, this.moduloPai.paginaDetalhes, link);
-      return this.paginaListagem.desenharConteudo();
+      dados = {
+        paginaMae: this.moduloPai.paginaDetalhes,
+        url: link
+      };
+      this.paginaListagem.configurar(dados);
+      return this.paginaListagem.abrir();
     };
 
     return SubModulo;

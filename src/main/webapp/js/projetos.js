@@ -6,26 +6,14 @@
 
     __extends(FormCriacaoProjeto, _super);
 
-    function FormCriacaoProjeto(modulo, paginaMae) {
+    function FormCriacaoProjeto(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      FormCriacaoProjeto.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      FormCriacaoProjeto.__super__.constructor.call(this, this.modulo);
     }
 
     FormCriacaoProjeto.prototype.desenharConteudoForm = function() {
-      var divCliente, divNome, labelCliente, labelNome;
-      divNome = $('<div>');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">');
-      divNome.append(labelNome);
-      divNome.append(this.inputNome);
-      divCliente = $('<div>');
-      this.form.append(divCliente);
-      labelCliente = $('<label for="cliente">Cliente</label>');
-      this.inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="" type="text">');
-      divNome.append(labelCliente);
-      return divNome.append(this.inputCliente);
+      this.inputNome = App.inputCriacao(this.form, "nome", "Nome", "text");
+      return this.inputCliente = App.inputCriacao(this.form, "cliente", "Cliente", "text");
     };
 
     FormCriacaoProjeto.prototype.montarJSON = function() {
@@ -47,23 +35,12 @@
     }
 
     FormEdicaoProjeto.prototype.desenharConteudoForm = function(jsonObj) {
-      var divCliente, divNome, labelCliente, labelNome;
-      divNome = $('<div>');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
-      divNome.append(labelNome);
-      divNome.append(this.inputNome);
-      divCliente = $('<div>');
-      this.form.append(divCliente);
-      labelCliente = $('<label for="cliente">Cliente</label>');
-      this.inputCliente = $('<input name="cliente" id="cliente" placeholder="" value="' + jsonObj.cliente + '" type="text">');
-      divNome.append(labelCliente);
-      return divNome.append(this.inputCliente);
+      this.inputNome = App.inputEdicao(this.form, "nome", "Nome", "text", jsonObj.nome);
+      return this.inputCliente = App.inputEdicao(this.form, "cliente", "Cliente", "text", jsonObj.cliente);
     };
 
     FormEdicaoProjeto.prototype.montarJSON = function() {
-      return "{ 'nome': '" + (this.inputNome.val()) + "', 'cliente': '" + (this.inputCliente.val()) + "', 'id': " + this.idItem + ", 'version': " + this.versionItem + " }";
+      return "{ 'nome': '" + (this.inputNome.val()) + "', 'cliente': '" + (this.inputCliente.val()) + "', 'id': " + this.dados.idItem + ", 'version': " + this.dados.versionItem + " }";
     };
 
     return FormEdicaoProjeto;
@@ -74,10 +51,9 @@
 
     __extends(PaginaDetalhesProjeto, _super);
 
-    function PaginaDetalhesProjeto(modulo, paginaMae) {
+    function PaginaDetalhesProjeto(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      PaginaDetalhesProjeto.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      PaginaDetalhesProjeto.__super__.constructor.call(this, this.modulo);
     }
 
     PaginaDetalhesProjeto.prototype.carregar = function(registro) {
@@ -106,16 +82,16 @@
       this.moduloElemento = new App.ModuloElementos(this);
     }
 
-    ModuloProjetos.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoProjeto(this, this.paginaListagem);
+    ModuloProjetos.prototype.criarPaginaCriacao = function() {
+      return new App.FormCriacaoProjeto(this);
     };
 
-    ModuloProjetos.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoProjeto(this, this.paginaListagem);
+    ModuloProjetos.prototype.criarPaginaEdicao = function() {
+      return new App.FormEdicaoProjeto(this);
     };
 
     ModuloProjetos.prototype.criarPaginaDetalhes = function() {
-      return new App.PaginaDetalhesProjeto(this, this.paginaListagem);
+      return new App.PaginaDetalhesProjeto(this);
     };
 
     return ModuloProjetos;

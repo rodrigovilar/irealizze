@@ -6,20 +6,13 @@
 
     __extends(FormCriacaoResponsavel, _super);
 
-    function FormCriacaoResponsavel(modulo, paginaMae) {
+    function FormCriacaoResponsavel(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      FormCriacaoResponsavel.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      FormCriacaoResponsavel.__super__.constructor.call(this, this.modulo);
     }
 
     FormCriacaoResponsavel.prototype.desenharConteudoForm = function() {
-      var divLogin, labelLogin;
-      divLogin = $('<div>');
-      this.form.append(divLogin);
-      labelLogin = $('<label for="login">Login</label>');
-      this.inputLogin = $('<input name="login" id="login" placeholder="" value="" type="text">');
-      divLogin.append(labelLogin);
-      return divLogin.append(this.inputLogin);
+      return this.inputLogin = App.inputCriacao(this.form, "login", "Login", "text");
     };
 
     FormCriacaoResponsavel.prototype.montarJSON = function() {
@@ -34,24 +27,17 @@
 
     __extends(FormEdicaoResponsavel, _super);
 
-    function FormEdicaoResponsavel(modulo, paginaMae) {
+    function FormEdicaoResponsavel(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      FormEdicaoResponsavel.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      FormEdicaoResponsavel.__super__.constructor.call(this, this.modulo);
     }
 
     FormEdicaoResponsavel.prototype.desenharConteudoForm = function(jsonObj) {
-      var divLogin, labelLogin;
-      divLogin = $('<div>');
-      this.form.append(divLogin);
-      labelLogin = $('<label for="login">Login</label>');
-      this.inputLogin = $('<input name="login" id="login" placeholder="" value="' + jsonObj.login + '" type="text">');
-      divLogin.append(labelLogin);
-      return divLogin.append(this.inputLogin);
+      return this.inputLogin = App.inputEdicao(this.form, "login", "Login", "text", jsonObj.login);
     };
 
     FormEdicaoResponsavel.prototype.montarJSON = function() {
-      return "{ 'login': '" + (this.inputLogin.val()) + "', 'id': " + this.idItem + ", 'version': " + this.versionItem + " }";
+      return "{ 'login': '" + (this.inputLogin.val()) + "', 'id': " + this.dados.idItem + ", 'version': " + this.dados.versionItem + " }";
     };
 
     return FormEdicaoResponsavel;
@@ -62,10 +48,9 @@
 
     __extends(PaginaDetalhesResponsavel, _super);
 
-    function PaginaDetalhesResponsavel(modulo, paginaMae) {
+    function PaginaDetalhesResponsavel(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      PaginaDetalhesResponsavel.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      PaginaDetalhesResponsavel.__super__.constructor.call(this, this.modulo);
     }
 
     PaginaDetalhesResponsavel.prototype.carregar = function(registro) {
@@ -86,11 +71,15 @@
     }
 
     ModuloResponsaveis.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoResponsavel(this, this.paginaListagem);
+      return new App.FormEdicaoResponsavel(this);
     };
 
     ModuloResponsaveis.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoResponsavel(this, this.paginaListagem);
+      return new App.FormCriacaoResponsavel(this);
+    };
+
+    ModuloResponsaveis.prototype.criarPaginaDetalhes = function() {
+      return new App.PaginaDetalhesResponsavel(this);
     };
 
     return ModuloResponsaveis;

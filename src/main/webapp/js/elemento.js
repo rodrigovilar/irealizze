@@ -2,34 +2,6 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  App.FormEdicaoElemento = (function(_super) {
-
-    __extends(FormEdicaoElemento, _super);
-
-    function FormEdicaoElemento(modulo, paginaMae) {
-      this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      FormEdicaoElemento.__super__.constructor.call(this, this.modulo, this.paginaMae);
-    }
-
-    FormEdicaoElemento.prototype.desenharConteudoForm = function(jsonObj) {
-      var divNome, labelNome;
-      divNome = $('<div>');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
-      divNome.append(labelNome);
-      return divNome.append(this.inputNome);
-    };
-
-    FormEdicaoElemento.prototype.montarJSON = function() {
-      return '{ "nome": "' + this.inputNome.val() + '", "projeto": ' + this.modulo.idObjetoPai + ', "id": ' + this.idItem + ', "version": ' + this.versionItem + ' }';
-    };
-
-    return FormEdicaoElemento;
-
-  })(App.PaginaEdicao);
-
   App.FormCriacaoElemento = (function(_super) {
 
     __extends(FormCriacaoElemento, _super);
@@ -41,13 +13,7 @@
     }
 
     FormCriacaoElemento.prototype.desenharConteudoForm = function() {
-      var divNome, labelNome;
-      divNome = $('<div>');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">');
-      divNome.append(labelNome);
-      return divNome.append(this.inputNome);
+      return this.inputNome = App.inputCriacao(this.form, "nome", "Nome", "text");
     };
 
     FormCriacaoElemento.prototype.montarJSON = function() {
@@ -57,6 +23,27 @@
     return FormCriacaoElemento;
 
   })(App.PaginaCriacao);
+
+  App.FormEdicaoElemento = (function(_super) {
+
+    __extends(FormEdicaoElemento, _super);
+
+    function FormEdicaoElemento(modulo) {
+      this.modulo = modulo;
+      FormEdicaoElemento.__super__.constructor.call(this, this.modulo);
+    }
+
+    FormEdicaoElemento.prototype.desenharConteudoForm = function(jsonObj) {
+      return this.inputNome = App.inputEdicao(this.form, "nome", "Nome", "text", jsonObj.nome);
+    };
+
+    FormEdicaoElemento.prototype.montarJSON = function() {
+      return '{ "nome": "' + this.inputNome.val() + '", "projeto": ' + this.modulo.idObjetoPai + ', "id": ' + this.dados.idItem + ', "version": ' + this.dados.versionItem + ' }';
+    };
+
+    return FormEdicaoElemento;
+
+  })(App.PaginaEdicao);
 
   App.PaginaDetalhesElemento = (function(_super) {
 
@@ -91,15 +78,15 @@
     }
 
     ModuloElementos.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoElemento(this, this.paginaListagem);
+      return new App.FormEdicaoElemento(this);
     };
 
     ModuloElementos.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoElemento(this, this.paginaListagem);
+      return new App.FormCriacaoElemento(this);
     };
 
     ModuloElementos.prototype.criarPaginaDetalhes = function() {
-      return new App.PaginaDetalhesElemento(this, this.paginaListagem);
+      return new App.PaginaDetalhesElemento(this);
     };
 
     return ModuloElementos;

@@ -2,6 +2,27 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
+  App.FormCriacaoTabelaPreco = (function(_super) {
+
+    __extends(FormCriacaoTabelaPreco, _super);
+
+    function FormCriacaoTabelaPreco(modulo) {
+      this.modulo = modulo;
+      FormCriacaoTabelaPreco.__super__.constructor.call(this, this.modulo);
+    }
+
+    FormCriacaoTabelaPreco.prototype.desenharConteudoForm = function() {
+      return this.inputNome = App.inputCriacao(this.form, "nome", "Nome", "text");
+    };
+
+    FormCriacaoTabelaPreco.prototype.montarJSON = function() {
+      return "{ 'nome': '" + (this.inputNome.val()) + "'}";
+    };
+
+    return FormCriacaoTabelaPreco;
+
+  })(App.PaginaCriacao);
+
   App.FormEdicaoTabelaPreco = (function(_super) {
 
     __extends(FormEdicaoTabelaPreco, _super);
@@ -13,68 +34,28 @@
     }
 
     FormEdicaoTabelaPreco.prototype.desenharConteudoForm = function(jsonObj) {
-      var divNome, labelNome;
-      divNome = $('<div>');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">');
-      divNome.append(labelNome);
-      return divNome.append(this.inputNome);
+      return this.inputNome = App.inputEdicao(this.form, "nome", "Nome", "text", jsonObj.nome);
     };
 
     FormEdicaoTabelaPreco.prototype.montarJSON = function() {
-      return "{ 'nome': '" + (this.inputNome.val()) + "' }";
+      return "{ 'nome': '" + (this.inputNome.val()) + "', 'id': " + this.dados.idItem + ", 'version': " + this.dados.versionItem + " }";
     };
 
     return FormEdicaoTabelaPreco;
 
   })(App.PaginaEdicao);
 
-  App.FormCriacaoTabelaPreco = (function(_super) {
-
-    __extends(FormCriacaoTabelaPreco, _super);
-
-    function FormCriacaoTabelaPreco(modulo, paginaMae) {
-      this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      FormCriacaoTabelaPreco.__super__.constructor.call(this, this.modulo, this.paginaMae);
-    }
-
-    FormCriacaoTabelaPreco.prototype.desenharConteudoForm = function() {
-      var divNome, labelNome;
-      divNome = $('<div>');
-      this.form.append(divNome);
-      labelNome = $('<label for="nome">Nome</label>');
-      this.inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">');
-      divNome.append(labelNome);
-      return divNome.append(this.inputNome);
-    };
-
-    FormCriacaoTabelaPreco.prototype.montarJSON = function() {
-      return "{ 'nome': '" + (this.inputNome.val()) + "'}";
-    };
-
-    return FormCriacaoTabelaPreco;
-
-  })(App.PaginaCriacao);
-
   App.PaginaDetalhesTabelaPreco = (function(_super) {
 
     __extends(PaginaDetalhesTabelaPreco, _super);
 
-    function PaginaDetalhesTabelaPreco(modulo, paginaMae) {
+    function PaginaDetalhesTabelaPreco(modulo) {
       this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      PaginaDetalhesTabelaPreco.__super__.constructor.call(this, this.modulo, this.paginaMae);
+      PaginaDetalhesTabelaPreco.__super__.constructor.call(this, this.modulo);
     }
 
-    PaginaDetalhesTabelaPreco.prototype.montarJSON = function() {
-      return "{ 'nome': '" + (this.inputNome.val()) + "'}";
-    };
-
     PaginaDetalhesTabelaPreco.prototype.carregar = function(registro) {
-      var cabecalho, celulaItem, celulaPreco, tabela,
-        _this = this;
+      var cabecalho, celulaItem, celulaPreco, link, tabela;
       this.titulo.html("" + registro[this.modulo.propriedade]);
       tabela = $('<table>');
       this.pagina.append(tabela);
@@ -84,7 +65,9 @@
       cabecalho.append(celulaItem);
       celulaPreco = $('<td>Preço</td>');
       cabecalho.append(celulaPreco);
-      return $.getJSON("tabelasprecos/" + registro.id + "/precos", function(jsonObj) {
+      link = "tabelasprecos/" + registro.id + "/precos";
+      return $.getJSON(link, function(jsonObj) {
+        alert(jsonObj);
         return $.each(jsonObj, function(i, preco) {
           var item, linha;
           linha = $('<tr>');
@@ -112,15 +95,15 @@
     }
 
     ModuloTabelaPreco.prototype.criarPaginaEdicao = function() {
-      return new App.FormEdicaoTabelaPreco(this, this.paginaListagem);
+      return new App.FormEdicaoTabelaPreco(this);
     };
 
     ModuloTabelaPreco.prototype.criarPaginaCriacao = function() {
-      return new App.FormCriacaoTabelaPreco(this, this.paginaListagem);
+      return new App.FormCriacaoTabelaPreco(this);
     };
 
     ModuloTabelaPreco.prototype.criarPaginaDetalhes = function() {
-      return new App.PaginaDetalhesTabelaPreco(this, this.paginaListagem);
+      return new App.PaginaDetalhesTabelaPreco(this);
     };
 
     return ModuloTabelaPreco;

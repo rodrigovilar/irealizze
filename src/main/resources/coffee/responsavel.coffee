@@ -1,36 +1,28 @@
 class App.FormCriacaoResponsavel extends App.PaginaCriacao
-  constructor: (@modulo, @paginaMae) ->
-    super(@modulo, @paginaMae)
+  constructor: (@modulo) ->
+    super(@modulo)
     
   desenharConteudoForm: () ->
-    divLogin = $('<div>')
-    @form.append divLogin    
-    labelLogin = $('<label for="login">Login</label>')        
-    @inputLogin = $('<input name="login" id="login" placeholder="" value="" type="text">')
-    divLogin.append labelLogin
-    divLogin.append @inputLogin
+    @inputLogin = App.inputCriacao(@form, "login", "Login", "text")
 
   montarJSON: ->
     "{ 'login': '#{@inputLogin.val()}' }"
+
     
 class App.FormEdicaoResponsavel extends App.PaginaEdicao
-  constructor: (@modulo, @paginaMae) ->
-    super(@modulo, @paginaMae)
+  constructor: (@modulo) ->
+    super(@modulo)
     
   desenharConteudoForm: (jsonObj) ->
-    divLogin = $('<div>')
-    @form.append divLogin    
-    labelLogin = $('<label for="login">Login</label>')        
-    @inputLogin = $('<input name="login" id="login" placeholder="" value="' + jsonObj.login + '" type="text">')
-    divLogin.append labelLogin
-    divLogin.append @inputLogin
+    @inputLogin = App.inputEdicao(@form, "login", "Login", "text", jsonObj.login)
 
   montarJSON: ->
-    "{ 'login': '#{@inputLogin.val()}', 'id': #{@idItem}, 'version': #{@versionItem} }"
+    "{ 'login': '#{@inputLogin.val()}', 'id': #{@dados.idItem}, 'version': #{@dados.versionItem} }"
+    
     
 class App.PaginaDetalhesResponsavel extends App.PaginaDetalhes
-  constructor:(@modulo, @paginaMae)->
-    super(@modulo, @paginaMae)
+  constructor:(@modulo)->
+    super(@modulo)
      
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
@@ -41,7 +33,12 @@ class App.ModuloResponsaveis extends App.Modulo
     super(@paginaMae, 'Responsavel', 'responsaveis', 'login')
     
   criarPaginaEdicao: ->
-    new App.FormEdicaoResponsavel(this, @paginaListagem)
+    new App.FormEdicaoResponsavel(this)
     
   criarPaginaCriacao: ->
-    new App.FormCriacaoResponsavel(this, @paginaListagem)  
+    new App.FormCriacaoResponsavel(this)
+
+  criarPaginaDetalhes: ->
+    new App.PaginaDetalhesResponsavel(this)
+
+      

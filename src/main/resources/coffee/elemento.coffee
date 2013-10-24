@@ -1,34 +1,24 @@
-class App.FormEdicaoElemento extends App.PaginaEdicao
-  constructor: (@modulo, @paginaMae) ->
-    super(@modulo, @paginaMae)
-    
-  desenharConteudoForm: (jsonObj) ->
-    divNome = $('<div>')
-    @form.append divNome    
-    labelNome = $('<label for="nome">Nome</label>')        
-    @inputNome = $('<input name="nome" id="nome" placeholder="" value="' + jsonObj.nome + '" type="text">')
-    divNome.append labelNome
-    divNome.append @inputNome
-
-  montarJSON: ->
-    '{ "nome": "' + @inputNome.val() + '", "projeto": ' + @modulo.idObjetoPai + 
-      ', "id": ' + @idItem + ', "version": ' + @versionItem + ' }'              
-
-
 class App.FormCriacaoElemento extends App.PaginaCriacao
   constructor: (@modulo, @paginaMae) ->
     super(@modulo, @paginaMae)
     
   desenharConteudoForm: () ->
-    divNome = $('<div>')
-    @form.append divNome    
-    labelNome = $('<label for="nome">Nome</label>')        
-    @inputNome = $('<input name="nome" id="nome" placeholder="" value="" type="text">')
-    divNome.append labelNome
-    divNome.append @inputNome
+    @inputNome = App.inputCriacao(@form, "nome", "Nome", "text")
 
   montarJSON: ->
     '{ "nome": "' + @inputNome.val() + '", "projeto": ' + @modulo.idObjetoPai + ' }'              
+
+
+class App.FormEdicaoElemento extends App.PaginaEdicao
+  constructor: (@modulo) ->
+    super(@modulo)
+    
+  desenharConteudoForm: (jsonObj) ->
+    @inputNome = App.inputEdicao(@form, "nome", "Nome", "text", jsonObj.nome)
+
+  montarJSON: ->
+    '{ "nome": "' + @inputNome.val() + '", "projeto": ' + @modulo.idObjetoPai + 
+      ', "id": ' + @dados.idItem + ', "version": ' + @dados.versionItem + ' }'              
 
 
 class App.PaginaDetalhesElemento extends App.PaginaDetalhes
@@ -48,10 +38,10 @@ class App.ModuloElementos extends App.SubModulo
     @moduloElementoFolha = new App.ModuloElementoFolha(this)
     
   criarPaginaEdicao: ->
-    new App.FormEdicaoElemento(this, @paginaListagem)
+    new App.FormEdicaoElemento(this)
     
   criarPaginaCriacao: ->
-    new App.FormCriacaoElemento(this, @paginaListagem)
+    new App.FormCriacaoElemento(this)
     
   criarPaginaDetalhes: ->
-    new App.PaginaDetalhesElemento(this, @paginaListagem)
+    new App.PaginaDetalhesElemento(this)
