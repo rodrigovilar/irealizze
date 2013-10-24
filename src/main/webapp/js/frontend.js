@@ -359,7 +359,6 @@
       if (this.moduloPai.urlFilho) {
         link = this.moduloPai.urlFilho + '/' + this.idObjetoPai + '/' + this.urlFilho;
       }
-      alert(link);
       this.paginaListagem = new App.PaginaListagem(this, this.paginaMae, link);
       return this.paginaListagem.desenharConteudo();
     };
