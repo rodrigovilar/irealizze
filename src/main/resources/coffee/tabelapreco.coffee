@@ -40,18 +40,18 @@ class App.PaginaDetalhesTabelaPreco extends App.PaginaDetalhes
     cabecalho.append celulaPreco
     link = "tabelasprecos/" + registro.id + "/precos"
     
-    $.getJSON link, (jsonObj) ->
-      alert jsonObj
-      $.each jsonObj, (i, preco) ->
-        linha = $('<tr>') 
-        tabela.append linha
+    precos = eval(registro.precos)
     
-        item = eval(preco.item)
-        celulaItem = $('<td>' + item.nome + '</td>')
-        linha.append celulaItem
+    $.each precos, (i, preco) ->
+      linha = $('<tr>') 
+      tabela.append linha
+  
+      item = eval(preco.item)
+      celulaItem = $('<td>' + item.nome + '</td>')
+      linha.append celulaItem
     
-        celulaPreco = $('<td>' + preco.valorUnitario + '</td>')
-        linha.append celulaPreco
+      celulaPreco = $('<td>' + preco.valorUnitario + '</td>')
+      linha.append celulaPreco
     
 
 class App.ModuloTabelaPreco extends App.Modulo

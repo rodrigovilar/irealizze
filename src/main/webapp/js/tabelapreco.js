@@ -55,7 +55,7 @@
     }
 
     PaginaDetalhesTabelaPreco.prototype.carregar = function(registro) {
-      var cabecalho, celulaItem, celulaPreco, link, tabela;
+      var cabecalho, celulaItem, celulaPreco, link, precos, tabela;
       this.titulo.html("" + registro[this.modulo.propriedade]);
       tabela = $('<table>');
       this.pagina.append(tabela);
@@ -66,18 +66,16 @@
       celulaPreco = $('<td>Preço</td>');
       cabecalho.append(celulaPreco);
       link = "tabelasprecos/" + registro.id + "/precos";
-      return $.getJSON(link, function(jsonObj) {
-        alert(jsonObj);
-        return $.each(jsonObj, function(i, preco) {
-          var item, linha;
-          linha = $('<tr>');
-          tabela.append(linha);
-          item = eval(preco.item);
-          celulaItem = $('<td>' + item.nome + '</td>');
-          linha.append(celulaItem);
-          celulaPreco = $('<td>' + preco.valorUnitario + '</td>');
-          return linha.append(celulaPreco);
-        });
+      precos = eval(registro.precos);
+      return $.each(precos, function(i, preco) {
+        var item, linha;
+        linha = $('<tr>');
+        tabela.append(linha);
+        item = eval(preco.item);
+        celulaItem = $('<td>' + item.nome + '</td>');
+        linha.append(celulaItem);
+        celulaPreco = $('<td>' + preco.valorUnitario + '</td>');
+        return linha.append(celulaPreco);
       });
     };
 

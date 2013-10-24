@@ -85,23 +85,22 @@ public class Preco {
     
     public String toJson() {
     	ObjectNode noPreco = preco2json(this);
-		return noPreco.toString().replace("\\", "");
-
+		return noPreco.toString();
     }
     
-    private static ObjectNode preco2json(Preco preco) {
+    public static ObjectNode preco2json(Preco preco) {
 		ObjectNode noPreco = JsonNodeFactory.instance.objectNode();
 		
 		noPreco.put("id", preco.getId());
 		noPreco.put("valorUnitario", preco.getValorUnitario());			
-		noPreco.put("item", preco.getItem().toJson());
+		noPreco.put("item", Item.item2json(preco.getItem()));
 		noPreco.put("version", preco.getVersion());
-		noPreco.put("tabela", preco.getTabela().toJson());
+		noPreco.put("tabela", TabelaPreco.tabela2json(preco.getTabela(), false));
 		
 		return noPreco;
 	}
-    
-    public static String toJsonArray(Collection<Preco> collection) {
+
+    public static ArrayNode toJson(Collection<Preco> collection) {
     	ArrayNode arrayDePrecos = JsonNodeFactory.instance.arrayNode();
 
 		for (Preco preco : collection) {
@@ -109,8 +108,11 @@ public class Preco {
 			arrayDePrecos.add(noPreco);
 		}
 
-    	return arrayDePrecos.toString().replace("\\", "");
-
+    	return arrayDePrecos;
+    }
+    
+    public static String toJsonArray(Collection<Preco> collection) {
+    	return toJson(collection).toString();
     }
 
 }

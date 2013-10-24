@@ -102,7 +102,7 @@ public class Item {
 		return noItem.toString();
 	}
 
-	private static ObjectNode item2json(Item item) {
+	public static ObjectNode item2json(Item item) {
 		ObjectNode noItem = JsonNodeFactory.instance.objectNode();
 
 		noItem.put("id", item.getId());
