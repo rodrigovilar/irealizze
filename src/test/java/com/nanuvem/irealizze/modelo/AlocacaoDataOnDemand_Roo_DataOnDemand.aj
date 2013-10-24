@@ -29,13 +29,13 @@ privileged aspect AlocacaoDataOnDemand_Roo_DataOnDemand {
     private List<Alocacao> AlocacaoDataOnDemand.data;
     
     @Autowired
-    ElementoDataOnDemand AlocacaoDataOnDemand.elementoDataOnDemand;
+    private ElementoDataOnDemand AlocacaoDataOnDemand.elementoDataOnDemand;
     
     @Autowired
-    PeriodoDataOnDemand AlocacaoDataOnDemand.periodoDataOnDemand;
+    private PeriodoDataOnDemand AlocacaoDataOnDemand.periodoDataOnDemand;
     
     @Autowired
-    ResponsavelDataOnDemand AlocacaoDataOnDemand.responsavelDataOnDemand;
+    private ResponsavelDataOnDemand AlocacaoDataOnDemand.responsavelDataOnDemand;
     
     public Alocacao AlocacaoDataOnDemand.getNewTransientAlocacao(int index) {
         Alocacao obj = new Alocacao();

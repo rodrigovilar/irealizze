@@ -5,13 +5,12 @@ package com.nanuvem.irealizze.modelo.perene;
 
 import com.nanuvem.irealizze.modelo.perene.Preco;
 import flexjson.JSONDeserializer;
-import flexjson.JSONSerializer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 privileged aspect Preco_Roo_Json {
-        
+    
     public static Collection<Preco> Preco.fromJsonArrayToPrecoes(String json) {
         return new JSONDeserializer<List<Preco>>().use(null, ArrayList.class).use("values", Preco.class).deserialize(json);
     }

@@ -28,7 +28,7 @@ privileged aspect PeriodoDataOnDemand_Roo_DataOnDemand {
     private List<Periodo> PeriodoDataOnDemand.data;
     
     @Autowired
-    ProjetoDataOnDemand PeriodoDataOnDemand.projetoDataOnDemand;
+    private ProjetoDataOnDemand PeriodoDataOnDemand.projetoDataOnDemand;
     
     public Periodo PeriodoDataOnDemand.getNewTransientPeriodo(int index) {
         Periodo obj = new Periodo();

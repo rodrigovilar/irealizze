@@ -34,6 +34,9 @@ App.desenharBotao = (elemento, texto, callback) ->
     botao.click =>
       callback()
   
+App.dataJson2Gui = (formatoAAAAMMDD) ->
+  formatoDDMMAAAA = formatoAAAAMMDD.split('-').reverse().join('/')
+  return formatoDDMMAAAA
 
 class App.Pagina
 
@@ -57,7 +60,7 @@ class App.Pagina
   
 class App.PaginaListagem extends App.Pagina
 
-  constructor: (@modulo, @paginaMae) ->
+  constructor: (@modulo, @paginaMae, @linkGet) ->
     super(@modulo, @paginaMae)
 
   desenharConteudo: =>
@@ -71,7 +74,7 @@ class App.PaginaListagem extends App.Pagina
     
     @desenharBotaoVoltar()
 
-    $.getJSON @modulo.url, (jsonObj) =>
+    $.getJSON @linkGet, (jsonObj) =>
       $.each jsonObj, (i, registro) =>
         @listar(registro)
     
@@ -190,7 +193,7 @@ class App.Modulo
     @paginaDetalhes = @criarPaginaDetalhes()
   
   criarPaginaListagem: ->
-    new App.PaginaListagem(this, @paginaMae)
+    new App.PaginaListagem(this, @paginaMae, @url)
    
   criarPaginaEdicao: ->
     new App.PaginaEdicao(this, @paginaListagem)
@@ -221,8 +224,8 @@ class App.SubModulo extends App.Modulo
     super(@moduloPai.paginaDetalhes, @nome, @urlFilho, @propriedade)
     
   criarPaginaListagem: ->
-    new App.PaginaListagem(this, @moduloPai.paginaDetalhes)
-  
+    new App.PaginaListagem(this, @moduloPai.paginaDetalhes, @url)
+
   abrir: (idPai) ->
     if (idPai)
       @idObjetoPai = idPai
@@ -231,6 +234,6 @@ class App.SubModulo extends App.Modulo
     if (@moduloPai.urlFilho)
       link = @moduloPai.urlFilho + '/' + @idObjetoPai + '/' + @urlFilho
       
-    @paginaListagem = new App.PaginaListagem(this, @paginaMae, link)
+    @paginaListagem = new App.PaginaListagem(this, @moduloPai.paginaDetalhes, link)
     @paginaListagem.desenharConteudo()
   

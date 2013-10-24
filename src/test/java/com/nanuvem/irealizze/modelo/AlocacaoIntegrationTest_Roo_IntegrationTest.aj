@@ -24,7 +24,7 @@ privileged aspect AlocacaoIntegrationTest_Roo_IntegrationTest {
     declare @type: AlocacaoIntegrationTest: @Transactional;
     
     @Autowired
-    AlocacaoDataOnDemand AlocacaoIntegrationTest.dod;
+    private AlocacaoDataOnDemand AlocacaoIntegrationTest.dod;
     
     @Test
     public void AlocacaoIntegrationTest.testCountAlocacaos() {

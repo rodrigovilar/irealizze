@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 privileged aspect Item_Roo_Json {
-       
+    
     public static Collection<Item> Item.fromJsonArrayToItems(String json) {
         return new JSONDeserializer<List<Item>>().use(null, ArrayList.class).use("values", Item.class).deserialize(json);
     }

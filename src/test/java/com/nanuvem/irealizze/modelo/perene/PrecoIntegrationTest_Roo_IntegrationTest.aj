@@ -24,7 +24,7 @@ privileged aspect PrecoIntegrationTest_Roo_IntegrationTest {
     declare @type: PrecoIntegrationTest: @Transactional;
     
     @Autowired
-    PrecoDataOnDemand PrecoIntegrationTest.dod;
+    private PrecoDataOnDemand PrecoIntegrationTest.dod;
     
     @Test
     public void PrecoIntegrationTest.testCountPrecoes() {

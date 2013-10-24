@@ -24,7 +24,7 @@ privileged aspect MedicaoIntegrationTest_Roo_IntegrationTest {
     declare @type: MedicaoIntegrationTest: @Transactional;
     
     @Autowired
-    MedicaoDataOnDemand MedicaoIntegrationTest.dod;
+    private MedicaoDataOnDemand MedicaoIntegrationTest.dod;
     
     @Test
     public void MedicaoIntegrationTest.testCountMedicaos() {

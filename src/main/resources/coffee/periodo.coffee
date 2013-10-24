@@ -1,26 +1,3 @@
-class App.FormEdicaoPeriodo extends App.PaginaEdicao
-  constructor: (@modulo, @paginaMae) ->
-    super(@modulo, @paginaMae)
-    
-  desenharConteudoForm: (jsonObj) ->
-    divDataLimite = $('<div>')
-    @form.append divDataLimite    
-    labelDataLimite = $('<label for="dataLimite">DataLimite</label>')        
-    @inputDataLimite = $('<input name="dataLimite" id="dataLimite" placeholder="" value="' + jsonObj.dataLimite + '" type="text">')
-    divDataLimite.append labelDataLimite
-    divDataLimite.append @inputDataLimite
-
-    divProjeto = $('<div>')
-    @form.append divProjeto    
-    labelProjeto = $('<label for="projeto">Projeto</label>')        
-    @inputProjeto = $('<input name="projeto" id="projeto" placeholder="" value="' + jsonObj.cliente + '" type="text">')
-    divProjeto.append labelProjeto
-    divProjeto.append @inputProjeto
-
-  montarJSON: ->
-    '{ "dataLimite": "' + @inputDataLimite.val() + '", "projeto": ' + @inputProjeto.val() + 
-      ', "id": ' + @idItem + ', "version": ' + @versionItem + ' }'                
-
 class App.FormCriacaoPeriodo extends App.PaginaCriacao
   constructor: (@modulo) ->
     super(@modulo)
@@ -28,13 +5,31 @@ class App.FormCriacaoPeriodo extends App.PaginaCriacao
   desenharConteudoForm: () ->
     divDataLimite = $('<div>')
     @form.append divDataLimite    
-    labelDataLimite = $('<label for="dataLimite">DataLimite</label>')        
-    @inputDataLimite = $('<input name="dataLimite" id="dataLimite" placeholder="" value="" type="date">')
+    labelDataLimite = $('<label for="dataLimite">Data Final</label>')        
+    @inputDataLimite = $('<input name="dataLimite" id="dataLimite" value="" type="date">')
     divDataLimite.append labelDataLimite
     divDataLimite.append @inputDataLimite
 
   montarJSON: ->
     '{ "dataLimite": "' + @inputDataLimite.val() + '", "projeto": ' + @modulo.idObjetoPai + ' }'                
+
+
+class App.FormEdicaoPeriodo extends App.PaginaEdicao
+  constructor: (@modulo, @paginaMae) ->
+    super(@modulo, @paginaMae)
+    
+  desenharConteudoForm: (jsonObj) ->
+    divDataLimite = $('<div>')
+    @form.append divDataLimite    
+    labelDataLimite = $('<label for="dataLimite">Data Final</label>')        
+    @inputDataLimite = $('<input name="dataLimite" id="dataLimite" value="' + jsonObj.dataLimite + '" type="date">')
+    divDataLimite.append labelDataLimite
+    divDataLimite.append @inputDataLimite
+
+  montarJSON: ->
+    '{ "dataLimite": "' + @inputDataLimite.val() + '", "projeto": ' + @modulo.idObjetoPai + 
+      ', "id": ' + @idItem + ', "version": ' + @versionItem + ' }'                
+
 
 class App.PaginaDetalhesPeriodo extends App.PaginaDetalhes
   constructor:(@modulo)->
@@ -43,9 +38,10 @@ class App.PaginaDetalhesPeriodo extends App.PaginaDetalhes
   carregar: (registro) ->
     @titulo.html "#{registro[@modulo.propriedade]}"
         
+        
 class App.ModuloPeriodos extends App.SubModulo
   constructor: (@moduloPai) ->
-    super('Periodos', 'periodos', 'dataLimite', @moduloPai)
+    super('Períodos', 'periodos', 'dataLimite', @moduloPai)
     
   criarPaginaEdicao: ->
     new App.FormEdicaoPeriodo(this, @paginaListagem)
@@ -60,6 +56,4 @@ class App.ModuloPeriodos extends App.SubModulo
     alert "ver periodo " + idItem
 
   prepararLinhaListagem: (registro) ->
-    formatoAAAAMMDD = registro[@propriedade]
-    formatoDDMMAAAA = formatoAAAAMMDD.split('-').reverse().join('/')
-    return formatoDDMMAAAA
+    return App.dataJson2Gui registro[@propriedade]

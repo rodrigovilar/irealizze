@@ -24,7 +24,7 @@ privileged aspect TipoItemIntegrationTest_Roo_IntegrationTest {
     declare @type: TipoItemIntegrationTest: @Transactional;
     
     @Autowired
-    TipoItemDataOnDemand TipoItemIntegrationTest.dod;
+    private TipoItemDataOnDemand TipoItemIntegrationTest.dod;
     
     @Test
     public void TipoItemIntegrationTest.testCountTipoItems() {

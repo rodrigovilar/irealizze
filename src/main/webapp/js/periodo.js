@@ -2,40 +2,6 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  App.FormEdicaoPeriodo = (function(_super) {
-
-    __extends(FormEdicaoPeriodo, _super);
-
-    function FormEdicaoPeriodo(modulo, paginaMae) {
-      this.modulo = modulo;
-      this.paginaMae = paginaMae;
-      FormEdicaoPeriodo.__super__.constructor.call(this, this.modulo, this.paginaMae);
-    }
-
-    FormEdicaoPeriodo.prototype.desenharConteudoForm = function(jsonObj) {
-      var divDataLimite, divProjeto, labelDataLimite, labelProjeto;
-      divDataLimite = $('<div>');
-      this.form.append(divDataLimite);
-      labelDataLimite = $('<label for="dataLimite">DataLimite</label>');
-      this.inputDataLimite = $('<input name="dataLimite" id="dataLimite" placeholder="" value="' + jsonObj.dataLimite + '" type="text">');
-      divDataLimite.append(labelDataLimite);
-      divDataLimite.append(this.inputDataLimite);
-      divProjeto = $('<div>');
-      this.form.append(divProjeto);
-      labelProjeto = $('<label for="projeto">Projeto</label>');
-      this.inputProjeto = $('<input name="projeto" id="projeto" placeholder="" value="' + jsonObj.cliente + '" type="text">');
-      divProjeto.append(labelProjeto);
-      return divProjeto.append(this.inputProjeto);
-    };
-
-    FormEdicaoPeriodo.prototype.montarJSON = function() {
-      return '{ "dataLimite": "' + this.inputDataLimite.val() + '", "projeto": ' + this.inputProjeto.val() + ', "id": ' + this.idItem + ', "version": ' + this.versionItem + ' }';
-    };
-
-    return FormEdicaoPeriodo;
-
-  })(App.PaginaEdicao);
-
   App.FormCriacaoPeriodo = (function(_super) {
 
     __extends(FormCriacaoPeriodo, _super);
@@ -49,8 +15,8 @@
       var divDataLimite, labelDataLimite;
       divDataLimite = $('<div>');
       this.form.append(divDataLimite);
-      labelDataLimite = $('<label for="dataLimite">DataLimite</label>');
-      this.inputDataLimite = $('<input name="dataLimite" id="dataLimite" placeholder="" value="" type="date">');
+      labelDataLimite = $('<label for="dataLimite">Data Final</label>');
+      this.inputDataLimite = $('<input name="dataLimite" id="dataLimite" value="" type="date">');
       divDataLimite.append(labelDataLimite);
       return divDataLimite.append(this.inputDataLimite);
     };
@@ -62,6 +28,34 @@
     return FormCriacaoPeriodo;
 
   })(App.PaginaCriacao);
+
+  App.FormEdicaoPeriodo = (function(_super) {
+
+    __extends(FormEdicaoPeriodo, _super);
+
+    function FormEdicaoPeriodo(modulo, paginaMae) {
+      this.modulo = modulo;
+      this.paginaMae = paginaMae;
+      FormEdicaoPeriodo.__super__.constructor.call(this, this.modulo, this.paginaMae);
+    }
+
+    FormEdicaoPeriodo.prototype.desenharConteudoForm = function(jsonObj) {
+      var divDataLimite, labelDataLimite;
+      divDataLimite = $('<div>');
+      this.form.append(divDataLimite);
+      labelDataLimite = $('<label for="dataLimite">Data Final</label>');
+      this.inputDataLimite = $('<input name="dataLimite" id="dataLimite" value="' + jsonObj.dataLimite + '" type="date">');
+      divDataLimite.append(labelDataLimite);
+      return divDataLimite.append(this.inputDataLimite);
+    };
+
+    FormEdicaoPeriodo.prototype.montarJSON = function() {
+      return '{ "dataLimite": "' + this.inputDataLimite.val() + '", "projeto": ' + this.modulo.idObjetoPai + ', "id": ' + this.idItem + ', "version": ' + this.versionItem + ' }';
+    };
+
+    return FormEdicaoPeriodo;
+
+  })(App.PaginaEdicao);
 
   App.PaginaDetalhesPeriodo = (function(_super) {
 
@@ -86,7 +80,7 @@
 
     function ModuloPeriodos(moduloPai) {
       this.moduloPai = moduloPai;
-      ModuloPeriodos.__super__.constructor.call(this, 'Periodos', 'periodos', 'dataLimite', this.moduloPai);
+      ModuloPeriodos.__super__.constructor.call(this, 'Períodos', 'periodos', 'dataLimite', this.moduloPai);
     }
 
     ModuloPeriodos.prototype.criarPaginaEdicao = function() {
@@ -106,10 +100,7 @@
     };
 
     ModuloPeriodos.prototype.prepararLinhaListagem = function(registro) {
-      var formatoAAAAMMDD, formatoDDMMAAAA;
-      formatoAAAAMMDD = registro[this.propriedade];
-      formatoDDMMAAAA = formatoAAAAMMDD.split('-').reverse().join('/');
-      return formatoDDMMAAAA;
+      return App.dataJson2Gui(registro[this.propriedade]);
     };
 
     return ModuloPeriodos;

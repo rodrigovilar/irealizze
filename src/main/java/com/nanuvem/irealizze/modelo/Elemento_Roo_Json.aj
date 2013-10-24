@@ -5,13 +5,11 @@ package com.nanuvem.irealizze.modelo;
 
 import com.nanuvem.irealizze.modelo.Elemento;
 import flexjson.JSONDeserializer;
-import flexjson.JSONSerializer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 privileged aspect Elemento_Roo_Json {
-    
     
     public static Collection<Elemento> Elemento.fromJsonArrayToElementoes(String json) {
         return new JSONDeserializer<List<Elemento>>().use(null, ArrayList.class).use("values", Elemento.class).deserialize(json);

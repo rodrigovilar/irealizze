@@ -26,7 +26,7 @@ privileged aspect ElementoDataOnDemand_Roo_DataOnDemand {
     private List<Elemento> ElementoDataOnDemand.data;
     
     @Autowired
-    ProjetoDataOnDemand ElementoDataOnDemand.projetoDataOnDemand;
+    private ProjetoDataOnDemand ElementoDataOnDemand.projetoDataOnDemand;
     
     public Elemento ElementoDataOnDemand.getNewTransientElemento(int index) {
         Elemento obj = new Elemento();
