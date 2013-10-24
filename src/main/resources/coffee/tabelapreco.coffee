@@ -42,16 +42,34 @@ class App.PaginaDetalhesTabelaPreco extends App.PaginaDetalhes
     
     precos = eval(registro.precos)
     
-    $.each precos, (i, preco) ->
+    $.each precos, (i, preco) =>
       linha = $('<tr>') 
       tabela.append linha
-  
-      item = eval(preco.item)
-      celulaItem = $('<td>' + item.nome + '</td>')
-      linha.append celulaItem
-    
-      celulaPreco = $('<td>' + preco.valorUnitario + '</td>')
-      linha.append celulaPreco
+      @desenharLinha(linha, preco)
+
+  desenharLinha: (linha, preco) ->  
+    item = eval(preco.item)
+
+    celulaItem = $('<td>' + item.nome + '</td>')
+    linha.append celulaItem
+
+    celulaPreco = $('<td>')
+    inputPreco = $('<input min="0.00" step="0.01" value="' + preco.valorUnitario + '" type="number">')
+    celulaPreco.append inputPreco
+    linha.append celulaPreco
+
+    tdMsg = $('<td>')
+    divMsg = $('<div>')
+    tdMsg.append divMsg
+    linha.append tdMsg
+
+    inputPreco.change =>
+      divMsg.html "Atualizando" 
+      preco.valorUnitario = inputPreco.val()
+      preco.tabela = preco.tabela.id
+      preco.item = preco.item.id  
+      App.enviarPut "precos", JSON.stringify(preco), =>
+        divMsg.html "Ok" 
     
 
 class App.ModuloTabelaPreco extends App.Modulo

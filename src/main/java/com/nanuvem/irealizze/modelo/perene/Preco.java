@@ -60,7 +60,7 @@ public class Preco {
 			}
 
 			if (precoJSON.has("valorUnitario")) {
-				preco.setValorUnitario(precoJSON.get("valorUnitario").asDouble());
+				preco.setValorUnitario(precoJSON.get("valorUnitario").asDouble()); //TODO tornar locale safe
 			}
 
 			if (precoJSON.has("tabela")) {

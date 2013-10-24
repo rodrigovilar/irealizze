@@ -55,7 +55,8 @@
     }
 
     PaginaDetalhesTabelaPreco.prototype.carregar = function(registro) {
-      var cabecalho, celulaItem, celulaPreco, link, precos, tabela;
+      var cabecalho, celulaItem, celulaPreco, link, precos, tabela,
+        _this = this;
       this.titulo.html("" + registro[this.modulo.propriedade]);
       tabela = $('<table>');
       this.pagina.append(tabela);
@@ -68,14 +69,35 @@
       link = "tabelasprecos/" + registro.id + "/precos";
       precos = eval(registro.precos);
       return $.each(precos, function(i, preco) {
-        var item, linha;
+        var linha;
         linha = $('<tr>');
         tabela.append(linha);
-        item = eval(preco.item);
-        celulaItem = $('<td>' + item.nome + '</td>');
-        linha.append(celulaItem);
-        celulaPreco = $('<td>' + preco.valorUnitario + '</td>');
-        return linha.append(celulaPreco);
+        return _this.desenharLinha(linha, preco);
+      });
+    };
+
+    PaginaDetalhesTabelaPreco.prototype.desenharLinha = function(linha, preco) {
+      var celulaItem, celulaPreco, divMsg, inputPreco, item, tdMsg,
+        _this = this;
+      item = eval(preco.item);
+      celulaItem = $('<td>' + item.nome + '</td>');
+      linha.append(celulaItem);
+      celulaPreco = $('<td>');
+      inputPreco = $('<input min="0.00" step="0.01" value="' + preco.valorUnitario + '" type="number">');
+      celulaPreco.append(inputPreco);
+      linha.append(celulaPreco);
+      tdMsg = $('<td>');
+      divMsg = $('<div>');
+      tdMsg.append(divMsg);
+      linha.append(tdMsg);
+      return inputPreco.change(function() {
+        divMsg.html("Atualizando");
+        preco.valorUnitario = inputPreco.val();
+        preco.tabela = preco.tabela.id;
+        preco.item = preco.item.id;
+        return App.enviarPut("precos", JSON.stringify(preco), function() {
+          return divMsg.html("Ok");
+        });
       });
     };
 
